@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const bot = new Discord.Client();
-const token = 'NjI3NDAzMzAzMzY1Mzc4MDQ4.XY8LKA.gmqRInfE1sm1IqYc8GYsMIq1VIw';
+const token = 'NjI3NDAzMzAzMzY1Mzc4MDQ4.XZGqqw.59OmaOOuDLhNORG4b3vNEbaTAL4';
 const PREFIX = "!";
 var db_path = 'hiscores.txt';
 var f = require('./functions.js');
@@ -8,7 +8,7 @@ var f = require('./functions.js');
 hs = f.csv_to_lists(db_path);
 [players, players_index] = f.create_players(hs);
 [boss_kills, boss_index, boss_names] = f.create_bosses(hs);
-//console.log(players);
+
 
 bot.on('ready', ()=> {
   console.log("This bot is online!");
@@ -28,54 +28,57 @@ bot.on('message', msg=>{
           copy_boss.sort(function (a, b) {
               return b[1]-a[1];
               });
-          //console.log(key,boss_kills,copy_boss);
           str1 = str1.concat(`\n${key}\n`)
           str1 = str1.concat(`1. ${copy_boss[0][0]}: ${copy_boss[0][1]}\n`);
           str1 = str1.concat(`2. ${copy_boss[1][0]}: ${copy_boss[1][1]}\n`);
           str1 = str1.concat(`3. ${copy_boss[2][0]}: ${copy_boss[2][1]}\n`);
 
-          //str1 = str1.concat(`\n${key}\n1. ${boss_kills[key][0][0]}: ${boss_kills[key][0][1]}\n2.\n3.\n`)
-          //msg.channel.sendMessage(`${key}\n1. ${boss_kills[key][0][0]}: ${boss_kills[key][0][1]}`);
         }
         index = str1.indexOf("Kraken");
-        //console.log(str1)
         str2 = str1.slice(0,index);
         str3 = str1.slice(index,str1.length);
-        //console.log(str2.length,str3.length)
         msg.channel.send(str2);
         msg.channel.send(str3);
       }
       else{
-        //console.log(args[1]);
-        copy_boss = [...boss_kills[args[1]]];
-        copy_boss.sort(function (a, b) {
-            return b[1]-a[1];
-            });
-        bstring = `${args[1]}\n`
-        bstring = bstring.concat(`1. ${copy_boss[0][0]}: ${copy_boss[0][1]}\n`);
-        bstring = bstring.concat(`2. ${copy_boss[1][0]}: ${copy_boss[1][1]}\n`);
-        bstring = bstring.concat(`3. ${copy_boss[2][0]}: ${copy_boss[2][1]}\n`);
-        msg.channel.send(bstring);//`1. Name: ${boss_kills[args.slice(1,args.length)[0][1]}`);
+        if(!boss_names.includes(args[1])){
+          msg.channel.send("That boss name doesn't match any existent boss.");
+        }
+        else{
+          copy_boss = [...boss_kills[args[1]]];
+          copy_boss.sort(function (a, b) {
+              return b[1]-a[1];
+              });
+          bstring = `${args[1]}\n`
+          bstring = bstring.concat(`1. ${copy_boss[0][0]}: ${copy_boss[0][1]}\n`);
+          bstring = bstring.concat(`2. ${copy_boss[1][0]}: ${copy_boss[1][1]}\n`);
+          bstring = bstring.concat(`3. ${copy_boss[2][0]}: ${copy_boss[2][1]}\n`);
+          msg.channel.send(bstring);
+        }
       }
-      break;//msg.reply
+      break;
     case 'update':
       if(msg.member.hasPermission('KICK_MEMBERS')){
 
 
-      if (!args.length==4){
-        msg.channel.send("To update some you need to do !update rsn boss kc");
-      }
-      else{
-
-        rsn = args[1]
-        boss = args[2]
-        kc = args[3]
-        while (!players.includes(rsn)) {
-          f.create_player(boss_kills,players,rsn);
+        if (!args.length==4){
+          msg.channel.send("To update some you need to do !update rsn boss kc");
+        }
+        else{
+          rsn = args[1]
+          boss = args[2]
+          kc = args[3]
+          if(!boss_names.includes(boss)){
+            msg.channel.send("That boss name doesn't match any existent boss.");
           }
-        boss_kills = f.updatedict(boss_kills, players, players_index, args[1], args[2], args[3]);
-        msg.channel.send("Hs updated!");
-      }}
+          else{
+            while (!players.includes(rsn)) {
+              f.create_player(boss_kills,players,rsn);
+              }
+            boss_kills = f.updatedict(boss_kills, players, players_index, args[1], args[2], args[3]);
+            msg.channel.send("Hs updated!");
+            }}}
+
       else {
         msg.channel.send("You don't have enough permission to do this");
       }
@@ -108,6 +111,7 @@ bot.on('message', msg=>{
     break;
   }
 })
+
 
 bot.login(token);
 

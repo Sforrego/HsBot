@@ -20,9 +20,9 @@ exports.create_players=function(hs){
   var players_index = {};
   for(var i=1;i<hs.length-1;i++){
     players.push(`${hs[i][0]}`);
-    players_index[hs[i][0]]=i-1;
+    players_index[hs[i][0]]=i;}
   return [players,players_index];
-}};
+};
 
 exports.csv_to_lists=function(db_path){
   var info = fs.readFileSync(db_path,'utf8');
@@ -55,7 +55,7 @@ exports.write_file=function(boss_kills,boss_index,players,players_index,db_file)
     data = data.concat(`,${boss_names[i]}`);
     }
   data = data.concat('\n');
-  for(var i = 0; i< players.length;i++){
+  for(var i = 0; i<players.length;i++){
     data = data.concat(`${players[i]}`);
     for(var key in boss_kills){
       data = data.concat(`,${boss_kills[key][i][1]}`);

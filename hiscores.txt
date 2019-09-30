@@ -1,2 +1,5 @@
 Rsn,Kree'Arra,CommanderZilyana,GeneralGraardor,K'rilTsutsaroth,DagannothRex,DagganothSupreme,DagganothPrime,GiantMole,KalphiteQueen,KingBlackDragon,Callisto,Venenatis,Vet'ion,ChaosElemental,ChaosFanatic,CrazyArchaeologist,Scorpia,BarrowsChests,CorporealBeast,Zulrah,TzTok-Jad,Tzkal-Zuk,Kraken,ThermonuclearSmokeDevil,Cerberus,AbyssalSire,Skotizo,Wintertodt,Obor,ChambersofXeric,ChambersofXeric:ChallengeMode,DerangedArchaeologist,GrotesqueGuardians,Vorkath,Bryophyta,TheatreofBlood,AlchemicalHydra,Hespori,Mimic,Sarachnis,Zalcano,TheGauntlet,TheCorruptedGauntlet
-IronRok,1,2,1,19,361,214,204,1,101,77,60,333,11,8,1,9,3,579,0,854,3,0,144,0,203,243,18,164,0,29,0,0,0,11,0,0,0,113,2,0,167,0,0
+IronRok,1,2,1,19,361,214,204,1,101,77,60,333,11,8,1,9,3,579,0,854,3,0,144,0,203,243,18,164,0,29,0,0,0,11,0,0,0,0,0,0,0,0,0
+CHProduct,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,195,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+sologooch,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2700,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+PeePuddle,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,60,0,0,0,0,0
