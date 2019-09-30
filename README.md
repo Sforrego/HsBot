@@ -9,15 +9,23 @@
 !hs
 ```
 Prints every boss top 3 kcs, only doable by a high rank because it uses too much space on a channel.
+```bash
 !hs boss
-prints its top 3 kc
-!update player boss kc
-it updates the current kc of a player in a certain boss, if the player was not on the db
-it creates an entry for that payer with 0 kc on every boss and then updates it accordingly
+```
+Prints its top 3 kc.
+```bash
+!update player boss kc.
+```
+It updates the current kc of a player in a certain boss, if the player was not on the db
+it creates an entry for that payer with 0 kc on every boss and then updates it accordingly.
+```bash
 !clear n
-if no n is given default is 2, max n is 10.
+```
+If no n is given default is 2, max n is 10.
+```bash
 !save
-saves the db with all current changes.
+```
+Saves the db with all current changes.
 
 
 ## How it works
