@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const bot = new Discord.Client();
-const token = 'NjI3NDAzMzAzMzY1Mzc4MDQ4.XZGqqw.59OmaOOuDLhNORG4b3vNEbaTAL4';
+const token = 'token';
 const PREFIX = "!";
 var db_path = 'hiscores.txt';
 var f = require('./functions.js');
