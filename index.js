@@ -176,7 +176,7 @@ async function accessSpreadsheet() {
   })
 
 
-  bot.login(token);
+  bot.login(process.env.BOT_TOKEN);
 
   process.on('SIGTERM', function () {
     console.log("Data saved.");
@@ -195,7 +195,7 @@ async function accessSpreadsheet() {
     f.update_sheet(boss_kills,boss_index,players,players_index,rows,sheet);
     process.exit(0);
   });
-//bot.login(process.env.BOT_TOKEN);
+
 }
 accessSpreadsheet();
 
