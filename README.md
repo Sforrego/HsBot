@@ -21,7 +21,7 @@ it creates an entry for that payer with 0 kc on every boss and then updates it a
 ```bash
 !clear n
 ```
-Deletes the n messages above, if no n is given default is 2, max n is 10.
+If no n is given default is 2, max n is 10.
 ```bash
 !save
 ```

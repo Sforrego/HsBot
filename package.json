@@ -1,7 +1,7 @@
 {
   "name": "dbot",
   "version": "1.0.0",
-  "description": "",
+  "description": "* Online DB\r   * Ignore Caps\r   * Accept name with spaces",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,6 +10,10 @@
   "license": "ISC",
   "dependencies": {
     "discord.js": "^11.5.1",
-    "fast-csv": "^3.4.0"
-  }
+    "fast-csv": "^3.4.0",
+    "google-spreadsheet": "^2.0.8",
+    "googleapis": "^39.2.0"
+  },
+  "devDependencies": {},
+  "keywords": []
 }
