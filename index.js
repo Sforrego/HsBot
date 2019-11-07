@@ -112,16 +112,16 @@ async function accessSpreadsheet() {
           args[2] = args[2].toLowerCase();
           if (!args.length==4){
             msg.channel.send("To update you need to do !update rsn boss kc");
-            setTimeout(donothing, 5000);
-            msg.channel.bulkDelete(2);
+            // setTimeout(donothing, 5000);
+            // msg.channel.bulkDelete(2);
           }
 
           else{
 
             if((!Object.keys(boss_shorts).includes(args[2])) && (!Object.keys(boss_names_low).includes(args[2]))){
               msg.channel.send("That boss name doesn't match any existent boss.");
-              setTimeout(donothing, 5000);
-              msg.channel.bulkDelete(2);
+              // setTimeout(donothing, 5000);
+              // msg.channel.bulkDelete(2);
             }
 
             else{
@@ -144,14 +144,14 @@ async function accessSpreadsheet() {
               //boss_kills = f.updatedict(boss_kills, players, players_index, rsn, boss_name, kc);
               f.update_rows(players_index,rsn,boss_name,kc,rows)
               msg.channel.send("Hs updated!");
-              setTimeout(donothing, 2000);
-              msg.channel.bulkDelete(2);
+              // setTimeout(donothing, 2000);
+              // msg.channel.bulkDelete(2);
               }}}
 
         else {
           msg.channel.send("You don't have enough permission to do this");
-          setTimeout(donothing, 5000);
-          msg.channel.bulkDelete(2);
+          // setTimeout(donothing, 5000);
+          // msg.channel.bulkDelete(2);
         }
         break;
       // case 'save':
@@ -198,8 +198,8 @@ async function accessSpreadsheet() {
           rows = value;})
         msg1 = 'Newest version of sheets loaded.';
         msg.channel.send(msg1);
-        setTimeout(donothing, 2000);
-        msg.channel.bulkDelete(2);
+        // setTimeout(donothing, 2000);
+        // msg.channel.bulkDelete(2);
       break;
     }
   })
