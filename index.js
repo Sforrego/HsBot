@@ -8,7 +8,7 @@ const consts = require('./const.js');
 const GoogleSpreadsheet = require('google-spreadsheet');
 const { promisify } = require('util');
 const creds = require('./client_secret.json');
-// to do: change everything to spreadsheet format.
+// to do: change name feature, add herbiboar.
 async function accessSpreadsheet() {
   const doc = new GoogleSpreadsheet('1wWLt9pkC1doPSZyHmD_AewvUVupXcEtqqymcGSoHG6U');
   await promisify(doc.useServiceAccountAuth)(creds);
@@ -23,6 +23,7 @@ async function accessSpreadsheet() {
     'min-col':1,
     'max-col':52,
   });
+
   // Transform google sheets to list of lists
   var row0 = [[]];
   for(i=1;i<52;i++){
@@ -49,7 +50,7 @@ async function accessSpreadsheet() {
     let args = msg.content.substring(PREFIX.length).split(" ");
     switch(args[0]){
       case 'hs':
-      msg.channel.bulkDelete(1);
+      // msg.channel.bulkDelete(1);
 
       boss_kills = f.get_bosses(rows,boss_names);
       //console.log(boss_kills);
@@ -158,7 +159,7 @@ async function accessSpreadsheet() {
       //   update_sheet(boss_kills,boss_index,players,players_index,rows,sheet);
       //   msg.channel.send("Data saved.");
       //   break;
-      case 'clear':
+      case 'HsClear':
         if(msg.member.hasPermission('KICK_MEMBERS')){
           if(!args[1]){
             msg.channel.bulkDelete(2);
@@ -166,6 +167,9 @@ async function accessSpreadsheet() {
           else {
             if(args[1]<=10){
               msg.channel.bulkDelete(10);
+            }
+            if(args[1]==50){
+              msg.channel.bulkDelete(50);
             }
             else{
               msg.channel.send("You can't delete more than 10 messages at a time.");
@@ -184,7 +188,7 @@ async function accessSpreadsheet() {
        ans = ans.slice(1,ans.length);
        msg.channel.send(ans);
       break;
-      case 'help':
+      case 'HsCommands':
         msg1 = "I can't deal with spaces please replace them with _.\n Commands and examples:\n !hs\n Prints all the highscores (Admin only).\n\n "
         msg1 = msg1.concat("!hs KalphiteQueen\n Prints the highscores of a certain boss.\n\n !update IronRok KalphiteQueen 100\n ");
         msg1 = msg1.concat("Updates the information of a players kc in a specific boss (Admin only)\n\n !save\n Saves all the changes to the db.\n\n !clear n \n Clears the last n comments in the current cannel (Admin only)\n\n ");
