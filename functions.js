@@ -62,8 +62,8 @@ exports.updatedict=function(boss_kills, players, players_index, rsn, boss, kills
   return boss_kills;
 };
 
-exports.update_rows=async function(players_index, rsn, boss, kills, rows){
-    rows[players_index[rsn]][boss] = kills;
+exports.update_rows= async function(players_index, rsn, boss, kills, rows){
+    rows[players_index[rsn]][boss.toLowerCase()] = kills;
     await rows[players_index[rsn]].save();
 
 }
