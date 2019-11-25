@@ -5,7 +5,7 @@ var f = require('./functions.js');
 const fs = require('fs');
 const consts = require('./const.js');
 //to run from heroku delete token, change bot.login and enable worker in heroku.
-const token = "NjI3NDAzMzAzMzY1Mzc4MDQ4.XcEsUw.qzcLwEKyNICjlLtGegn9IWO5uy4";
+//const token = "";
 const GoogleSpreadsheet = require('google-spreadsheet');
 const { promisify } = require('util');
 const creds = require('./client_secret.json');
@@ -210,7 +210,7 @@ async function accessSpreadsheet() {
   })
 
 
-  bot.login(token);//process.env.BOT_TOKEN);//
+  bot.login(process.env.BOT_TOKEN);//token);//
 
 };
 
