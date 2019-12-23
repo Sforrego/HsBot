@@ -1,7 +1,6 @@
 ## Future implementations:
-  * Online DB
-  * Ignore Caps
-  * Accept name with spaces
+  !hs vs bossname rsn1 rsn2 rsn3 rsn4 ....
+  !hs hespori n (top n players)
 
 
 ## Commands
@@ -23,9 +22,9 @@ it creates an entry for that payer with 0 kc on every boss and then updates it a
 ```
 If no n is given default is 2, max n is 10.
 ```bash
-!save
+!load
 ```
-Saves the db with all current changes.
+loads the bot with all current changes.
 
 
 ## How it works
