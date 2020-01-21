@@ -6,6 +6,8 @@ from dotenv import load_dotenv
 from oauth2client.service_account import ServiceAccountCredentials
 from funcs import *
 import asyncio
+import time
+import httplib2
 
 load_dotenv()
 token1 = os.getenv('DISCORD_TOKEN1')
@@ -24,9 +26,14 @@ start_sheet = client.open("07 Irons HiScore").get_worksheet(2)
 
 bot1 = commands.Bot(command_prefix='!hs ')
 
+
+def refresh(creds):
+    creds.refresh(httplib2.Http())
+
 @bot1.event
 async def on_ready():
     print(f'{bot1.user} has connected to Discord!')
+    task = asyncio.create_task(do_stuff_every_x_seconds(60*45, refresh,creds))
 
 
 
@@ -107,21 +114,34 @@ async def compare(ctx, stat, player1, player2):
             response += f"1. {player1} {comparison[2]} {comparison[1]} \n"
             response += f"2. {player2} {comparison[4]} {comparison[3]} "
         else:
-            response += f"2. {player2} {comparison[4]} {comparison[3]} \n"
-            response += f"1. {player1} {comparison[2]} {comparison[1]} "
+            response += f"1. {player2} {comparison[4]} {comparison[3]} \n"
+            response += f"2. {player1} {comparison[2]} {comparison[1]} "
     elif len(comparison) == 3:
         if winner:
             response += f"1. {player1} {comparison[1]}\n"
             response += f"2. {player2} {comparison[2]}"
         else:
-            response += f"2. {player2} {comparison[2]}\n"
-            response += f"1. {player1} {comparison[1]}"
+            response += f"1. {player2} {comparison[2]}\n"
+            response += f"2. {player1} {comparison[1]}"
     await ctx.send(response)
 
 @bot1.command(name='bossestop', help='Prints the top 5 players for every boss (Admin).')
 @commands.has_permissions(kick_members=True)
 async def full_bosses_print(ctx):
     pass
+
+@bot1.command(name='list', help='Gets all the short ways of calling each stat (Case insensitive and spaces must be replaced with _).')
+async def get_boss_list(ctx):
+    response = str(get_stats_shorts())
+    await ctx.send(response)
+
+
+async def do_stuff_every_x_seconds(timeout, stuff, *args):
+    start = time.time()
+    while True:
+        await asyncio.sleep(timeout)
+        print(time.time()-start)
+        stuff(*args)
 
 ##########################################################
 ##################### bot 2 ##############################

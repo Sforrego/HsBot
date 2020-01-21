@@ -3,6 +3,8 @@ from oauth2client.service_account import ServiceAccountCredentials
 from getstats import *
 from constants import *
 import time
+import asyncio
+
 
 def get_stat(name):
     name = name.lower()
@@ -12,6 +14,15 @@ def get_stat(name):
         return boss_shorts[name]
     else:
         return 0
+
+def get_stats_shorts():
+    newdict = {stat:[] for stat in BOSSES}
+    for stat in CLUES:
+        newdict[stat] = []
+    for stat_short, stat in boss_shorts.items():
+        newdict[stat].append(stat_short)
+    newdict = {key:value for key,value in newdict.items() if value != [] }
+    return newdict
 
 def get_pretty_names(start_sheet,names):
     pretty_names_list = []
@@ -194,6 +205,7 @@ if __name__ == "__main__":
     start_sheet = client.open("07 Irons HiScore").get_worksheet(2)
     names = [x.lower() for x in start_sheet.col_values(2)[1:]]
 
+    print(len(str(get_stats_shorts())))
     #print(get_pretty_name(start_sheet,"no_ge_canvey"))
 
     #print(compare_players(bosses_sheet, skills_sheet, names, "IronRok", "no ge canvey", "Attack"))
