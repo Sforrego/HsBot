@@ -33,7 +33,7 @@ def get_stat_top(bosses_sheet, skills_sheet, start_sheet, names, stat, n):
             if len(player) == 2:
                 response += f"{i}. {players[i-1]} {player[0]} \n"
             elif len(player) == 3:
-                response += f"{i}.  {players[i-1]} {player[0]} {player[1]}\n"
+                response += f"{i}.  {players[i-1]} {player[1]} {player[0]}\n"
     else:
         response = f"Stat {stat} not found."
     response += "\n"
@@ -48,7 +48,7 @@ def top_stat(bosses_sheet, skills_sheet, names, stat, n):
         mylist = bosses_sheet.col_values(index)[1:]
         mylist = [(int(mylist[i]),names[i]) if mylist[i] != "" else (-1,names[i]) for i in range(len(mylist))]
     elif stat in SKILLS:
-        index = SKILLS.index(stat)*2+1
+        index = SKILLS.index(stat)*2+2
         lvl = skills_sheet.col_values(index)[1:]
         xp = skills_sheet.col_values(index+1)[1:]
         mylist = list(zip(xp,lvl))
@@ -197,8 +197,8 @@ if __name__ == "__main__":
     #print(get_pretty_name(start_sheet,"no_ge_canvey"))
 
     #print(compare_players(bosses_sheet, skills_sheet, names, "IronRok", "no ge canvey", "Attack"))
-    update_player(bosses_sheet,skills_sheet,start_sheet,names,"Iron Osc4r",1)
-
+    #update_player(bosses_sheet,skills_sheet,start_sheet,names,"Iron Osc4r",1)
+    #print(skills_sheet.col_values(1))
     #not_found = update_all(bosses_sheet,skills_sheet,names)
     #print(compare_players(bosses_sheet,skills_sheet,names,"no ge canvey","ironrok","Magic"))
     #print(top_stat(bosses_sheet,skills_sheet,names,"Zulrah",7))
