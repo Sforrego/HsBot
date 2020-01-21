@@ -20,9 +20,23 @@ def get_pretty_names(start_sheet,names):
         pretty_names = start_sheet.col_values(1)[1:]
         index = ugly_names.index(name)
         pretty_names_list.append(pretty_names[index])
-    return pretty_names_list   
+    return pretty_names_list
 
-
+def get_stat_top(bosses_sheet, skills_sheet, start_sheet, names, stat, n):
+    top_stats = top_stat(bosses_sheet, skills_sheet, names, stat, n)
+    if top_stats != 404:
+        stat = get_stat(stat)
+        response = f"{stat}\n\n"
+        players = [x[-1] for x in top_stats]
+        players = get_pretty_names(start_sheet,players)
+        for i,player in enumerate(top_stats,start=1):
+            if len(player) == 2:
+                response += f"{i}. {players[i-1]} {player[0]} \n"
+            elif len(player) == 3:
+                response += f"{i}.  {players[i-1]} {player[0]} {player[1]}\n"
+    else:
+        response = f"Stat {stat} not found."
+    return response
 
 def top_stat(bosses_sheet, skills_sheet, names, stat, n):
     stat = get_stat(stat)
@@ -30,16 +44,18 @@ def top_stat(bosses_sheet, skills_sheet, names, stat, n):
         return stat
     elif stat not in SKILLS:
         index = STATSINDEX[stat]
-        list = bosses_sheet.col_values(index)[1:]
-        list = [(int(list[i]),names[i]) if list[i] != "" else (-1,names[i]) for i in range(len(list))]
+        mylist = bosses_sheet.col_values(index)[1:]
+        mylist = [(int(mylist[i]),names[i]) if mylist[i] != "" else (-1,names[i]) for i in range(len(mylist))]
     elif stat in SKILLS:
         index = SKILLS.index(stat)*2+1
-        list = skills_sheet.get_all_values()[1:]
-        list = [(int(x[index+1]),x[index],x[0]) for x in list]
+        lvl = skills_sheet.col_values(index)[1:]
+        xp = skills_sheet.col_values(index+1)[1:]
+        mylist = list(zip(xp,lvl))
+        mylist = [(int(mylist[i][0]),int(mylist[i][1]),names[i]) if mylist[i] != "" else (-1,names[i]) for i in range(len(mylist))]
 
-    list = sorted(list, reverse=True)
-    list = list[:n]
-    return list
+    mylist = sorted(mylist, reverse=True)
+    mylist = mylist[:n]
+    return mylist
 
 
 def update_player(bosses_sheet, skills_sheet, start_sheet, names, name, addplayer=0):
