@@ -36,6 +36,7 @@ def get_stat_top(bosses_sheet, skills_sheet, start_sheet, names, stat, n):
                 response += f"{i}.  {players[i-1]} {player[0]} {player[1]}\n"
     else:
         response = f"Stat {stat} not found."
+    response += "\n"
     return response
 
 def top_stat(bosses_sheet, skills_sheet, names, stat, n):
