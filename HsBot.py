@@ -27,14 +27,11 @@ start_sheet = client.open("07 Irons HiScore").get_worksheet(2)
 bot1 = commands.Bot(command_prefix='!hs ')
 
 
-def refresh(creds):
-    creds.refresh(httplib2.Http())
-
 @bot1.event
 async def on_ready():
     print(f'{bot1.user} has connected to Discord!')
-    task = asyncio.create_task(do_stuff_every_x_seconds(60*45, refresh,creds))
-
+    task = asyncio.create_task(do_stuff_every_x_seconds(60*45, client.login))
+    task2 = asyncio.create_task(do_stuff_every_x_seconds(60*60*24, update_all,bosses_sheet,skills_sheet,start_sheet))
 
 
 @bot1.command(name='add', help='Adds a player to the spreadsheets (Admin).')
@@ -67,7 +64,7 @@ async def full_update(ctx):
     msg = f"All players are being updated ..."
     await ctx.send(msg)
     names = [x.lower() for x in start_sheet.col_values(2)[1:]]
-    update_all(bosses_sheet,skills_sheet,names)
+    update_all(bosses_sheet,skills_sheet,start_sheet)
     response = f"All players have been updated."
     await ctx.send(response)
 
@@ -133,6 +130,7 @@ async def full_bosses_print(ctx):
 @bot1.command(name='list', help='Gets all the short ways of calling each stat (Case insensitive and spaces must be replaced with _).')
 async def get_boss_list(ctx):
     response = str(get_stats_shorts())
+    response += "\nIf the name is not on the list use the regular name (change spaces with _)\n"
     await ctx.send(response)
 
 
@@ -153,6 +151,7 @@ bot2 = commands.Bot(command_prefix='!corner ')
 @bot2.event
 async def on_ready():
     print(f'{bot2.user} has connected to Discord!')
+
 
 @bot2.command(name='send', help='Assigns corner role to member for duration minutes')
 @commands.has_permissions(kick_members=True)
@@ -193,12 +192,13 @@ async def remove_corners(ctx):
     await ctx.send(members_in_corner)
 
 
-
-
 loop = asyncio.get_event_loop()
 loop.create_task(bot1.start(token1))
 loop.create_task(bot2.start(token2))
+
 loop.run_forever()
+
+
 
 # bot1.run(token1)
 #
