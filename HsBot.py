@@ -30,8 +30,8 @@ bot1 = commands.Bot(command_prefix='!hs ')
 @bot1.event
 async def on_ready():
     print(f'{bot1.user} has connected to Discord!')
-    task = asyncio.create_task(do_stuff_every_x_seconds(60*45, client.login))
-    task2 = asyncio.create_task(do_stuff_every_x_seconds(60*60*24, update_all,bosses_sheet,skills_sheet,start_sheet))
+    task = loop.create_task(do_stuff_every_x_seconds(60, client.login))
+    task2 = loop.create_task(do_stuff_every_x_seconds(60*60*24, update_all,bosses_sheet,skills_sheet,start_sheet))
 
 
 @bot1.command(name='add', help='Adds a player to the spreadsheets (Admin).')
@@ -137,6 +137,7 @@ async def get_boss_list(ctx):
 async def do_stuff_every_x_seconds(timeout, stuff, *args):
     start = time.time()
     while True:
+
         await asyncio.sleep(timeout)
         print(time.time()-start)
         stuff(*args)
