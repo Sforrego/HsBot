@@ -95,7 +95,8 @@ def update_player(bosses_sheet, skills_sheet, start_sheet, names, name, addplaye
                 date_cell_list = start_sheet.range(f'H{index}:I{index}')
                 mylist = [name.replace(" ","_"),player_skills["Overall"],
                 player_skills["Overall"],player_skills["Overall_Xp"],player_skills["Overall_Xp"]]
-                for i,cell in enumerate(start_cell_list):
+                start_cell_list[0].value = mylist[0]
+                for i,cell in enumerate(start_cell_list[1:],start=1):
                     cell.value = int(mylist[i])
                 today = datetime.now()
                 today = today.strftime("%Y/%m/%d")
@@ -276,10 +277,10 @@ if __name__ == "__main__":
 
     #EXAMPLES
 
-    remove_players(bosses_sheet,skills_sheet,start_sheet,names,["w355"])
+    #remove_players(bosses_sheet,skills_sheet,start_sheet,names,["saund"])
     #update_all(bosses_sheet,skills_sheet,start_sheet,243)
     #update_player(bosses_sheet,skills_sheet,start_sheet,names,"hassinen42")
-
+    #update_player(bosses_sheet,skills_sheet,start_sheet,names,"bonerrific",1)
     #print(top_stat(bosses_sheet,skills_sheet,names,"Zulrah",7))
     #print(get_pretty_name(start_sheet,"no_ge_canvey"))
     #print(compare_players(bosses_sheet, skills_sheet, names, "IronRok", "no ge canvey", "Attack"))
