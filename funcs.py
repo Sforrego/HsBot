@@ -4,7 +4,7 @@ from getstats import *
 from constants import *
 import time
 import asyncio
-
+from datetime import datetime
 
 def get_stat(name):
     name = name.lower()
@@ -69,7 +69,6 @@ def top_stat(bosses_sheet, skills_sheet, names, stat, n):
     mylist = mylist[:n]
     return mylist
 
-
 def update_player(bosses_sheet, skills_sheet, start_sheet, names, name, addplayer=0):
     name = name.lower()
     if name not in names and not addplayer:
@@ -93,18 +92,32 @@ def update_player(bosses_sheet, skills_sheet, start_sheet, names, name, addplaye
 
             if addplayer:
                 start_cell_list = start_sheet.range(f'B{index}:F{index}')
+                date_cell_list = start_sheet.range(f'H{index}:I{index}')
                 mylist = [name.replace(" ","_"),player_skills["Overall"],
                 player_skills["Overall"],player_skills["Overall_Xp"],player_skills["Overall_Xp"]]
                 for i,cell in enumerate(start_cell_list):
                     cell.value = int(mylist[i])
+                today = datetime.now()
+                today = today.strftime("%Y/%m/%d")
+                for i,cell in enumerate(date_cell_list):
+                    cell.value = today
                 start_sheet.update_cells(start_cell_list)
+                start_sheet.update_cells(date_cell_list)
+
+
             else:
                 start_cell_list = start_sheet.range(f'D{index}:D{index}')
                 start_cell_list.extend(start_sheet.range(f'F{index}:F{index}'))
+                date_cell_list = start_sheet.range(f'I{index}:I{index}')
                 mylist = [player_skills["Overall"],player_skills["Overall_Xp"]]
                 for i,cell in enumerate(start_cell_list):
                     cell.value = int(mylist[i])
+                today = datetime.now()
+                today = today.strftime("%Y/%m/%d")
+                for i,cell in enumerate(date_cell_list):
+                    cell.value = today
                 start_sheet.update_cells(start_cell_list)
+                start_sheet.update_cells(date_cell_list)
 
             player_skills = list(player_skills.values())
             print(f"updating {name} total {player_skills[0]}")
@@ -122,15 +135,15 @@ def update_player(bosses_sheet, skills_sheet, start_sheet, names, name, addplaye
         else:
             print(f"{name} not found in hiscores.")
 
-
 def update_rsn(bosses_sheet, skills_sheet, start_sheet, names, old_name, new_name):
     old_name = old_name.lower()
     if old_name in names:
         index = names.index(old_name)+2
         bosses_sheet.update_acell(f'A{index}', new_name)
-        names[index] = new_name
-        update_player(bosses_sheet, skills_sheet, start_sheet, names, new_name)
+        start_sheet.update_acell(f'B{index}', new_name.lower())
+        names[index-2] = new_name.lower()
 
+        update_player(bosses_sheet, skills_sheet, start_sheet, names, new_name)
 
 def update_all(bosses_sheet, skills_sheet, start_sheet, starting_cell=2):
     names = [x.lower() for x in start_sheet.col_values(2)[1:]]
@@ -139,61 +152,78 @@ def update_all(bosses_sheet, skills_sheet, start_sheet, starting_cell=2):
     start_values = start_sheet.get_all_values()[1:]
     bosses_list = []
     skills_list = []
-    start_list = []
+    start_list_lvl = []
+    start_list_xp = []
     bosses_cell_list = bosses_sheet.range(f'B{starting_cell}:AZ{len(names)+1}')
     skills_cell_list = skills_sheet.range(f'B{starting_cell}:AW{len(names)+1}')
     start_cell_list = start_sheet.range(f'D{starting_cell}:D{len(names)+1}')
     start_cell_list.extend(start_sheet.range(f'F{starting_cell}:F{len(names)+1}'))
     # start_cell_list = start_sheet.range(f'C{starting_cell}:F{len(names)+1}')
+    date_cell_list = start_sheet.range(f'I{starting_cell}:I{len(names)+1}')
     not_found = []
-
+    outdated_names = start_sheet.range(f'J{starting_cell}:J{len(names)+1}')
 
     for index,name in enumerate(names[starting_cell-2:], start=starting_cell):
         stats = getStats(playerURL(name,'iron'))
         if stats != "404":
             player_skills, player_clues , player_bosses = createDicts(parseStats(stats))
             player_bosses = [player_skills["Overall"]]+list(player_clues.values())+list(player_bosses.values())
-            start_list.append((player_skills["Overall"],player_skills["Overall_Xp"]))
             # start_list.append((player_skills["Overall"],player_skills["Overall"],player_skills["Overall_Xp"],player_skills["Overall_Xp"]))
 
 
 
             player_skills = list(player_skills.values())
-            print(f"updating {name} total {player_skills[0]}")
+            print(f"updating {index}. {name} total {player_skills[0]} xp {player_skills[1]}")
             bosses_list.append(player_bosses)
             skills_list.append(player_skills)
+            start_list_lvl.append(player_skills[0])
+            start_list_xp.append(player_skills[1])
         else:
 
             print(f"{name} not found in highscores.")
             bosses_list.append(bosses_values[index-2][1:])
             skills_list.append(skills_values[index-2][1:])
-            # start_list.append((int(start_values[index-2][3]),int(int(start_values[index-2][5]))))
-            start_list.append([int(x) for x in start_values[index-2][2:6]])
+            # start_list.append([int(x) for x in start_values[index-2][2:6]])
+            start_list_lvl.append(start_values[index-2][3])
+            start_list_xp.append(start_values[index-2][5])
             print([int(x) for x in start_values[index-2][2:6]])
 
             not_found.append(name)
 
     bosses_list = [item for sublist in bosses_list for item in sublist]
     skills_list = [item for sublist in skills_list for item in sublist]
-    start_list = [item for sublist in start_list for item in sublist]
+    start_list = start_list_lvl+start_list_xp
 
 
-    for i, val in enumerate(bosses_list):  #gives us a tuple of an index and value
+    for i, val in enumerate(bosses_list):
         if val:
             bosses_cell_list[i].value = int(val)
 
-    for i, val in enumerate(skills_list):  #gives us a tuple of an index and value
+    for i, val in enumerate(skills_list):
         if val:
             skills_cell_list[i].value = int(val)
 
-    for i, val in enumerate(start_list):  #gives us a tuple of an index and value
+    for i, val in enumerate(start_list):
         if val:
             start_cell_list[i].value = int(val)
+
+    today = datetime.now()
+    today = today.strftime("%Y/%m/%d")
+
+    for i, val in enumerate(date_cell_list):
+        date_cell_list[i].value = today
+
+    for i,_ in enumerate(outdated_names):
+        if len(not_found) > i:
+            val = not_found[i]
+        else:
+            val = ""
+        outdated_names[i].value = val
 
     bosses_sheet.update_cells(bosses_cell_list)
     skills_sheet.update_cells(skills_cell_list)
     start_sheet.update_cells(start_cell_list)
-
+    start_sheet.update_cells(date_cell_list)
 
     print("Sheets updated.")
     return not_found
@@ -202,7 +232,6 @@ def update_bosses_names(BOSSES, sheet):
     # updates the columns names
     for i, boss in enumerate(BOSSES):
         sheet.update_cell(1, 10+i, boss)
-
 
 def compare_players(bosses_sheet, skills_sheet, names, name1, name2, stat):
     name1,name2 = name1.lower(),name2.lower()
@@ -223,6 +252,18 @@ def compare_players(bosses_sheet, skills_sheet, names, name1, name2, stat):
     else:
         return 404
 
+def remove_players(bosses_sheet, skills_sheet, start_sheet, names, to_remove):
+    for name in to_remove:
+        name = name.lower()
+        if name not in names:
+            print("Player not in memberlist.")
+        else:
+            index = names.index(name)+2
+            names.remove(name)
+            start_sheet.delete_row(index)
+            skills_sheet.delete_row(index)
+            bosses_sheet.delete_row(index)
+
 if __name__ == "__main__":
     scope = ['https://spreadsheets.google.com/feeds',
         'https://www.googleapis.com/auth/drive']
@@ -233,13 +274,14 @@ if __name__ == "__main__":
     start_sheet = client.open("07 Irons HiScore").get_worksheet(2)
     names = [x.lower() for x in start_sheet.col_values(2)[1:]]
 
-    #update_all(bosses_sheet,skills_sheet,start_sheet,names,233)
-    #update_player(bosses_sheet,skills_sheet,start_sheet,names,"big_win")
+    #EXAMPLES
 
-    #print(get_pretty_name(start_sheet,"no_ge_canvey"))
+    remove_players(bosses_sheet,skills_sheet,start_sheet,names,["w355"])
+    #update_all(bosses_sheet,skills_sheet,start_sheet,243)
+    #update_player(bosses_sheet,skills_sheet,start_sheet,names,"hassinen42")
 
-    #print(compare_players(bosses_sheet, skills_sheet, names, "IronRok", "no ge canvey", "Attack"))
-    #print(skills_sheet.col_values(1))
-    #not_found = update_all(bosses_sheet,skills_sheet,names)
-    #print(compare_players(bosses_sheet,skills_sheet,names,"no ge canvey","ironrok","Magic"))
     #print(top_stat(bosses_sheet,skills_sheet,names,"Zulrah",7))
+    #print(get_pretty_name(start_sheet,"no_ge_canvey"))
+    #print(compare_players(bosses_sheet, skills_sheet, names, "IronRok", "no ge canvey", "Attack"))
+
+    #print(skills_sheet.col_values(1))

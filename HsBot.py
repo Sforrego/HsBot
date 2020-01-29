@@ -64,8 +64,12 @@ async def full_update(ctx):
     msg = f"All players are being updated ..."
     await ctx.send(msg)
     names = [x.lower() for x in start_sheet.col_values(2)[1:]]
-    update_all(bosses_sheet,skills_sheet,start_sheet)
-    response = f"All players have been updated."
+    try:
+        update_all(bosses_sheet,skills_sheet,start_sheet)
+        response = f"All players have been updated."
+    except Exception:
+        print(Exception)
+        response = "There was an error, please try again later."
     await ctx.send(response)
 
 @bot1.command(name='top', help='Shows the top 5 players and their kc for a specific stat.')
@@ -75,7 +79,7 @@ async def top(ctx, stat):
     await ctx.send(response)
 
 @bot1.command(name='topx', help='Shows the top X players and their kc for a specific stat.')
-async def top(ctx, stat, n):
+async def topx(ctx, stat, n):
     if int(n) <= 10:
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
         response = get_stat_top(bosses_sheet, skills_sheet,start_sheet ,names, stat, int(n))
