@@ -50,6 +50,17 @@ async def update(ctx, name):
     response = f"{name} stats has been updated."
     await ctx.send(response)
 
+@bot1.command(name='ranks', help='Shows the rank within the clan of a member in all the skills. (!hs ranks bosses player or !hs ranks skills player)')
+async def update(ctx,stat,name):
+    names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+    stat = 1 if stat == "bosses" else 0
+    answer_dict = player_top_stats(bosses_sheet, skills_sheet, start_sheet, names, name, stat)
+    response = f"\n{name}\n"
+    for key in answer_dict:
+        response += f"{key}: {answer_dict[key]}\n"
+    await ctx.send(response)
+
+
 @bot1.command(name='change', help='Changes a players rsn in the spreadsheets (Admin).')
 @commands.has_permissions(kick_members=True)
 async def change_rsn(ctx, old_name,new_name):
@@ -138,6 +149,10 @@ async def get_boss_list(ctx):
     await ctx.send(response)
 
 
+
+
+
+
 async def do_stuff_every_x_seconds(timeout, stuff, *args):
     start = time.time()
     while True:
@@ -145,6 +160,9 @@ async def do_stuff_every_x_seconds(timeout, stuff, *args):
         await asyncio.sleep(timeout)
         print(time.time()-start)
         stuff(*args)
+
+
+
 
 ##########################################################
 ##################### bot 2 ##############################

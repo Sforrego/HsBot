@@ -37,7 +37,7 @@ def get_stat_top(bosses_sheet, skills_sheet, start_sheet, names, stat, n):
     top_stats = top_stat(bosses_sheet, skills_sheet, names, stat, n)
     if top_stats != 404:
         stat = get_stat(stat)
-        response = f"{stat}\n\n"
+        response = f'{stat}\n\n'
         players = [x[-1] for x in top_stats]
         players = get_pretty_names(start_sheet,players)
         for i,player in enumerate(top_stats,start=1):
@@ -265,6 +265,33 @@ def remove_players(bosses_sheet, skills_sheet, start_sheet, names, to_remove):
             skills_sheet.delete_row(index)
             bosses_sheet.delete_row(index)
 
+def player_top_stats(bosses_sheet, skills_sheet, start_sheet, names, name, bosses):
+    sheet = bosses_sheet if bosses else skills_sheet
+    stat = CLUES+BOSSES if bosses else SKILLS
+    name = name.lower()
+    index_name = names.index(name)+1
+    list_of_lists = sheet.get_all_values()
+    transposed = list(map(list, zip(*list_of_lists)))[1:]
+    sorted_list = [sorted(map(int,x[1:]),reverse=True) for x in transposed]
+    player = list_of_lists[index_name]
+    top_stats = {}
+    for i,stat in enumerate(player[1:]):
+        stat = int(stat)
+        if stat != -1:
+            index_in_stat = sorted_list[i].index(stat)
+            top_stats[list_of_lists[0][i+1]] = index_in_stat+1 # +1 so the ranks start at 1
+    if not bosses:
+        overall = top_stats["Overall"]
+        top_stats = {key.replace("_Xp",""):value for key,value in top_stats.items() if "_Xp" in key}
+        top_stats["Overall"] = overall
+    return top_stats
+
+
+
+
+
+
+
 if __name__ == "__main__":
     scope = ['https://spreadsheets.google.com/feeds',
         'https://www.googleapis.com/auth/drive']
@@ -274,6 +301,8 @@ if __name__ == "__main__":
     skills_sheet = client.open("07 Irons HiScore").get_worksheet(1)
     start_sheet = client.open("07 Irons HiScore").get_worksheet(2)
     names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+
+    player_top_stats(bosses_sheet, skills_sheet, start_sheet, names, "IronRok", 1)
 
     #EXAMPLES
 
