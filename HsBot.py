@@ -138,10 +138,10 @@ async def compare(ctx, stat, player1, player2):
             response += f"2. {player1} {comparison[1]}"
     await ctx.send(response)
 
-@bot1.command(name='bossestop', help='Prints the top 5 players for every boss (Admin).')
-@commands.has_permissions(kick_members=True)
-async def full_bosses_print(ctx):
-    pass
+# @bot1.command(name='bossestop', help='Prints the top 5 players for every boss (Admin).')
+# @commands.has_permissions(kick_members=True)
+# async def full_bosses_print(ctx):
+#     pass
 
 @bot1.command(name='list', help='Gets all the short ways of calling each stat (Case insensitive and spaces must be replaced with _).')
 async def get_boss_list(ctx):
