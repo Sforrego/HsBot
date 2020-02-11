@@ -26,11 +26,13 @@ def get_stats_shorts():
 
 def get_pretty_names(start_sheet,names):
     pretty_names_list = []
+    ugly_names = start_sheet.col_values(2)[1:]
+    pretty_names = start_sheet.col_values(1)[1:]
     for name in names:
-        ugly_names = start_sheet.col_values(2)[1:]
-        pretty_names = start_sheet.col_values(1)[1:]
         index = ugly_names.index(name)
-        pretty_names_list.append(pretty_names[index])
+        pretty_name = pretty_names[index]
+        pretty_name = pretty_name.replace("_"," ")
+        pretty_names_list.append(pretty_name)
     return pretty_names_list
 
 def get_stat_top(bosses_sheet, skills_sheet, start_sheet, names, stat, n):
