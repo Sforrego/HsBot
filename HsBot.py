@@ -56,7 +56,7 @@ async def update(ctx,stat,name):
     stat = 1 if stat == "bosses" else 0
     answer_dict = player_top_stats(bosses_sheet, skills_sheet, start_sheet, names, name, stat)
     [name] = get_pretty_names(start_sheet,[name.lower()])
-    response = f"\n{name}\n"
+    response = f"\n{name}\n\n"
     for key in answer_dict:
         response += f"{key}: {answer_dict[key]}\n"
     await ctx.send(response)
