@@ -138,6 +138,15 @@ async def compare(ctx, stat, player1, player2):
             response += f"2. {player1} {comparison[1]}"
     await ctx.send(response)
 
+@bot1.command(name='memberslist', help='Shows every player and their join date.')
+@commands.has_permissions(kick_members=True)
+async def memberslit(ctx):
+    response = ""
+    members = ctx.guild.members
+    for member in members:
+        response += f"{member.nick} Joined: {member.joined_at}.\n"
+
+    await ctx.send(response)
 # @bot1.command(name='bossestop', help='Prints the top 5 players for every boss (Admin).')
 # @commands.has_permissions(kick_members=True)
 # async def full_bosses_print(ctx):
