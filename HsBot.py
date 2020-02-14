@@ -144,7 +144,7 @@ async def memberslit(ctx):
     response = ""
     members = ctx.guild.members
     for member in members:
-        response += f"{member.nick} Joined: {member.joined_at}.\n"
+        response += f"{member} {member.nick} Joined: {member.joined_at}.\n"
 
     await ctx.send(response)
 # @bot1.command(name='bossestop', help='Prints the top 5 players for every boss (Admin).')
