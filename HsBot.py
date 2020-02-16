@@ -54,9 +54,9 @@ async def update(ctx, name):
 async def update(ctx,stat,name):
     names = [x.lower() for x in start_sheet.col_values(2)[1:]]
     stat = 1 if stat == "bosses" else 0
-    [name] = get_pretty_names(start_sheet,[name.lower()])
     answer_dict = player_top_stats(bosses_sheet, skills_sheet, start_sheet, names, name, stat)
-    response = f"\n{name}\n"
+    [name] = get_pretty_names(start_sheet,[name.lower()])
+    response = f"\n{name}\n\n"
     for key in answer_dict:
         response += f"{key}: {answer_dict[key]}\n"
     await ctx.send(response)
@@ -138,10 +138,22 @@ async def compare(ctx, stat, player1, player2):
             response += f"2. {player1} {comparison[1]}"
     await ctx.send(response)
 
-@bot1.command(name='bossestop', help='Prints the top 5 players for every boss (Admin).')
-@commands.has_permissions(kick_members=True)
-async def full_bosses_print(ctx):
-    pass
+# @bot1.command(name='memberslist', help='Shows every player and their join date.')
+# @commands.has_permissions(kick_members=True)
+# async def memberslit(ctx,num):
+#     response = ""
+#     members = ctx.guild.members
+#     for i,member in enumerate(members):
+#         response += f"{str(member)} {member.nick} Joined: {member.joined_at}.\n"
+#         if i == int(num):
+#             break
+#     await ctx.send(response)
+
+
+# @bot1.command(name='bossestop', help='Prints the top 5 players for every boss (Admin).')
+# @commands.has_permissions(kick_members=True)
+# async def full_bosses_print(ctx):
+#     pass
 
 @bot1.command(name='list', help='Gets all the short ways of calling each stat (Case insensitive and spaces must be replaced with _).')
 async def get_boss_list(ctx):
