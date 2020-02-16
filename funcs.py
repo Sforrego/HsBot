@@ -88,7 +88,7 @@ def update_player(bosses_sheet, skills_sheet, start_sheet, names, name, addplaye
 
 
             skills_cell_list = skills_sheet.range(f'B{index}:AW{index}')
-            bosses_cell_list = bosses_sheet.range(f'B{index}:AZ{index}')
+            bosses_cell_list = bosses_sheet.range(f'B{index}:BA{index}')
             player_skills, player_clues , player_bosses = createDicts(parseStats(stats))
             player_bosses = [player_skills["Overall"]]+list(player_clues.values())+list(player_bosses.values())
 
@@ -157,7 +157,7 @@ def update_all(bosses_sheet, skills_sheet, start_sheet, starting_cell=2):
     skills_list = []
     start_list_lvl = []
     start_list_xp = []
-    bosses_cell_list = bosses_sheet.range(f'B{starting_cell}:AZ{len(names)+1}')
+    bosses_cell_list = bosses_sheet.range(f'B{starting_cell}:BA{len(names)+1}')
     skills_cell_list = skills_sheet.range(f'B{starting_cell}:AW{len(names)+1}')
     start_cell_list = start_sheet.range(f'D{starting_cell}:D{len(names)+1}')
     start_cell_list.extend(start_sheet.range(f'F{starting_cell}:F{len(names)+1}'))
