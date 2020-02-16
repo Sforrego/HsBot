@@ -304,7 +304,7 @@ if __name__ == "__main__":
     start_sheet = client.open("07 Irons HiScore").get_worksheet(2)
     names = [x.lower() for x in start_sheet.col_values(2)[1:]]
 
-    player_top_stats(bosses_sheet, skills_sheet, start_sheet, names, "IronRok", 1)
+    #player_top_stats(bosses_sheet, skills_sheet, start_sheet, names, "IronRok", 1)
 
     #EXAMPLES
 
@@ -312,7 +312,7 @@ if __name__ == "__main__":
     #update_all(bosses_sheet,skills_sheet,start_sheet,243)
     #update_player(bosses_sheet,skills_sheet,start_sheet,names,"hassinen42")
     #update_player(bosses_sheet,skills_sheet,start_sheet,names,"bonerrific",1)
-    #print(top_stat(bosses_sheet,skills_sheet,names,"Zulrah",7))
+    print(top_stat(bosses_sheet,skills_sheet,names,"Nightmare",10))
     #print(get_pretty_name(start_sheet,"no_ge_canvey"))
     #print(compare_players(bosses_sheet, skills_sheet, names, "IronRok", "no ge canvey", "Attack"))
 
