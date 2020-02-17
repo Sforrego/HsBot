@@ -31,7 +31,7 @@ bot1 = commands.Bot(command_prefix='!hs ')
 async def on_ready():
     print(f'{bot1.user} has connected to Discord!')
     task = loop.create_task(do_stuff_every_x_seconds(60*29, client.login))
-    task2 = loop.create_task(do_stuff_every_x_seconds(60*60*24, update_all,bosses_sheet,skills_sheet,start_sheet))
+    task2 = loop.create_task(do_stuff_every_x_seconds(60*60*12, update_all,bosses_sheet,skills_sheet,start_sheet))
 
 
 @bot1.command(name='add', help='Adds a player to the spreadsheets (Admin).')
@@ -43,7 +43,6 @@ async def add(ctx, name):
     await ctx.send(response)
 
 @bot1.command(name='update', help='Updates a players stats in the spreadsheets (Admin).')
-@commands.has_permissions(kick_members=True)
 async def update(ctx, name):
     names = [x.lower() for x in start_sheet.col_values(2)[1:]]
     update_player(bosses_sheet,skills_sheet,start_sheet,names,name,0)
@@ -51,7 +50,7 @@ async def update(ctx, name):
     await ctx.send(response)
 
 @bot1.command(name='ranks', help='Shows the rank within the clan of a member in all the skills. (!hs ranks bosses player or !hs ranks skills player)')
-async def update(ctx,stat,name):
+async def ranks(ctx,stat,name):
     names = [x.lower() for x in start_sheet.col_values(2)[1:]]
     stat = 1 if stat == "bosses" else 0
     answer_dict = player_top_stats(bosses_sheet, skills_sheet, start_sheet, names, name, stat)
@@ -86,9 +85,15 @@ async def full_update(ctx):
 
 @bot1.command(name='top', help='Shows the top 5 players and their kc for a specific stat.')
 async def top(ctx, stat):
-    names = [x.lower() for x in start_sheet.col_values(2)[1:]]
-    response = get_stat_top(bosses_sheet, skills_sheet,start_sheet ,names, stat, 5)
-    await ctx.send(response)
+    response = ''
+    try:
+        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+        response = get_stat_top(bosses_sheet, skills_sheet,start_sheet ,names, stat, 5)
+    except gspread.exceptions.APIError as e:
+        response = "Unauthenticated."
+        print(str(e))
+    finally:
+        await ctx.send(response)
 
 @bot1.command(name='topx', help='Shows the top X players and their kc for a specific stat.')
 async def topx(ctx, stat, n):
