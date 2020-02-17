@@ -90,19 +90,25 @@ async def top(ctx, stat):
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
         response = get_stat_top(bosses_sheet, skills_sheet,start_sheet ,names, stat, 5)
     except gspread.exceptions.APIError as e:
-        response = "Unauthenticated."
-        print(str(e))
+        print("Authenticating.")
+        client.login()
+        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+        response = get_stat_top(bosses_sheet, skills_sheet,start_sheet ,names, stat, 5)
     finally:
         await ctx.send(response)
 
 @bot1.command(name='topx', help='Shows the top X players and their kc for a specific stat.')
 async def topx(ctx, stat, n):
-    if int(n) <= 10:
-        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
-        response = get_stat_top(bosses_sheet, skills_sheet,start_sheet ,names, stat, int(n))
-    else:
-        response = "N has to be 10 or lower."
-    await ctx.send(response)
+    try:
+        if int(n) <= 10:
+            names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+            response = get_stat_top(bosses_sheet, skills_sheet,start_sheet ,names, stat, int(n))
+        else:
+            response = "N has to be 10 or lower."
+    except gspread.exceptions.APIError as e:
+        response = "Unauthenticated." 
+    finally:
+        await ctx.send(response)
 
 
 @bot1.command(name='compare', help='Compares two players in a specific stat.')
