@@ -37,22 +37,33 @@ async def on_ready():
 @bot1.command(name='add', help='Adds a player to the spreadsheets (Admin).')
 @commands.has_permissions(kick_members=True)
 async def add(ctx, name):
-    names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+    try:
+        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+    except gspread.exceptions.APIError as e:
+        client.login()
+        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
     update_player(bosses_sheet,skills_sheet,start_sheet,names,name,1)
     response = f"{name} has been added to the memberslist."
     await ctx.send(response)
 
 @bot1.command(name='update', help='Updates a players stats in the spreadsheets (Admin).')
 async def update(ctx, name):
-    names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+    try:
+        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+    except gspread.exceptions.APIError as e:
+        client.login()
+        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
     update_player(bosses_sheet,skills_sheet,start_sheet,names,name,0)
     response = f"{name} stats has been updated."
     await ctx.send(response)
 
 @bot1.command(name='ranks', help='Shows the rank within the clan of a member in all the skills. (!hs ranks bosses player or !hs ranks skills player)')
 async def ranks(ctx,stat,name):
-    names = [x.lower() for x in start_sheet.col_values(2)[1:]]
-    stat = 1 if stat == "bosses" else 0
+    try:
+        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+    except gspread.exceptions.APIError as e:
+        client.login()
+        names = [x.lower() for x in start_sheet.col_values(2)[1:]]    stat = 1 if stat == "bosses" else 0
     answer_dict = player_top_stats(bosses_sheet, skills_sheet, start_sheet, names, name, stat)
     [name] = get_pretty_names(start_sheet,[name.lower()])
     response = f"\n{name}\n\n"
@@ -64,7 +75,11 @@ async def ranks(ctx,stat,name):
 @bot1.command(name='change', help='Changes a players rsn in the spreadsheets (Admin).')
 @commands.has_permissions(kick_members=True)
 async def change_rsn(ctx, old_name,new_name):
-    names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+    try:
+        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+    except gspread.exceptions.APIError as e:
+        client.login()
+        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
     update_rsn(bosses_sheet,skills_sheet,start_sheet,names,old_name,new_name)
     response = f"{old_name} has been changed to {new_name} and his stats has been updated."
     await ctx.send(response)
@@ -74,7 +89,11 @@ async def change_rsn(ctx, old_name,new_name):
 async def full_update(ctx):
     msg = f"All players are being updated ..."
     await ctx.send(msg)
-    names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+    try:
+        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+    except gspread.exceptions.APIError as e:
+        client.login()
+        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
     try:
         update_all(bosses_sheet,skills_sheet,start_sheet)
         response = f"All players have been updated."
@@ -85,35 +104,36 @@ async def full_update(ctx):
 
 @bot1.command(name='top', help='Shows the top 5 players and their kc for a specific stat.')
 async def top(ctx, stat):
-    response = ''
     try:
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
-        response = get_stat_top(bosses_sheet, skills_sheet,start_sheet ,names, stat, 5)
     except gspread.exceptions.APIError as e:
-        print("Authenticating.")
         client.login()
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
-        response = get_stat_top(bosses_sheet, skills_sheet,start_sheet ,names, stat, 5)
-    finally:
-        await ctx.send(response)
+
+    response = get_stat_top(bosses_sheet, skills_sheet,start_sheet ,names, stat, 5)
+    await ctx.send(response)
 
 @bot1.command(name='topx', help='Shows the top X players and their kc for a specific stat.')
 async def topx(ctx, stat, n):
-    try:
-        if int(n) <= 10:
+    if int(n) <= 10:
+        try:
             names = [x.lower() for x in start_sheet.col_values(2)[1:]]
-            response = get_stat_top(bosses_sheet, skills_sheet,start_sheet ,names, stat, int(n))
-        else:
-            response = "N has to be 10 or lower."
-    except gspread.exceptions.APIError as e:
-        response = "Unauthenticated." 
-    finally:
-        await ctx.send(response)
+        except gspread.exceptions.APIError as e:
+            client.login()
+            names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+        response = get_stat_top(bosses_sheet, skills_sheet,start_sheet ,names, stat, int(n))
+    else:
+        response = "N has to be 10 or lower."
+    await ctx.send(response)
 
 
 @bot1.command(name='compare', help='Compares two players in a specific stat.')
 async def compare(ctx, stat, player1, player2):
-    names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+    try:
+        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+    except gspread.exceptions.APIError as e:
+        client.login()
+        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
     p1,p2 = player1.lower(), player2.lower()
     stat = get_stat(stat)
     if not stat:
