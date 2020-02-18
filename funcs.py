@@ -299,9 +299,9 @@ if __name__ == "__main__":
         'https://www.googleapis.com/auth/drive']
     creds = ServiceAccountCredentials.from_json_keyfile_name('client_secret.json', scope)
     client = gspread.authorize(creds)
-    bosses_sheet = client.open("07 Irons HiScore").get_worksheet(0)
-    skills_sheet = client.open("07 Irons HiScore").get_worksheet(1)
-    start_sheet = client.open("07 Irons HiScore").get_worksheet(2)
+    bosses_sheet = client.open("07 Irons HiScore").worksheet('Bosses')
+    skills_sheet = client.open("07 Irons HiScore").worksheet('Skills')
+    start_sheet = client.open("07 Irons HiScore").worksheet('Start')
     names = [x.lower() for x in start_sheet.col_values(2)[1:]]
 
     #player_top_stats(bosses_sheet, skills_sheet, start_sheet, names, "IronRok", 1)
