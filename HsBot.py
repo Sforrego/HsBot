@@ -277,7 +277,7 @@ async def dont_notify_me(ctx):
     role = discord.utils.get(ctx.guild.roles, name="NotifyOn")
     for member in ctx.guild.members:
         await member.add_roles(role)
-    await ctx.send("Everyone will not be notified.")
+    await ctx.send("Everyone will be notified.")
 @bot2.command(name='none')
 async def dont_notify_me(ctx):
     role = discord.utils.get(ctx.guild.roles, name="NotifyOn")
