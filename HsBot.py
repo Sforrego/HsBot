@@ -267,10 +267,26 @@ async def notify_me(ctx):
     await ctx.send("You will be notified.")
 
 @bot2.command(name='off')
-async def notify_me(ctx):
+async def dont_notify_me(ctx):
     role = discord.utils.get(ctx.guild.roles, name="NotifyOn")
     await ctx.message.author.remove_roles(role)
     await ctx.send("You will not be notified.")
+
+@bot2.command(name='all')
+async def dont_notify_me(ctx):
+    role = discord.utils.get(ctx.guild.roles, name="NotifyOn")
+    for member in ctx.guild.members:
+        await member.add_roles(role)
+    await ctx.send("Everyone will not be notified.")
+@bot2.command(name='none')
+async def dont_notify_me(ctx):
+    role = discord.utils.get(ctx.guild.roles, name="NotifyOn")
+    for member in ctx.guild.members:
+        await member.remove_roles(role)
+    await ctx.send("Everyone will not be notified.")
+
+
+
 
 loop = asyncio.get_event_loop()
 loop.create_task(bot1.start(token1))
