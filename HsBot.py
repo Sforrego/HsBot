@@ -215,7 +215,7 @@ async def do_stuff_every_x_seconds(timeout, stuff, *args):
 ##########################################################
 token2 = os.getenv('DISCORD_TOKEN2')
 
-bot2 = commands.Bot(command_prefix='!corner ')
+bot2 = commands.Bot(command_prefix=['!corner ','!notify'])
 
 @bot2.event
 async def on_ready():
@@ -260,6 +260,17 @@ async def remove_corners(ctx):
         members_in_corner = 'No members in the corner.'
     await ctx.send(members_in_corner)
 
+@bot2.command(name='on')
+async def notify_me(ctx):
+    role = discord.utils.get(ctx.guild.roles, name="NotifyOn")
+    await ctx.message.author.add_roles(role)
+    await ctx.send("You will be notified.")
+
+@bot2.command(name='off')
+async def notify_me(ctx):
+    role = discord.utils.get(ctx.guild.roles, name="NotifyOn")
+    await ctx.message.author.remove_roles(role)
+    await ctx.send("You will not be notified.")
 
 loop = asyncio.get_event_loop()
 loop.create_task(bot1.start(token1))

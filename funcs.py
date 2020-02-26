@@ -155,14 +155,14 @@ def update_all(bosses_sheet, skills_sheet, start_sheet, starting_cell=2):
     start_values = start_sheet.get_all_values()[1:]
     bosses_list = []
     skills_list = []
-    # start_list_lvl = []
-    # start_list_xp = []
-    start_list = []
+    start_list_lvl = []
+    start_list_xp = []
+    # start_list = []
     bosses_cell_list = bosses_sheet.range(f'B{starting_cell}:BA{len(names)+1}')
     skills_cell_list = skills_sheet.range(f'B{starting_cell}:AW{len(names)+1}')
-    # start_cell_list = start_sheet.range(f'D{starting_cell}:D{len(names)+1}')
-    # start_cell_list.extend(start_sheet.range(f'F{starting_cell}:F{len(names)+1}'))
-    start_cell_list = start_sheet.range(f'C{starting_cell}:F{len(names)+1}')
+    start_cell_list = start_sheet.range(f'D{starting_cell}:D{len(names)+1}')
+    start_cell_list.extend(start_sheet.range(f'F{starting_cell}:F{len(names)+1}'))
+    # start_cell_list = start_sheet.range(f'C{starting_cell}:F{len(names)+1}')
     date_cell_list = start_sheet.range(f'I{starting_cell}:I{len(names)+1}')
     not_found = []
     outdated_names = start_sheet.range(f'J{starting_cell}:J{len(names)+1}')
@@ -172,7 +172,7 @@ def update_all(bosses_sheet, skills_sheet, start_sheet, starting_cell=2):
         if stats != "404":
             player_skills, player_clues , player_bosses = createDicts(parseStats(stats))
             player_bosses = [player_skills["Overall"]]+list(player_clues.values())+list(player_bosses.values())
-            start_list.append((player_skills["Overall"],player_skills["Overall"],player_skills["Overall_Xp"],player_skills["Overall_Xp"]))
+            # start_list.append((player_skills["Overall"],player_skills["Overall"],player_skills["Overall_Xp"],player_skills["Overall_Xp"]))
 
 
 
@@ -180,22 +180,22 @@ def update_all(bosses_sheet, skills_sheet, start_sheet, starting_cell=2):
             print(f"updating {index}. {name} total {player_skills[0]} xp {player_skills[1]}")
             bosses_list.append(player_bosses)
             skills_list.append(player_skills)
-            # start_list_lvl.append(player_skills[0])
-            # start_list_xp.append(player_skills[1])
+            start_list_lvl.append(player_skills[0])
+            start_list_xp.append(player_skills[1])
         else:
 
             print(f"{name} not found in highscores.")
             bosses_list.append(bosses_values[index-2][1:])
             skills_list.append(skills_values[index-2][1:])
-            start_list.append([int(x) if x else x for x in start_values[index-2][2:6]])
-            # start_list_lvl.append(start_values[index-2][3])
-            # start_list_xp.append(start_values[index-2][5])
+            # start_list.append([int(x) if x else x for x in start_values[index-2][2:6]])
+            start_list_lvl.append(start_values[index-2][3])
+            start_list_xp.append(start_values[index-2][5])
 
             not_found.append(name)
 
     bosses_list = [item for sublist in bosses_list for item in sublist]
     skills_list = [item for sublist in skills_list for item in sublist]
-    # start_list = start_list_lvl+start_list_xp
+    start_list = start_list_lvl+start_list_xp
 
 
     for i, val in enumerate(bosses_list):
@@ -313,7 +313,7 @@ if __name__ == "__main__":
 
     #get_coded_name(start_sheet)
     #remove_players(bosses_sheet,skills_sheet,start_sheet,names,["saund"])
-    update_all(bosses_sheet,skills_sheet,start_sheet,320)
+    # update_all(bosses_sheet,skills_sheet,start_sheet)
     #update_player(bosses_sheet,skills_sheet,start_sheet,names,"hassinen42")
     #update_player(bosses_sheet,skills_sheet,start_sheet,names,"bonerrific",1)
     #print(top_stat(bosses_sheet,skills_sheet,names,"Nightmare",10))
