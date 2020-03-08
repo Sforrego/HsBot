@@ -71,15 +71,14 @@ def top_stat(bosses_sheet, skills_sheet, names, stat, n):
     mylist = mylist[:n]
     return mylist
 
-def update_player(bosses_sheet, skills_sheet, start_sheet, names, name, addplayer=0):
+def update_player(bosses_sheet, skills_sheet, start_sheet, names, name, stats, addplayer=0):
     name = name.lower()
     if name not in names and not addplayer:
         print("Player not in memberslist.")
     elif name in names and addplayer:
         print("Player already in memberslist.")
     else:
-        stats = getStats(playerURL(name,'iron'))
-        if stats != "404":
+        if stats != 404:
             if addplayer:
                 bosses_sheet.append_row([name])
                 names.append(name)
@@ -145,8 +144,8 @@ def update_rsn(bosses_sheet, skills_sheet, start_sheet, names, old_name, new_nam
         bosses_sheet.update_acell(f'A{index}', new_name)
         start_sheet.update_acell(f'B{index}', new_name.lower())
         names[index-2] = new_name.lower()
-
-        update_player(bosses_sheet, skills_sheet, start_sheet, names, new_name)
+        stats = getStats(playerURL(new_name,'iron'))
+        update_player(bosses_sheet, skills_sheet, start_sheet, names, new_name,stats)
 
 def update_all(bosses_sheet, skills_sheet, start_sheet, starting_cell=2):
     names = [x.lower() for x in start_sheet.col_values(2)[1:]]
@@ -169,7 +168,7 @@ def update_all(bosses_sheet, skills_sheet, start_sheet, starting_cell=2):
 
     for index,name in enumerate(names[starting_cell-2:], start=starting_cell):
         stats = getStats(playerURL(name,'iron'))
-        if stats != "404":
+        if stats != 404:
             player_skills, player_clues , player_bosses = createDicts(parseStats(stats))
             player_bosses = [player_skills["Overall"]]+list(player_clues.values())+list(player_bosses.values())
             # start_list.append((player_skills["Overall"],player_skills["Overall"],player_skills["Overall_Xp"],player_skills["Overall_Xp"]))

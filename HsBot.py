@@ -9,6 +9,9 @@ import asyncio
 import time
 import httplib2
 
+## make one function that creates an object after calling rs.hs make the other funcs receive that.
+
+
 load_dotenv()
 token1 = os.getenv('DISCORD_TOKEN1')
 
@@ -17,9 +20,10 @@ scope = ['https://spreadsheets.google.com/feeds',
     'https://www.googleapis.com/auth/drive']
 creds = ServiceAccountCredentials.from_json_keyfile_name('client_secret.json', scope)
 client = gspread.authorize(creds)
-bosses_sheet = client.open("07 Irons HiScore").worksheet('Bosses')
-skills_sheet = client.open("07 Irons HiScore").worksheet('Skills')
-start_sheet = client.open("07 Irons HiScore").worksheet('Start')
+bosses_sheet = client.open("Members Ranks").worksheet('Bosses')
+skills_sheet = client.open("Members Ranks").worksheet('Skills')
+start_sheet = client.open("Members Ranks").worksheet('Start')
+members_sheet = client.open("Members Ranks").worksheet('Members')
 
 
 #BOT
@@ -42,8 +46,12 @@ async def add(ctx, name):
     except gspread.exceptions.APIError as e:
         client.login()
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
-    update_player(bosses_sheet,skills_sheet,start_sheet,names,name,1)
-    response = f"{name} has been added to the memberslist."
+    stats = getStats(playerURL(name,'iron'))
+    if stats == 404:
+        response = f"{name} not found in the highscores."
+    else:
+        update_player(bosses_sheet,skills_sheet,start_sheet,names,name,stats,1)
+        response = f"{name} has been added to the memberslist."
     await ctx.send(response)
 
 @bot1.command(name='update', help='Updates a players stats in the spreadsheets (Admin).')
@@ -53,8 +61,12 @@ async def update(ctx, name):
     except gspread.exceptions.APIError as e:
         client.login()
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
-    update_player(bosses_sheet,skills_sheet,start_sheet,names,name,0)
-    response = f"{name} stats has been updated."
+    stats = getStats(playerURL(name,'iron'))
+    if stats == 404:
+        response = f"{name} not found in the highscores."
+    else:
+        update_player(bosses_sheet,skills_sheet,start_sheet,names,name,stats)
+        response = f"{name} stats has been updated."
     await ctx.send(response)
 
 @bot1.command(name='ranks', help='Shows the rank within the clan of a member in all the skills. (!hs ranks bosses player or !hs ranks skills player)')
@@ -171,6 +183,27 @@ async def compare(ctx, stat, player1, player2):
             response += f"2. {player1} {comparison[1]}"
     await ctx.send(response)
 
+@bot1.command(name='superadd', help='Changes a players discord nick, gives him role, and adds him to ml (Admin).')
+@commands.has_permissions(kick_members=True)
+async def superadd(ctx, member:discord.Member,*args):
+    rsn = " ".join(args)
+    stats = getStats(playerURL(rsn,'iron'))
+    if stats == 404:
+        response = f"{name} not found in the highscores."
+    else:
+        try:
+            names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+        except gspread.exceptions.APIError as e:
+            client.login()
+            names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+        role = discord.utils.get(ctx.guild.roles, name="Member")
+        await member.add_roles(role)
+        #await member.edit(nick=rsn)
+        col0 = members_sheet.col_values(0)
+        last = col0.index("")
+        print(last)
+        response = f"{rsn} has been added to the memberlist and given nickname and role."
+    await ctx.send(response)
 # @bot1.command(name='memberslist', help='Shows every player and their join date.')
 # @commands.has_permissions(kick_members=True)
 # async def memberslit(ctx,num):
