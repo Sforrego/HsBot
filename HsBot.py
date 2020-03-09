@@ -8,7 +8,7 @@ from funcs import *
 import asyncio
 import time
 import httplib2
-
+from discord.ext.commands import MemberConverter
 ## make one function that creates an object after calling rs.hs make the other funcs receive that.
 
 
@@ -185,25 +185,46 @@ async def compare(ctx, stat, player1, player2):
 
 @bot1.command(name='superadd', help='Changes a players discord nick, gives him role, and adds him to ml (Admin).')
 @commands.has_permissions(kick_members=True)
-async def superadd(ctx, member:discord.Member,*args):
-    rsn = " ".join(args)
-    stats = getStats(playerURL(rsn,'iron'))
-    if stats == 404:
-        response = f"{name} not found in the highscores."
-    else:
-        try:
-            names = [x.lower() for x in start_sheet.col_values(2)[1:]]
-        except gspread.exceptions.APIError as e:
-            client.login()
-            names = [x.lower() for x in start_sheet.col_values(2)[1:]]
-        role = discord.utils.get(ctx.guild.roles, name="Member")
-        await member.add_roles(role)
-        #await member.edit(nick=rsn)
-        col0 = members_sheet.col_values(0)
-        last = col0.index("")
-        print(last)
-        response = f"{rsn} has been added to the memberlist and given nickname and role."
-    await ctx.send(response)
+async def superadd(ctx, member,*args):
+    #check spreadsheet if member is already there.
+    converter = MemberConverter()
+    try:
+        member = await converter.convert(ctx,member)
+        if "Member" in [x.name for x in member.roles]:
+            response = f"{member} already has Member rank."
+        else:
+            rsn = " ".join(args)
+            stats = getStats(playerURL(rsn,'iron'))
+            if stats == 404:
+                response = f"{rsn} not found in the highscores."
+            else:
+                try:
+                    names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+                except gspread.exceptions.APIError as e:
+                    client.login()
+                    names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+                col0 = members_sheet.col_values(1)
+                if rsn in col0:
+                    response = f"{rsn} already in the memberlist (spreadsheet)."
+                else:
+                    role = discord.utils.get(ctx.guild.roles, name="Member")
+                    await member.add_roles(role)
+                    await member.edit(nick=rsn)
+
+                    index = len(col0)+1
+                    #members_cell_list = members_sheet.range(f'A{index}:B{index}')
+                    members_sheet.update_acell(f"A{index}",rsn)
+                    members_sheet.update_acell(f"K{index}",rsn)
+                    members_sheet.update_acell(f"B{index}",member.joined_at.strftime("%d %b, %Y"))
+
+                    #members_sheet.update_cells(members_cell_list)
+                    response = f"{rsn} has been added to the memberlist and given nickname and role."
+    except discord.ext.commands.errors.BadArgument:
+        response = f"Member {member} not found."
+    finally:
+        await ctx.send(response)
+
+
 # @bot1.command(name='memberslist', help='Shows every player and their join date.')
 # @commands.has_permissions(kick_members=True)
 # async def memberslit(ctx,num):
