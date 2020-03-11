@@ -35,6 +35,15 @@ def get_pretty_names(start_sheet,names):
         pretty_names_list.append(pretty_name)
     return pretty_names_list
 
+def get_pretty_names2(start_sheet):
+    pretty_names_list = []
+    ugly_names = start_sheet.col_values(1)[1:]
+    for name in ugly_names:
+        pretty_name = name.lower().replace(" ","_")
+        pretty_names_list.append(pretty_name)
+    return pretty_names_list
+
+
 def get_stat_top(bosses_sheet, skills_sheet, start_sheet, names, stat, n):
     top_stats = top_stat(bosses_sheet, skills_sheet, names, stat, n)
     if top_stats != 404:
@@ -310,9 +319,10 @@ if __name__ == "__main__":
 
     #EXAMPLES
 
+
     #get_coded_name(start_sheet)
     #remove_players(bosses_sheet,skills_sheet,start_sheet,names,["saund"])
-    # update_all(bosses_sheet,skills_sheet,start_sheet)
+    #update_all(bosses_sheet,skills_sheet,start_sheet)
     #update_player(bosses_sheet,skills_sheet,start_sheet,names,"hassinen42")
     #update_player(bosses_sheet,skills_sheet,start_sheet,names,"bonerrific",1)
     #print(top_stat(bosses_sheet,skills_sheet,names,"Nightmare",10))
@@ -320,3 +330,8 @@ if __name__ == "__main__":
     #print(compare_players(bosses_sheet, skills_sheet, names, "IronRok", "no ge canvey", "Attack"))
 
     #print(skills_sheet.col_values(1))
+    # pretty = get_pretty_names2(start_sheet)
+    # start_cell_list = start_sheet.range(f'B{2}:B{358}')
+    # for index,cell in enumerate(start_cell_list):
+    #     cell.value = pretty[index]
+    # start_sheet.update_cells(start_cell_list)
