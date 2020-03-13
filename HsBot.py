@@ -90,12 +90,15 @@ async def ranks(ctx,stat,name):
 @commands.has_permissions(kick_members=True)
 async def change_rsn(ctx, old_name,new_name):
     try:
-        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+        names = start_sheet.col_values(2)[1:]
     except gspread.exceptions.APIError as e:
         client.login()
-        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
-    update_rsn(bosses_sheet,skills_sheet,start_sheet,names,old_name,new_name)
-    response = f"{old_name} has been changed to {new_name} and his stats has been updated."
+        names = start_sheet.col_values(2)[1:]
+    try:
+        update_rsn(members_sheet,bosses_sheet,skills_sheet,start_sheet,names,old_name,new_name)
+        response = f"{old_name} has been changed to {new_name} and his stats has been updated."
+    except Exception as e:
+        response = f"Something went wrong. Error {e}"
     await ctx.send(response)
 
 @bot1.command(name='fullupdate', help='Updates every player (Admin).')
@@ -127,27 +130,57 @@ async def top(ctx, stat):
     response = get_stat_top(bosses_sheet, skills_sheet,start_sheet ,names, stat, 5)
     await ctx.send(response)
 
-@bot1.command(name='topx', help='Shows the top X players and their kc for a specific stat.')
-async def topx(ctx, stat, n):
-    if int(n) <= 10:
-        try:
-            names = [x.lower() for x in start_sheet.col_values(2)[1:]]
-        except gspread.exceptions.APIError as e:
-            client.login()
-            names = [x.lower() for x in start_sheet.col_values(2)[1:]]
-        response = get_stat_top(bosses_sheet, skills_sheet,start_sheet ,names, stat, int(n))
-    else:
-        response = "N has to be 10 or lower."
-    await ctx.send(response)
-
-
-@bot1.command(name='compare', help='Compares two players in a specific stat.')
-async def compare(ctx, stat, player1, player2):
+@bot1.command(name='top10', help='Shows the top X players and their kc for a specific stat.')
+async def topx(ctx, stat):
     try:
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
     except gspread.exceptions.APIError as e:
         client.login()
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+    response = get_stat_top(bosses_sheet, skills_sheet,start_sheet ,names, stat, 10)
+    await ctx.send(response)
+
+@bot1.command(name='clan_ranks', help='Changes a players rsn in the spreadsheets (Admin).')
+@commands.has_permissions(kick_members=True)
+async def change_rsn(ctx, *rank):
+    rank = " ".join(rank)
+    try:
+        names = start_sheet.col_values(1)[1:]
+    except gspread.exceptions.APIError as e:
+        client.login()
+        names = start_sheet.col_values(1)[1:]
+    if rank in RANKS.keys():
+        members_has_rank = []
+        rank1 = members_sheet.col_values(RANKS[rank])
+        rank2 = members_sheet.col_values(RANKS[rank]+1)
+        for i,value in enumerate(rank1,start=0):
+            if value == "GIVEN" and rank2[i]!="GIVEN":
+                members_has_rank.append(names[i-1])
+    response = f"{members_has_rank}"
+    await ctx.send(response[:1998])
+@bot1.command(name='due_ranks', help='Return all players due rank in the spreadsheets (Admin).')
+@commands.has_permissions(kick_members=True)
+async def change_rsn(ctx):
+    try:
+        names = start_sheet.col_values(1)[1:]
+    except gspread.exceptions.APIError as e:
+        client.login()
+    names = start_sheet.col_values(1)[1:]
+    members_due_rank = []
+    members_values = members_sheet.get_all_values()[1:]
+    for i,value in enumerate(members_values,start=2):
+        if "TRUE" in value:
+            members_due_rank.append(value[0])
+    response = f"{members_due_rank}"
+    await ctx.send(response[:1998])
+
+@bot1.command(name='compare', help='Compares two players in a specific stat.')
+async def compare(ctx, stat, player1, player2):
+    try:
+        names = start_sheet.col_values(2)[1:]
+    except gspread.exceptions.APIError as e:
+        client.login()
+        names = start_sheet.col_values(2)[1:]
     p1,p2 = player1.lower(), player2.lower()
     stat = get_stat(stat)
     if not stat:
@@ -199,13 +232,13 @@ async def superadd(ctx, member,*args):
                 response = f"{rsn} not found in the highscores."
             else:
                 try:
-                    names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+                    names = start_sheet.col_values(2)[1:]
                 except gspread.exceptions.APIError as e:
                     client.login()
-                    names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+                    names = start_sheet.col_values(2)[1:]
                 col0 = members_sheet.col_values(1)
-                if rsn in col0:
-                    response = f"{rsn} already in the memberlist (spreadsheet)."
+                if rsn.replace(" ","_").lower() in names:
+                    response = f"{rsn} is already in the memberlist (spreadsheet)."
                 else:
                     role = discord.utils.get(ctx.guild.roles, name="Member")
                     await member.add_roles(role)
@@ -215,14 +248,17 @@ async def superadd(ctx, member,*args):
                     #members_cell_list = members_sheet.range(f'A{index}:B{index}')
                     members_sheet.update_acell(f"A{index}",rsn)
                     members_sheet.update_acell(f"K{index}",rsn)
+                    members_sheet.update_acell(f"L{index}",rsn.replace(" ","_"))
                     members_sheet.update_acell(f"B{index}",member.joined_at.strftime("%d %b, %Y"))
-
-                    #members_sheet.update_cells(members_cell_list)
-                    response = f"{rsn} has been added to the memberlist and given nickname and role."
+                    update_player(bosses_sheet,skills_sheet,start_sheet,names,rsn.replace(" ","_"))
+                    response = f"{rsn} has been added to the memberlist, given nickname and role, and updated in the clan's HS."
     except discord.ext.commands.errors.BadArgument:
         response = f"Member {member} not found."
+    except Exception as e:
+        print(e)
     finally:
         await ctx.send(response)
+
 
 
 # @bot1.command(name='memberslist', help='Shows every player and their join date.')
@@ -246,6 +282,21 @@ async def superadd(ctx, member,*args):
 async def get_boss_list(ctx):
     response = str(get_stats_shorts())
     response += "\nIf the name is not on the list use the regular name (change spaces with _)\n"
+    await ctx.send(response)
+
+@bot1.command(name='check', help='Checks if a name is in the hiscores.')
+async def get_boss_list(ctx, *args):
+    rsn = "_".join(args)
+    rsn2 = " ".join(args)
+    try:
+        names = start_sheet.col_values(2)[1:]
+    except gspread.exceptions.APIError as e:
+        client.login()
+        names = start_sheet.col_values(2)[1:]
+    if check(names,rsn):
+        response = f"{rsn2} is in the highscores."
+    else:
+        response = f"{rsn2} is not in the highscores."
     await ctx.send(response)
 
 

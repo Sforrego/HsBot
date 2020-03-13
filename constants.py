@@ -11,6 +11,19 @@ GAMEMODE_URL = {
   'sdmm': '_seasonal/',
   'ult': '_ultimate/',
 }
+
+
+RANKS = {
+    'smiley':4,
+    '1 banana':5,
+    '2 banana':6,
+    '3 banana':7,
+    'bronze':8,
+    'silver':9,
+    'gold':10,
+
+}
+
 SKILLS = [
   'Overall',
   'Attack',
@@ -143,7 +156,8 @@ boss_shorts = {
 "raids2":"Theatre of Blood",
 "beg":"Beginner",
 "med":"Medium",
-'clues':'Clues (total)'
+'clues':'Clues (total)',
+"hydra":"Alchemical Hydra"
 }
 
 # INDEX IN THE SPREADSHEET

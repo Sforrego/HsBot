@@ -35,14 +35,6 @@ def get_pretty_names(start_sheet,names):
         pretty_names_list.append(pretty_name)
     return pretty_names_list
 
-def get_pretty_names2(start_sheet):
-    pretty_names_list = []
-    ugly_names = start_sheet.col_values(1)[1:]
-    for name in ugly_names:
-        pretty_name = name.lower().replace(" ","_")
-        pretty_names_list.append(pretty_name)
-    return pretty_names_list
-
 
 def get_stat_top(bosses_sheet, skills_sheet, start_sheet, names, stat, n):
     top_stats = top_stat(bosses_sheet, skills_sheet, names, stat, n)
@@ -74,7 +66,7 @@ def top_stat(bosses_sheet, skills_sheet, names, stat, n):
         lvl = skills_sheet.col_values(index)[1:]
         xp = skills_sheet.col_values(index+1)[1:]
         mylist = list(zip(xp,lvl))
-        mylist = [(int(mylist[i][0]),int(mylist[i][1]),names[i]) if mylist[i] != "" else (-1,names[i]) for i in range(len(mylist))]
+        mylist = [(int(mylist[i][0]),int(mylist[i][1]),names[i]) if mylist[i][0] != "" else (-1,names[i]) for i in range(len(mylist))]
 
     mylist = sorted(mylist, reverse=True)
     mylist = mylist[:n]
@@ -146,15 +138,21 @@ def update_player(bosses_sheet, skills_sheet, start_sheet, names, name, stats, a
         else:
             print(f"{name} not found in hiscores.")
 
-def update_rsn(bosses_sheet, skills_sheet, start_sheet, names, old_name, new_name):
+def update_rsn(members_sheet,bosses_sheet, skills_sheet, start_sheet, names, old_name, new_name):
     old_name = old_name.lower()
     if old_name in names:
         index = names.index(old_name)+2
-        bosses_sheet.update_acell(f'A{index}', new_name)
-        start_sheet.update_acell(f'B{index}', new_name.lower())
+        members_sheet.update_acell(f"K{index}",new_name)
         names[index-2] = new_name.lower()
         stats = getStats(playerURL(new_name,'iron'))
-        update_player(bosses_sheet, skills_sheet, start_sheet, names, new_name,stats)
+        update_player(bosses_sheet, skills_sheet, start_sheet, names, new_name, stats)
+
+def check(names,rsn):
+    if rsn.lower() in names:
+        return True
+    return False
+
+
 
 def update_all(bosses_sheet, skills_sheet, start_sheet, starting_cell=2):
     names = [x.lower() for x in start_sheet.col_values(2)[1:]]
@@ -283,6 +281,8 @@ def player_top_stats(bosses_sheet, skills_sheet, start_sheet, names, name, bosse
     index_name = names.index(name)+1
     list_of_lists = sheet.get_all_values()
     transposed = list(map(list, zip(*list_of_lists)))[1:]
+    transposed = [[i if i != "" else -1 for i in x] for x in transposed]
+    print(transposed)
     sorted_list = [sorted(map(int,x[1:]),reverse=True) for x in transposed]
     player = list_of_lists[index_name]
     top_stats = {}
@@ -313,7 +313,7 @@ if __name__ == "__main__":
     bosses_sheet = client.open("Members Ranks").worksheet('Bosses')
     skills_sheet = client.open("Members Ranks").worksheet('Skills')
     start_sheet = client.open("Members Ranks").worksheet('Start')
-    names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+    names = start_sheet.col_values(2)[1:]
 
     #player_top_stats(bosses_sheet, skills_sheet, start_sheet, names, "IronRok", 1)
 
