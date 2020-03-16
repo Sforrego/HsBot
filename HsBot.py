@@ -168,21 +168,21 @@ async def change_rsn(ctx,rank):
         client.login()
         names = start_sheet.col_values(1)[1:]
     members_due_rank = []
-        if rank == "all":
-            members_values = members_sheet.get_all_values()[1:]
-            for i,value in enumerate(members_values,start=2):
-                if "TRUE" in value:
-                    members_due_rank.append(value[0])
+    if rank == "all":
+        members_values = members_sheet.get_all_values()[1:]
+        for i,value in enumerate(members_values,start=2):
+            if "TRUE" in value:
+                members_due_rank.append(value[0])
+        response = f"{members_due_rank}"
+    else:
+        if rank in RANKS.keys():
+            rank1 = members_sheet.col_values(RANKS[rank])
+            for i,value in enumerate(rank1,start=0):
+                if value == "TRUE":
+                    members_due_rank.append(names[i-1])
             response = f"{members_due_rank}"
         else:
-            if rank in RANKS.keys():
-                rank1 = members_sheet.col_values(RANKS[rank])
-                for i,value in enumerate(rank1,start=0):
-                    if value == "TRUE":
-                        members_due_rank.append(names[i-1])
-                response = f"{members_due_rank}"
-            else:
-                response = f"That option is not valid, choose from: all, {RANKS.keys}"
+            response = f"That option is not valid, choose from: all, {RANKS.keys}"
     await ctx.send(response[:1998])
 
 @bot1.command(name='compare', help='Compares two players in a specific stat.')
