@@ -166,8 +166,8 @@ async def change_rsn(ctx,rank):
         names = start_sheet.col_values(1)[1:]
     except gspread.exceptions.APIError as e:
         client.login()
-    names = start_sheet.col_values(1)[1:]
-        members_due_rank = []
+        names = start_sheet.col_values(1)[1:]
+    members_due_rank = []
         if rank == "all":
             members_values = members_sheet.get_all_values()[1:]
             for i,value in enumerate(members_values,start=2):
