@@ -255,7 +255,7 @@ async def superadd(ctx, member,*args):
     except discord.ext.commands.errors.BadArgument:
         response = f"Member {member} not found."
     except Exception as e:
-        print(e)
+        response = str(e)
     finally:
         await ctx.send(response)
 
