@@ -158,20 +158,31 @@ async def change_rsn(ctx, *rank):
                 members_has_rank.append(names[i-1])
     response = f"{members_has_rank}"
     await ctx.send(response[:1998])
-@bot1.command(name='due_ranks', help='Return all players due rank in the spreadsheets (Admin).')
+
+@bot1.command(name='due', help='Return all players due rank in the spreadsheets (Admin).')
 @commands.has_permissions(kick_members=True)
-async def change_rsn(ctx):
+async def change_rsn(ctx,rank):
     try:
         names = start_sheet.col_values(1)[1:]
     except gspread.exceptions.APIError as e:
         client.login()
     names = start_sheet.col_values(1)[1:]
-    members_due_rank = []
-    members_values = members_sheet.get_all_values()[1:]
-    for i,value in enumerate(members_values,start=2):
-        if "TRUE" in value:
-            members_due_rank.append(value[0])
-    response = f"{members_due_rank}"
+        members_due_rank = []
+        if rank == "all":
+            members_values = members_sheet.get_all_values()[1:]
+            for i,value in enumerate(members_values,start=2):
+                if "TRUE" in value:
+                    members_due_rank.append(value[0])
+            response = f"{members_due_rank}"
+        else:
+            if rank in RANKS.keys():
+                rank1 = members_sheet.col_values(RANKS[rank])
+                for i,value in enumerate(rank1,start=0):
+                    if value == "TRUE":
+                        members_due_rank.append(names[i-1])
+                response = f"{members_due_rank}"
+            else:
+                response = f"That option is not valid, choose from: all, {RANKS.keys}"
     await ctx.send(response[:1998])
 
 @bot1.command(name='compare', help='Compares two players in a specific stat.')
@@ -261,16 +272,16 @@ async def superadd(ctx, member,*args):
 
 
 
-# @bot1.command(name='memberslist', help='Shows every player and their join date.')
-# @commands.has_permissions(kick_members=True)
-# async def memberslit(ctx,num):
-#     response = ""
-#     members = ctx.guild.members
-#     for i,member in enumerate(members):
-#         response += f"{str(member)} {member.nick} Joined: {member.joined_at}.\n"
-#         if i == int(num):
-#             break
-#     await ctx.send(response)
+@bot1.command(name='joindate', help='Shows every player and their join date.')
+@commands.has_permissions(kick_members=True)
+async def memberslit(ctx,member):
+    response = ""
+    members = ctx.guild.members
+    for i,member in enumerate(members):
+        response += f"{str(member)} {member.nick} Joined: {member.joined_at}.\n"
+        if i == int(num):
+            break
+    await ctx.send(response)
 
 
 # @bot1.command(name='bossestop', help='Prints the top 5 players for every boss (Admin).')
