@@ -21,6 +21,26 @@ RANKS = {
     'bronze':8,
     'silver':9,
     'gold':10,
+    "1nana":5,
+    "2nana":6,
+    "3nana":7,
+    "1":5,
+    "2":6,
+    "3":7,
+    "recruit":5,
+    "corporal":6,
+    "sergeant":7,
+    "0":4
+}
+
+RANKS2 = {
+    4:"Smiley",
+    5:"Recruit",
+    6:"Corporal",
+    7:"Sergeant",
+    8:"Lieutenant",
+    9:"Captain",
+    10:"General"
 
 }
 
