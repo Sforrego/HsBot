@@ -275,13 +275,35 @@ async def superadd(ctx, member,*args):
 
 @bot1.command(name='joindate', help='Shows every player and their join date.')
 @commands.has_permissions(kick_members=True)
-async def memberslit(ctx,member):
-    response = ""
-    members = ctx.guild.members
-    for i,member in enumerate(members):
-        response += f"{str(member)} {member.nick} Joined: {member.joined_at}.\n"
-        if i == int(num):
-            break
+async def memberslit(ctx,member:discord.Member):
+
+    response += f"{str(member)} {member.nick} Joined: {member.joined_at}.\n"
+
+    await ctx.send(response)
+
+@bot1.command(name='remove', help='Removes players from the cc (sheets) (Admin) (Replace spaces in names with underscore)\n Example: !hs remove Ironrok b_Ee_Z.')
+@commands.has_permissions(kick_members=True)
+async def memberslit(ctx,*members):
+    try:
+        names = start_sheet.col_values(2)[1:]
+    except gspread.exceptions.APIError as e:
+        client.login()
+        names = start_sheet.col_values(2)[1:]
+    not_found = []
+
+    for name in members:
+        if name.lower() not in names:
+            not_found.append(name)
+        else:
+            index = names.indeex(name.lower())+2
+            start_sheet.delete_row(index)
+            bosses_sheet.delete_row(index)
+            members_sheet.delete_row(index)
+            skills_sheet.delete_row(index)
+
+    response = f'Deleted \n{found}\n \nNot Found \n {not_found}'
+
+    found = [x for x in members if x not in not_found]
     await ctx.send(response)
 
 
