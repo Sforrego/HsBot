@@ -55,7 +55,8 @@ async def add(ctx, name):
     await ctx.send(response)
 
 @bot1.command(name='update', help='Updates a players stats in the spreadsheets (Admin).')
-async def update(ctx, name):
+async def update(ctx, *name):
+    name = " ".join(name)
     try:
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
     except gspread.exceptions.APIError as e:
@@ -262,7 +263,7 @@ async def superadd(ctx, member,*args):
                     members_sheet.update_acell(f"K{index}",rsn)
                     members_sheet.update_acell(f"L{index}",rsn.replace(" ","_"))
                     members_sheet.update_acell(f"B{index}",member.joined_at.strftime("%d %b, %Y"))
-                    update_player(bosses_sheet,skills_sheet,start_sheet,names,rsn.replace(" ","_"))
+                    update_player(bosses_sheet,skills_sheet,start_sheet,names,rsn.replace(" ","_"),stats)
                     response = f"{rsn} has been added to the memberlist, given nickname and role, and updated in the clan's HS."
     except discord.ext.commands.errors.BadArgument:
         response = f"Member {member} not found."
