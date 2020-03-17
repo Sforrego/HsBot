@@ -47,7 +47,7 @@ def get_stat_top(bosses_sheet, skills_sheet, start_sheet, names, stat, n):
             if len(player) == 2:
                 response += f"{i}. {players[i-1]} {player[0]} \n"
             elif len(player) == 3:
-                response += f"{i}.  {players[i-1]} {player[1]} {player[0]}\n"
+                response += f"{i}.  {players[i-1]} {player[0]} {player[1]}\n"
     else:
         response = f"Stat {stat} not found."
     response += "\n"
@@ -66,7 +66,7 @@ def top_stat(bosses_sheet, skills_sheet, names, stat, n):
         lvl = skills_sheet.col_values(index)[1:]
         xp = skills_sheet.col_values(index+1)[1:]
         mylist = list(zip(xp,lvl))
-        mylist = [(int(mylist[i][0]),int(mylist[i][1]),names[i]) if mylist[i][0] != "" else (-1,names[i]) for i in range(len(mylist))]
+        mylist = [(int(mylist[i][1]),int(mylist[i][0]),names[i]) if mylist[i][0] != "" else (-1,names[i]) for i in range(len(mylist))]
 
     mylist = sorted(mylist, reverse=True)
     mylist = mylist[:n]
