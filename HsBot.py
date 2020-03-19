@@ -297,7 +297,7 @@ async def memberslit(ctx,*members):
         if name.lower() not in names:
             not_found.append(name)
         else:
-            index = names.indeex(name.lower())+2
+            index = names.index(name.lower())+2
             start_sheet.delete_row(index)
             bosses_sheet.delete_row(index)
             members_sheet.delete_row(index)
