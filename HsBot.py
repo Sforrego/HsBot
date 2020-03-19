@@ -303,9 +303,9 @@ async def memberslit(ctx,*members):
             members_sheet.delete_row(index)
             skills_sheet.delete_row(index)
 
+    found = [x for x in members if x not in not_found]
     response = f'Deleted \n{found}\n \nNot Found \n {not_found}'
 
-    found = [x for x in members if x not in not_found]
     await ctx.send(response)
 
 
