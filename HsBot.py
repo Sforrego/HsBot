@@ -54,13 +54,14 @@ async def add(ctx, name):
         response = f"{name} has been added to the memberslist."
     await ctx.send(response)
 
-@bot1.command(name='update', help='Updates a players stats in the spreadsheets (Admin).')
+@bot1.command(name='update', help='Updates a players stats in the spreadsheets (Admin). \n Ejemplo: !hs update ironrok Yaspy (updates both players)')
 async def update(ctx, *names):
     try:
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
     except gspread.exceptions.APIError as e:
         client.login()
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+    response = ''
     for name in names:
         stats = getStats(playerURL(name,'iron'))
         if stats == 404:
