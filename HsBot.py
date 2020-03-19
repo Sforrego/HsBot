@@ -35,7 +35,7 @@ bot1 = commands.Bot(command_prefix='!hs ')
 async def on_ready():
     print(f'{bot1.user} has connected to Discord!')
     task = loop.create_task(do_stuff_every_x_seconds(60*29, client.login))
-    task2 = loop.create_task(do_stuff_every_x_seconds(60*60*12, update_all,bosses_sheet,skills_sheet,start_sheet))
+    task2 = loop.create_task(do_stuff_every_x_seconds(60*60*12, update_all,bosses_sheet,skills_sheet,start_sheet,client))
 
 
 @bot1.command(name='add', help='Adds a player to the spreadsheets (Admin).')
@@ -55,19 +55,19 @@ async def add(ctx, name):
     await ctx.send(response)
 
 @bot1.command(name='update', help='Updates a players stats in the spreadsheets (Admin).')
-async def update(ctx, *name):
-    name = " ".join(name)
+async def update(ctx, *names):
     try:
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
     except gspread.exceptions.APIError as e:
         client.login()
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
-    stats = getStats(playerURL(name,'iron'))
-    if stats == 404:
-        response = f"{name} not found in the highscores."
-    else:
-        update_player(bosses_sheet,skills_sheet,start_sheet,names,name,stats)
-        response = f"{name} stats has been updated."
+    for name in names:
+        stats = getStats(playerURL(name,'iron'))
+        if stats == 404:
+            response += f"{name} not found in the highscores.\n"
+        else:
+            update_player(bosses_sheet,skills_sheet,start_sheet,names,name,stats)
+            response += f"{name} stats has been updated\n"
     await ctx.send(response)
 
 @bot1.command(name='ranks', help='Shows the rank within the clan of a member in all the skills. (!hs ranks bosses player or !hs ranks skills player)')
@@ -108,12 +108,12 @@ async def full_update(ctx):
     msg = f"All players are being updated ..."
     await ctx.send(msg)
     try:
-        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+        names = start_sheet.col_values(2)[1:]
     except gspread.exceptions.APIError as e:
         client.login()
-        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+        names = start_sheet.col_values(2)[1:]
     try:
-        update_all(bosses_sheet,skills_sheet,start_sheet)
+        update_all(bosses_sheet,skills_sheet,start_sheet,client)
         response = f"All players have been updated."
     except Exception:
         print(Exception)

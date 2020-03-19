@@ -154,8 +154,12 @@ def check(names,rsn):
 
 
 
-def update_all(bosses_sheet, skills_sheet, start_sheet, starting_cell=2):
-    names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+def update_all(bosses_sheet, skills_sheet, start_sheet, client, starting_cell=2):
+    try:
+        names = start_sheet.col_values(2)[1:]
+    except gspread.exceptions.APIError as e:
+        client.login()
+        names = start_sheet.col_values(2)[1:]
     bosses_values = bosses_sheet.get_all_values()[1:]
     skills_values = skills_sheet.get_all_values()[1:]
     start_values = start_sheet.get_all_values()[1:]
@@ -229,6 +233,12 @@ def update_all(bosses_sheet, skills_sheet, start_sheet, starting_cell=2):
             val = ""
         outdated_names[i].value = val
 
+
+    try:
+        names = start_sheet.col_values(2)[1:]
+    except gspread.exceptions.APIError as e:
+        client.login()
+        names = start_sheet.col_values(2)[1:]
     bosses_sheet.update_cells(bosses_cell_list)
     skills_sheet.update_cells(skills_cell_list)
     start_sheet.update_cells(start_cell_list)
