@@ -66,7 +66,7 @@ SKILLS = [
   'Thieving',
   'Slayer',
   'Farming',
-  'Runecraft',
+  'Runecrafting',
   'Hunter',
   'Construction',
 ]
@@ -177,7 +177,14 @@ boss_shorts = {
 "beg":"Beginner",
 "med":"Medium",
 'clues':'Clues (total)',
-"hydra":"Alchemical Hydra"
+"hydra":"Alchemical Hydra",
+"rc": "Runecrafting",
+"wc":"Woodcutting",
+"hp":"Hitpoints",
+"str":"Strength",
+"def":"Defence",
+"atk":"Attack",
+"con":"Construction"
 }
 
 # INDEX IN THE SPREADSHEET
