@@ -240,15 +240,11 @@ async def superadd(ctx, member,*args):
         if "Member" in [x.name for x in member.roles]:
             response = f"{member} already has Member rank."
         else:
-            role = discord.utils.get(ctx.guild.roles, name="Member")
-            await member.add_roles(role)
-
             rsn = " ".join(args)
             stats = getStats(playerURL(rsn,'iron'))
             if stats == 404:
                 response = f"{rsn} not found in the highscores."
             else:
-                await member.edit(nick=rsn)
                 try:
                     names = start_sheet.col_values(2)[1:]
                 except gspread.exceptions.APIError as e:
@@ -258,7 +254,9 @@ async def superadd(ctx, member,*args):
                 if rsn.replace(" ","_").lower() in names:
                     response = f"{rsn} is already in the memberlist (spreadsheet)."
                 else:
-
+                    role = discord.utils.get(ctx.guild.roles, name="Member")
+                    await member.add_roles(role)
+                    await member.edit(nick=rsn)
 
                     index = len(col0)+1
                     #members_cell_list = members_sheet.range(f'A{index}:B{index}')
@@ -279,8 +277,10 @@ async def superadd(ctx, member,*args):
 
 @bot1.command(name='joindate', help='Shows a player and their join date.')
 @commands.has_permissions(kick_members=True)
-async def memberslit(ctx,member:discord.Member):
-
+async def memberslit(ctx,*member):
+    member = " ".join(member)
+    converter = MemberConverter()
+    member = await converter.convert(ctx,member)
     response = f"{str(member)} {member.nick} Joined: {member.joined_at}.\n"
     await ctx.send(response)
 
