@@ -275,12 +275,11 @@ async def superadd(ctx, member,*args):
 
 
 
-@bot1.command(name='joindate', help='Shows every player and their join date.')
+@bot1.command(name='joindate', help='Shows a player and their join date.')
 @commands.has_permissions(kick_members=True)
 async def memberslit(ctx,member:discord.Member):
 
-    response += f"{str(member)} {member.nick} Joined: {member.joined_at}.\n"
-
+    response = f"{str(member)} {member.nick} Joined: {member.joined_at}.\n"
     await ctx.send(response)
 
 @bot1.command(name='remove', help='Removes players from the cc (sheets) (Admin) (Replace spaces in names with underscore)\n Example: !hs remove Ironrok b_Ee_Z.')
@@ -297,7 +296,9 @@ async def memberslit(ctx,*members):
         if name.lower() not in names:
             not_found.append(name)
         else:
+
             index = names.index(name.lower())+2
+            names.remove(name.lower())
             start_sheet.delete_row(index)
             bosses_sheet.delete_row(index)
             members_sheet.delete_row(index)
