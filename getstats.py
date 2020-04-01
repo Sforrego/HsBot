@@ -15,11 +15,13 @@ def getStats(URL):
   if request.status_code == 200:
     return request._content.decode("utf-8")
   else:
+    print("Didnt Work")
     return 404
+
 def parseStats(stats_string):
-  statsList = stats_string.split("\n")
-  statsList = [x.split(",") for x in statsList][:-1]
-  return statsList
+    statsList = stats_string.split("\n")
+    statsList = [x.split(",") for x in statsList][:-1]
+    return statsList
 
 
 

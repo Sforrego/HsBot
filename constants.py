@@ -12,6 +12,49 @@ GAMEMODE_URL = {
   'ult': '_ultimate/',
 }
 
+BINGO_SKILLS=[
+"Woodcutting",
+"Fishing",
+"Mining",
+"Agility",
+"Thieving",
+"Slayer",
+"Runecrafting",
+"Hunter"
+]
+
+BINGO_BOSSES = [
+    "Zulrah",
+    "Grotesque Guardians",
+    "Crazy Archaeologist",
+    "Cerberus",
+    "Callisto",
+    "Venenatis",
+    "Sarachnis",
+    "Commander Zilyana",
+    "K'ril Tsutsaroth",
+    "Kree'Arra",
+    "Giant Mole",
+    "TzTok-Jad"
+]
+
+BINGO_TEAMS = ["1","2","3","4","5","6","7","8","ghost"]
+
+Bingo_TILES = {"Woodcutting":1000000,
+"Fishing":800000,
+"Mining":500000,
+"Agility":1000000,
+"Thieving":1500000,
+"Slayer":500000,
+"Runecrafting":400000,
+"Hunter":1000000,
+"Zulrah":128,
+"Grotesque Guardians":75,
+"Cerberus":128,
+"Sarachnis":100,
+"Giant Mole":75,
+"TzTok-Jad":3
+}
 
 RANKS = {
     'smiley':4,

@@ -152,8 +152,65 @@ def check(names,rsn):
         return True
     return False
 
+def bingo_update(bingo_sheet,skills=0,init=0):
+    if skills:
+        bingo_list = BINGO_SKILLS
+        starting_col = "B"
+        last_col = "Y"
+    else:
+        bingo_list = BINGO_BOSSES
+        starting_col = "D"
+        last_col = "AM"
+    ncols = len(bingo_list)
+
+    names = bingo_sheet.col_values(1)[1:]
+    bingo_values = bingo_sheet.get_all_values()[1:]
+    bingo_cell_list = bingo_sheet.range(f'{starting_col}{2}:{last_col}{len(names)+1}')
+
+    team_indexs = []
+
+    for i,name in enumerate(names):
+        if "team" in name.lower():
+            team_indexs.append(i+2)
+
+    new_bingo_list = []
+    for index3,cell in enumerate(bingo_cell_list):
+        modifier = 0 if init else 1
+        if index3 % 3 == modifier:
+            if cell.row in team_indexs:
+                pass
+            else:
+                new_bingo_list.append(cell)
+    names = [x for x in names if "team" not in x.lower() ]
+    for index, name in enumerate(names):
+        stats = getStats(playerURL(name,'iron'))
+        if stats == 404:
+            print(f"{name} not found")
+        else:
+            print(f"{index+1}. Updating {name}")
+            player_skills, player_clues , player_bosses = createDicts(parseStats(stats))
+            for index2, value in enumerate(bingo_list):
+                cell = new_bingo_list[ncols*index+index2]
+                if skills:
+                    cell.value = int(player_skills[f"{value}_Xp"])
+                else:
+                    cell.value = int(player_bosses[value]) if int(player_bosses[value]) != -1 else 0
+    #bingo_values = int(x) if x.isdigit() else x for x in y] for y in bingo_values
 
 
+    bingo_sheet.update_cells(new_bingo_list)
+    print("Finished updating.")
+
+def bingo_check(bingo_sheet_bosses,bingo_sheet_skills,team):
+    list_of_skills = bingo_sheet_skills.get_all_values()
+    list_of_bosses = bingo_sheet_bosses.get_all_values()
+    team_index = (int(team)-1)*6+2
+    row = list_of_skills[team_index]
+    progress = {}
+    for i,skill in enumerate(BINGO_SKILLS,start=1):
+        progress[skill] = f"{row[3*i]}/{Bingo_TILES[skill]} ({round(int(row[3*i])/Bingo_TILES[skill],2)*100}%)"
+    print(progress)
+    return progress
 def update_all(bosses_sheet, skills_sheet, start_sheet, client, starting_cell=2):
     try:
         names = start_sheet.col_values(2)[1:]
@@ -324,9 +381,11 @@ if __name__ == "__main__":
     skills_sheet = client.open("Members Ranks").worksheet('Skills')
     start_sheet = client.open("Members Ranks").worksheet('Start')
     names = start_sheet.col_values(2)[1:]
-
+    bingo_sheet_bosses = client.open("Lockdown Bingo").worksheet('BossTracker')
+    bingo_sheet_skills = client.open("Lockdown Bingo").worksheet('SkillsTracker')
     #player_top_stats(bosses_sheet, skills_sheet, start_sheet, names, "IronRok", 1)
-
+    #bingo_update(bingo_sheet_skills,skills=1)
+    bingo_check(bingo_sheet_bosses,bingo_sheet_skills,2)
     #EXAMPLES
 
 

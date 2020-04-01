@@ -25,10 +25,12 @@ skills_sheet = client.open("Members Ranks").worksheet('Skills')
 start_sheet = client.open("Members Ranks").worksheet('Start')
 members_sheet = client.open("Members Ranks").worksheet('Members')
 
+bingo_sheet_bosses = client.open("Lockdown Bingo").worksheet('BossTracker')
+bingo_sheet_skills = client.open("Lockdown Bingo").worksheet('SkillTracker')
 
 #BOT
 
-bot1 = commands.Bot(command_prefix='!hs ')
+bot1 = commands.Bot(command_prefix=['!hs ','!bingo '])
 
 
 @bot1.event
@@ -37,6 +39,17 @@ async def on_ready():
     task = loop.create_task(do_stuff_every_x_seconds(60*29, client.login))
     task2 = loop.create_task(do_stuff_every_x_seconds(60*60*12, update_all,bosses_sheet,skills_sheet,start_sheet,client))
 
+@bot1.command(name="updateteams",help="updates a bingo team progress. ")
+async def update_team(ctx, team):
+    await ctx.send("Teams updatings (this takes like 3-4 mins)...")
+    bingo_update(bingo_sheet_bosses)
+    bingo_update(bingo_sheet_skills,skills=1)
+    await ctx.send("Teams progress updated!")
+    
+@bot1.command(name="checkteam",help="Checks a bingo team progress. \n eg: !bingo checkteam 1")
+async def update_team(ctx, team):
+    response = str(bingo_check(bingo_sheet_bosses,bingo_sheet_skills,team))
+    await ctx.send(response)
 
 @bot1.command(name='add', help='Adds a player to the spreadsheets (Admin).')
 @commands.has_permissions(kick_members=True)
