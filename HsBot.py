@@ -26,7 +26,7 @@ start_sheet = client.open("Members Ranks").worksheet('Start')
 members_sheet = client.open("Members Ranks").worksheet('Members')
 
 bingo_sheet_bosses = client.open("Lockdown Bingo").worksheet('BossTracker')
-bingo_sheet_skills = client.open("Lockdown Bingo").worksheet('SkillTracker')
+bingo_sheet_skills = client.open("Lockdown Bingo").worksheet('SkillsTracker')
 
 #BOT
 
@@ -45,7 +45,7 @@ async def update_team(ctx, team):
     bingo_update(bingo_sheet_bosses)
     bingo_update(bingo_sheet_skills,skills=1)
     await ctx.send("Teams progress updated!")
-    
+
 @bot1.command(name="checkteam",help="Checks a bingo team progress. \n eg: !bingo checkteam 1")
 async def update_team(ctx, team):
     response = str(bingo_check(bingo_sheet_bosses,bingo_sheet_skills,team))
