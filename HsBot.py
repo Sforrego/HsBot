@@ -40,8 +40,8 @@ async def on_ready():
     task2 = loop.create_task(do_stuff_every_x_seconds(60*60*12, update_all,bosses_sheet,skills_sheet,start_sheet,client))
 
 @bot1.command(name="updateteams",help="updates a bingo team progress. ")
-async def update_team(ctx, team):
-    await ctx.send("Teams updatings (this takes like 3-4 mins)...")
+async def update_team(ctx):
+    await ctx.send("Teams updating... (this takes like 3-4 mins)")
     bingo_update(bingo_sheet_bosses)
     bingo_update(bingo_sheet_skills,skills=1)
     await ctx.send("Teams progress updated!")
@@ -277,6 +277,7 @@ async def superadd(ctx, member,*args):
                     members_sheet.update_acell(f"K{index}",rsn)
                     members_sheet.update_acell(f"L{index}",rsn.replace(" ","_"))
                     members_sheet.update_acell(f"B{index}",member.joined_at.strftime("%d %b, %Y"))
+                    names.append(rsn.replace(" ","_").lower())
                     update_player(bosses_sheet,skills_sheet,start_sheet,names,rsn.replace(" ","_"),stats)
                     response = f"{rsn} has been added to the memberlist, given nickname and role, and updated in the clan's HS."
     except discord.ext.commands.errors.BadArgument:
