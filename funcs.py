@@ -152,53 +152,97 @@ def check(names,rsn):
         return True
     return False
 
-def bingo_update(bingo_sheet,skills=0,init=0):
-    if skills:
+def bingo_update(bingo_sheet_bosses,bingo_sheet_skills,skills=0,init=0):
+    if not skills:
+        bingo_list = BINGO_BOSSES
+        starting_col = "E"
+        last_col = "AT"
+        bingo_sheet = bingo_sheet_bosses
+    elif skills == 1:
         bingo_list = BINGO_SKILLS
         starting_col = "B"
         last_col = "Y"
-    else:
-        bingo_list = BINGO_BOSSES
-        starting_col = "D"
-        last_col = "AM"
-    ncols = len(bingo_list)
+        bingo_sheet = bingo_sheet_skills
 
-    names = bingo_sheet.col_values(1)[1:]
-    bingo_values = bingo_sheet.get_all_values()[1:]
-    bingo_cell_list = bingo_sheet.range(f'{starting_col}{2}:{last_col}{len(names)+1}')
-
+    names = bingo_sheet_bosses.col_values(1)[1:]
     team_indexs = []
 
     for i,name in enumerate(names):
         if "team" in name.lower():
             team_indexs.append(i+2)
 
-    new_bingo_list = []
-    for index3,cell in enumerate(bingo_cell_list):
-        modifier = 0 if init else 1
-        if index3 % 3 == modifier:
-            if cell.row in team_indexs:
-                pass
-            else:
-                new_bingo_list.append(cell)
-    names = [x for x in names if "team" not in x.lower() ]
-    for index, name in enumerate(names):
-        stats = getStats(playerURL(name,'iron'))
-        if stats == 404:
-            print(f"{name} not found")
-        else:
-            print(f"{index+1}. Updating {name}")
-            player_skills, player_clues , player_bosses = createDicts(parseStats(stats))
-            for index2, value in enumerate(bingo_list):
-                cell = new_bingo_list[ncols*index+index2]
-                if skills:
-                    cell.value = int(player_skills[f"{value}_Xp"])
+    if skills != "both":
+        ncols = len(bingo_list)
+
+        bingo_cell_list = bingo_sheet.range(f'{starting_col}{2}:{last_col}{len(names)+1}')
+
+        new_bingo_list = []
+        for index3,cell in enumerate(bingo_cell_list):
+            modifier = 0 if init else 1
+            if index3 % 3 == modifier:
+                if cell.row in team_indexs:
+                    pass
                 else:
-                    cell.value = int(player_bosses[value]) if int(player_bosses[value]) != -1 else 0
-    #bingo_values = int(x) if x.isdigit() else x for x in y] for y in bingo_values
+                    new_bingo_list.append(cell)
+        names = [x for x in names if "team" not in x.lower() ]
+        for index, name in enumerate(names):
+            stats = getStats(playerURL(name,'iron'))
+            if stats == 404:
+                print(f"{name} not found")
+            else:
+                print(f"{index+1}. Updating {name}")
+                player_skills, player_clues , player_bosses = createDicts(parseStats(stats))
+                for index2, value in enumerate(bingo_list):
+                    cell = new_bingo_list[ncols*index+index2]
+                    if skills:
+                        cell.value = int(player_skills[f"{value}_Xp"])
+                    else:
+                        cell.value = int(player_bosses[value]) if int(player_bosses[value]) != -1 else 0
 
 
-    bingo_sheet.update_cells(new_bingo_list)
+        bingo_sheet.update_cells(new_bingo_list)
+    else:
+        bingo_list = [BINGO_BOSSES,BINGO_SKILLS]
+        starting_col = ["E","B"]
+        last_col = ["AT","Y"]
+        bingo_sheet = [bingo_sheet_bosses,bingo_sheet_skills]
+        ncols = [len(bingo_list[0]),len(bingo_list[1])]
+        bingo_cell_list = [bingo_sheet[i].range(f'{starting_col[i]}{2}:{last_col[i]}{len(names)+1}') for i in range(2)]
+        new_bingo_list = [[],[]]
+
+        for index3,cell, in enumerate(bingo_cell_list[0]):
+            modifier = 0 if init else 1
+            if index3 % 3 == modifier:
+                if cell.row in team_indexs:
+                    pass
+                else:
+                    new_bingo_list[0].append(cell)
+        for index3,cell, in enumerate(bingo_cell_list[1]):
+            modifier = 0 if init else 1
+            if index3 % 3 == modifier:
+                if cell.row in team_indexs:
+                    pass
+                else:
+                    new_bingo_list[1].append(cell)
+
+        names = [x for x in names if "team" not in x.lower() ]
+        for index, name in enumerate(names):
+            stats = getStats(playerURL(name,'iron'))
+            if stats == 404:
+                print(f"{name} not found")
+            else:
+
+                print(f"{index+1}. Updating {name}")
+                player_skills, player_clues , player_bosses = createDicts(parseStats(stats))
+                for index2, value in enumerate(bingo_list[0]):
+                    cell1 = new_bingo_list[0][ncols[0]*index+index2]
+                    cell1.value = int(player_bosses[value]) if int(player_bosses[value]) != -1 else 0
+                for index2, value in enumerate(bingo_list[1]):
+                    cell2 = new_bingo_list[1][ncols[1]*index+index2]
+                    cell2.value = int(player_skills[f"{value}_Xp"])
+
+        bingo_sheet[0].update_cells(new_bingo_list[0])
+        bingo_sheet[1].update_cells(new_bingo_list[1])
     print("Finished updating.")
 
 def bingo_check(bingo_sheet_bosses,bingo_sheet_skills,team):
@@ -384,8 +428,8 @@ if __name__ == "__main__":
     bingo_sheet_bosses = client.open("Lockdown Bingo").worksheet('BossTracker')
     bingo_sheet_skills = client.open("Lockdown Bingo").worksheet('SkillsTracker')
     #player_top_stats(bosses_sheet, skills_sheet, start_sheet, names, "IronRok", 1)
-    #bingo_update(bingo_sheet_skills,skills=1)
-    bingo_check(bingo_sheet_bosses,bingo_sheet_skills,2)
+    #bingo_update(bingo_sheet_bosses,bingo_sheet_skills,skills=1)
+    bingo_update(bingo_sheet_bosses,bingo_sheet_skills,skills="both",init=1)
     #EXAMPLES
 
 

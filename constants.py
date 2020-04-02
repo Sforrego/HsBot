@@ -26,6 +26,8 @@ BINGO_SKILLS=[
 BINGO_BOSSES = [
     "Zulrah",
     "Grotesque Guardians",
+    "Chaos Fanatic",
+    "Scorpia",
     "Crazy Archaeologist",
     "Cerberus",
     "Callisto",
@@ -53,7 +55,10 @@ Bingo_TILES = {"Woodcutting":1000000,
 "Cerberus":128,
 "Sarachnis":100,
 "Giant Mole":75,
-"TzTok-Jad":3
+"TzTok-Jad":3,
+"GWD": 150,
+"Wildy Demi": 100,
+"Wildy Bosses":60
 }
 
 RANKS = {

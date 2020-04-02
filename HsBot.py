@@ -41,13 +41,35 @@ async def on_ready():
 
 @bot1.command(name="updateteams",help="updates a bingo team progress. ")
 async def update_team(ctx):
-    await ctx.send("Teams updating... (this takes like 3-4 mins)")
-    bingo_update(bingo_sheet_bosses)
-    bingo_update(bingo_sheet_skills,skills=1)
+    try:
+        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+    except gspread.exceptions.APIError as e:
+        client.login()
+        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+    await ctx.send("Teams updating... (this takes like 1-2 mins)")
+    bingo_update(bingo_sheet_bosses,bingo_sheet_skills,skills="both")
     await ctx.send("Teams progress updated!")
+
+@bot1.command(name="startbingo00",help="starts tracking every player participating in the bingo.")
+@commands.has_permissions(kick_members=True)
+async def update_team(ctx):
+    try:
+        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+    except gspread.exceptions.APIError as e:
+        client.login()
+        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+    await ctx.send("Startin bingo tracking... (this takes like 3-4 mins)")
+    bingo_update(bingo_sheet_bosses,bingo_sheet_skills,skills="both",1)
+    bingo_update(bingo_sheet_bosses,bingo_sheet_skills,skills="both")
+    await ctx.send("Bingo tracker initialized!")
 
 @bot1.command(name="checkteam",help="Checks a bingo team progress. \n eg: !bingo checkteam 1")
 async def update_team(ctx, team):
+    try:
+        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+    except gspread.exceptions.APIError as e:
+        client.login()
+        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
     response = str(bingo_check(bingo_sheet_bosses,bingo_sheet_skills,team))
     await ctx.send(response)
 
