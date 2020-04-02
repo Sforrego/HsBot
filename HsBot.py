@@ -59,7 +59,7 @@ async def update_team(ctx):
         client.login()
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
     await ctx.send("Startin bingo tracking... (this takes like 3-4 mins)")
-    bingo_update(bingo_sheet_bosses,bingo_sheet_skills,skills="both",1)
+    bingo_update(bingo_sheet_bosses,bingo_sheet_skills,skills="both",init=1)
     bingo_update(bingo_sheet_bosses,bingo_sheet_skills,skills="both")
     await ctx.send("Bingo tracker initialized!")
 
