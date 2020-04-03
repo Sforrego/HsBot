@@ -58,7 +58,7 @@ async def update_team(ctx):
     except gspread.exceptions.APIError as e:
         client.login()
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
-    await ctx.send("Startin bingo tracking... (this takes like 3-4 mins)")
+    await ctx.send("Starting bingo tracker... (this takes like 3-4 mins)")
     bingo_update(bingo_sheet_bosses,bingo_sheet_skills,skills="both",init=1)
     bingo_update(bingo_sheet_bosses,bingo_sheet_skills,skills="both")
     await ctx.send("Bingo tracker initialized!")
@@ -71,6 +71,7 @@ async def update_team(ctx, team):
         client.login()
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
     response = str(bingo_check(bingo_sheet_bosses,bingo_sheet_skills,team))
+    response += "\n\nBoss KC might not be accurate (if you weren't ranked in the highscores in that boss when bingo began)"
     await ctx.send(response)
 
 @bot1.command(name='add', help='Adds a player to the spreadsheets (Admin).')
