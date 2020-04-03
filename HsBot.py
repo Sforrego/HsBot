@@ -40,6 +40,7 @@ async def on_ready():
     #task2 = loop.create_task(do_stuff_every_x_seconds(60*60*12, update_all,bosses_sheet,skills_sheet,start_sheet,client))
 
 @bot1.command(name="updateteams",help="updates a bingo team progress. ")
+@commands.has_permissions(kick_members=True)
 async def update_team(ctx):
     try:
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
