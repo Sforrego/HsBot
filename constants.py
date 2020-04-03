@@ -37,7 +37,9 @@ BINGO_BOSSES = [
     "K'ril Tsutsaroth",
     "Kree'Arra",
     "Giant Mole",
+    "Hespori",
     "TzTok-Jad"
+
 ]
 
 BINGO_TEAMS = ["1","2","3","4","5","6","7","8","ghost"]
@@ -69,7 +71,9 @@ BINGO_BOSS_TILES = {
     "K'ril Tsutsaroth":50,
     "Kree'Arra":50,
     "Giant Mole":75,
+    "Hespori":10,
     "TzTok-Jad":3
+
 }
 
 RANKS = {
