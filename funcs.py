@@ -246,13 +246,34 @@ def bingo_update(bingo_sheet_bosses,bingo_sheet_skills,skills=0,init=0):
     print("Finished updating.")
 
 def bingo_check(bingo_sheet_bosses,bingo_sheet_skills,team):
-    list_of_skills = bingo_sheet_skills.get_all_values()
-    list_of_bosses = bingo_sheet_bosses.get_all_values()
+    list_of_skills = bingo_sheet_skills.get_all_values()[1:]
+    list_of_bosses = bingo_sheet_bosses.get_all_values()[1:]
     team_index = (int(team)-1)*6+2
     row = list_of_skills[team_index]
+    row2 =  list_of_bosses[team_index]
     progress = {}
     for i,skill in enumerate(BINGO_SKILLS,start=1):
-        progress[skill] = f"{row[3*i]}/{Bingo_TILES[skill]} ({round(int(row[3*i])/Bingo_TILES[skill],2)*100}%)"
+        fraction = round(int(row[3*i])/Bingo_SKILL_TILES[skill],2)
+        if fraction > 1:
+            progress[skill] = f"COMPLETED"
+        else:
+            progress[skill] = f"{row[3*i]}/{Bingo_SKILL_TILES[skill]} ({fraction*100}%)"
+    for i,boss in enumerate(BINGO_BOSS_TILES.keys(),start=1):
+        if i < 4:
+            fraction = round(int(row2[i])/BINGO_BOSS_TILES[boss],2)
+            kc = row2[i]
+        else:
+            fraction = round(int(row2[3*(i-3)+3])/BINGO_BOSS_TILES[boss],2)
+            kc = row2[3*(i-3)+3]
+        if fraction > 1:
+            progress[boss] = f"COMPLETED"
+        else:
+            if boss in ["Chaos Fanatic","Scorpia","Crazy Archaeologist"]:
+                progress[boss] = f"{kc}"
+            else:
+                progress[boss] = f"{kc}/{BINGO_BOSS_TILES[boss]} ({fraction*100}%)"
+
+
     print(progress)
     return progress
 def update_all(bosses_sheet, skills_sheet, start_sheet, client, starting_cell=2):
@@ -429,7 +450,8 @@ if __name__ == "__main__":
     bingo_sheet_skills = client.open("Lockdown Bingo").worksheet('SkillsTracker')
     #player_top_stats(bosses_sheet, skills_sheet, start_sheet, names, "IronRok", 1)
     #bingo_update(bingo_sheet_bosses,bingo_sheet_skills,skills=1)
-    bingo_update(bingo_sheet_bosses,bingo_sheet_skills,skills="both",init=1)
+    #bingo_update(bingo_sheet_bosses,bingo_sheet_skills,skills="both",init=1)
+    bingo_check(bingo_sheet_bosses,bingo_sheet_skills,2)
     #EXAMPLES
 
 

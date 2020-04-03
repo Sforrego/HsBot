@@ -42,23 +42,34 @@ BINGO_BOSSES = [
 
 BINGO_TEAMS = ["1","2","3","4","5","6","7","8","ghost"]
 
-Bingo_TILES = {"Woodcutting":1000000,
-"Fishing":800000,
-"Mining":500000,
-"Agility":1000000,
-"Thieving":1500000,
-"Slayer":500000,
-"Runecrafting":400000,
-"Hunter":1000000,
-"Zulrah":128,
-"Grotesque Guardians":75,
-"Cerberus":128,
-"Sarachnis":100,
-"Giant Mole":75,
-"TzTok-Jad":3,
-"GWD": 150,
-"Wildy Demi": 100,
-"Wildy Bosses":60
+Bingo_SKILL_TILES = {"Woodcutting":1000000,
+    "Fishing":800000,
+    "Mining":500000,
+    "Agility":1000000,
+    "Thieving":1500000,
+    "Slayer":500000,
+    "Runecrafting":400000,
+    "Hunter":1000000,
+}
+
+BINGO_BOSS_TILES = {
+    "GWD":150,
+    "Wildy":60,
+    "Wildy_Demi":100,
+    "Zulrah":128,
+    "Grotesque Guardians":75,
+    "Chaos Fanatic":100,
+    "Scorpia":100,
+    "Crazy Archaeologist":100,
+    "Cerberus":128,
+    "Callisto":30,
+    "Venenatis":30,
+    "Sarachnis":100,
+    "Commander Zilyana":50,
+    "K'ril Tsutsaroth":50,
+    "Kree'Arra":50,
+    "Giant Mole":75,
+    "TzTok-Jad":3
 }
 
 RANKS = {
