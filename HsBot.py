@@ -37,7 +37,7 @@ bot1 = commands.Bot(command_prefix=['!hs ','!bingo '])
 async def on_ready():
     print(f'{bot1.user} has connected to Discord!')
     task = loop.create_task(do_stuff_every_x_seconds(60*29, client.login))
-    task2 = loop.create_task(do_stuff_every_x_seconds(60*60*12, update_all,bosses_sheet,skills_sheet,start_sheet,client))
+    #task2 = loop.create_task(do_stuff_every_x_seconds(60*60*12, update_all,bosses_sheet,skills_sheet,start_sheet,client))
 
 @bot1.command(name="updateteams",help="updates a bingo team progress. ")
 async def update_team(ctx):
