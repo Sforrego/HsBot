@@ -246,9 +246,9 @@ def bingo_update(bingo_sheet_bosses,bingo_sheet_skills,skills=0,init=0):
     print("Finished updating.")
 
 def bingo_check(bingo_sheet_bosses,bingo_sheet_skills,team):
-    list_of_skills = bingo_sheet_skills.get_all_values()[1:]
-    list_of_bosses = bingo_sheet_bosses.get_all_values()[1:]
-    team_index = (int(team)-1)*6+2
+    list_of_skills = bingo_sheet_skills.get_all_values()
+    list_of_bosses = bingo_sheet_bosses.get_all_values()
+    team_index = (int(team)-1)*7+1
     row = list_of_skills[team_index]
     row2 =  list_of_bosses[team_index]
     progress = {}
@@ -451,7 +451,7 @@ if __name__ == "__main__":
     #player_top_stats(bosses_sheet, skills_sheet, start_sheet, names, "IronRok", 1)
     #bingo_update(bingo_sheet_bosses,bingo_sheet_skills,skills=1)
     #bingo_update(bingo_sheet_bosses,bingo_sheet_skills,skills="both",init=1)
-    bingo_check(bingo_sheet_bosses,bingo_sheet_skills,2)
+    bingo_check(bingo_sheet_bosses,bingo_sheet_skills,5)
     #EXAMPLES
 
 
