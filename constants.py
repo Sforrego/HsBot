@@ -20,6 +20,7 @@ BINGO_SKILLS=[
 "Thieving",
 "Slayer",
 "Runecrafting",
+"Firemaking",
 "Hunter"
 ]
 
@@ -51,6 +52,7 @@ Bingo_SKILL_TILES = {"Woodcutting":1000000,
     "Thieving":1500000,
     "Slayer":500000,
     "Runecrafting":400000,
+    "Firemaking":2000000,
     "Hunter":1000000,
 }
 

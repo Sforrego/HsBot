@@ -258,6 +258,7 @@ def bingo_check(bingo_sheet_bosses,bingo_sheet_skills,team):
             progress[skill] = f"COMPLETED"
         else:
             progress[skill] = f"{row[3*i]}/{Bingo_SKILL_TILES[skill]} ({fraction*100}%)"
+        print(fraction)
     for i,boss in enumerate(BINGO_BOSS_TILES.keys(),start=1):
         if i < 4:
             fraction = round(int(row2[i])/BINGO_BOSS_TILES[boss],2)
