@@ -161,7 +161,7 @@ def bingo_update(bingo_sheet_bosses,bingo_sheet_skills,skills=0,init=0):
     elif skills == 1:
         bingo_list = BINGO_SKILLS
         starting_col = "B"
-        last_col = "Y"
+        last_col = "AB"
         bingo_sheet = bingo_sheet_skills
 
     names = bingo_sheet_bosses.col_values(1)[1:]
@@ -204,7 +204,7 @@ def bingo_update(bingo_sheet_bosses,bingo_sheet_skills,skills=0,init=0):
     else:
         bingo_list = [BINGO_BOSSES,BINGO_SKILLS]
         starting_col = ["E","B"]
-        last_col = ["AW","Y"]
+        last_col = ["AW","AB"]
         bingo_sheet = [bingo_sheet_bosses,bingo_sheet_skills]
         ncols = [len(bingo_list[0]),len(bingo_list[1])]
         bingo_cell_list = [bingo_sheet[i].range(f'{starting_col[i]}{2}:{last_col[i]}{len(names)+1}') for i in range(2)]
