@@ -254,26 +254,26 @@ def bingo_check(bingo_sheet_bosses,bingo_sheet_skills,team):
     progress = {}
     for i,skill in enumerate(BINGO_SKILLS,start=1):
         fraction = round(int(row[3*i])/Bingo_SKILL_TILES[skill],2)
-        if fraction > 1:
-            progress[skill] = f"COMPLETED"
+        if fraction >= 1:
+            progress[skill] = ("COMPLETED",)
         else:
-            progress[skill] = f"{row[3*i]}/{Bingo_SKILL_TILES[skill]} ({fraction*100}%)"
-        print(fraction)
+            progress[skill] = (row[3*i],Bingo_SKILL_TILES[skill])
+        #print(fraction)
     for i,boss in enumerate(BINGO_BOSS_TILES.keys(),start=1):
         if i < 4:
-            fraction = round(int(row2[i])/BINGO_BOSS_TILES[boss],2)
             kc = row2[i]
+            fraction = round(int(kc)/BINGO_BOSS_TILES[boss],2)
         else:
-            fraction = round(int(row2[3*(i-3)+3])/BINGO_BOSS_TILES[boss],2)
             kc = row2[3*(i-3)+3]
-        if fraction > 1:
-            progress[boss] = f"COMPLETED"
+            fraction = round(int(kc)/BINGO_BOSS_TILES[boss],2)
+
+        if fraction >= 1:
+            progress[boss] = ("COMPLETED",)
         else:
             if boss in ["Chaos Fanatic","Scorpia","Crazy Archaeologist"]:
-                progress[boss] = f"{kc}"
+                progress[boss] = (kc,)
             else:
-                progress[boss] = f"{kc}/{BINGO_BOSS_TILES[boss]} ({fraction*100}%)"
-
+                progress[boss] = (kc,BINGO_BOSS_TILES[boss])
 
     print(progress)
     return progress

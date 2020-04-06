@@ -41,7 +41,7 @@ async def on_ready():
 
 @bot1.command(name="updateteams",help="updates a bingo team progress. ")
 @commands.has_permissions(kick_members=True)
-async def update_team(ctx):
+async def update_teams(ctx):
     try:
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
     except gspread.exceptions.APIError as e:
@@ -53,7 +53,7 @@ async def update_team(ctx):
 
 @bot1.command(name="startbingo00",help="starts tracking every player participating in the bingo.")
 @commands.has_permissions(kick_members=True)
-async def update_team(ctx):
+async def start_teams(ctx):
     try:
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
     except gspread.exceptions.APIError as e:
@@ -65,13 +65,19 @@ async def update_team(ctx):
     await ctx.send("Bingo tracker initialized!")
 
 @bot1.command(name="checkteam",help="Checks a bingo team progress. \n eg: !bingo checkteam 1")
-async def update_team(ctx, team):
+async def check_team(ctx, team):
     try:
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
     except gspread.exceptions.APIError as e:
         client.login()
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
-    response = str(bingo_check(bingo_sheet_bosses,bingo_sheet_skills,team))
+    mydict = bingo_check(bingo_sheet_bosses,bingo_sheet_skills,team)
+    response = ""
+    for key, value in mydict.items():
+        if len(value) == 2:
+            response += f"{key}: {value[0]}/{value[1]} ({round(value[0]/value[1],2)*100}%)\n"
+        else:
+            response += f"{key}:{value[0]}\n"
     response += "\n\nBoss KC might not be accurate (if you weren't ranked in the highscores in that boss when bingo began)"
     await ctx.send(response)
 
