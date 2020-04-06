@@ -75,7 +75,7 @@ async def check_team(ctx, team):
     response = ""
     for key, value in mydict.items():
         if len(value) == 2:
-            response += f"{key}: {value[0]}/{value[1]} ({float(str(round(int(value[0])/int(value[1]),2)))*100}%)\n"
+            response += f"{key}: {value[0]}/{value[1]} ({int(value[0])/int(value[1])*100:.2f}%)\n"
         else:
             response += f"{key}:{value[0]}\n"
     response += "\n\nBoss KC might not be accurate (if you weren't ranked in the highscores in that boss when bingo began)"
