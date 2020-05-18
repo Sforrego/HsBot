@@ -326,7 +326,7 @@ async def memberslit(ctx,*member):
     member = " ".join(member)
     converter = MemberConverter()
     member = await converter.convert(ctx,member)
-    console.log(f"Member name: {member.name}. Nickname: {member.nick}")
+    print(f"Member name: {member.name}. Nickname: {member.nick}")
     response = f"{str(member)} {member.nick} Joined: {member.joined_at}.\n"
     await ctx.send(response)
 
