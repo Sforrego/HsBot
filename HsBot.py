@@ -307,6 +307,7 @@ async def superadd(ctx, member,*args):
                     members_sheet.update_acell(f"K{index}",rsn)
                     members_sheet.update_acell(f"L{index}",rsn.replace(" ","_"))
                     members_sheet.update_acell(f"B{index}",member.joined_at.strftime("%d %b, %Y"))
+                    members_sheet.update_acell(f"U{index}",member.name)
                     names.append(rsn.replace(" ","_").lower())
                     update_player(bosses_sheet,skills_sheet,start_sheet,names,rsn.replace(" ","_"),stats)
                     response = f"{rsn} has been added to the memberlist, given nickname and role, and updated in the clan's HS."
@@ -325,6 +326,7 @@ async def memberslit(ctx,*member):
     member = " ".join(member)
     converter = MemberConverter()
     member = await converter.convert(ctx,member)
+    console.log(f"Member name: {member.name}. Nickname: {member.nick}")
     response = f"{str(member)} {member.nick} Joined: {member.joined_at}.\n"
     await ctx.send(response)
 

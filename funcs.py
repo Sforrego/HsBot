@@ -438,6 +438,24 @@ def get_coded_name(start_sheet):
         cell.value = names[i]
     start_sheet.update_cells(cell_list)
 
+def new_remove(members, start_sheet,bosses_sheet,skills_sheet,members_sheet):
+    not_found = []
+
+    for name in members:
+        if name.lower() not in names:
+            not_found.append(name)
+        else:
+
+            index = names.index(name.lower())+2
+            names.remove(name.lower())
+            start_sheet.delete_rows(index)
+            bosses_sheet.delete_rows(index)
+            members_sheet.delete_rows(index)
+            skills_sheet.delete_rows(index)
+
+    found = [x for x in members if x not in not_found]
+    return found
+
 if __name__ == "__main__":
     scope = ['https://spreadsheets.google.com/feeds',
         'https://www.googleapis.com/auth/drive']
@@ -446,22 +464,24 @@ if __name__ == "__main__":
     bosses_sheet = client.open("Members Ranks").worksheet('Bosses')
     skills_sheet = client.open("Members Ranks").worksheet('Skills')
     start_sheet = client.open("Members Ranks").worksheet('Start')
+    members_sheet = client.open("Members Ranks").worksheet('Members')
+
     names = start_sheet.col_values(2)[1:]
     bingo_sheet_bosses = client.open("Lockdown Bingo").worksheet('BossTracker')
     bingo_sheet_skills = client.open("Lockdown Bingo").worksheet('SkillsTracker')
     #player_top_stats(bosses_sheet, skills_sheet, start_sheet, names, "IronRok", 1)
     #bingo_update(bingo_sheet_bosses,bingo_sheet_skills,skills=1)
     #bingo_update(bingo_sheet_bosses,bingo_sheet_skills,skills="both",init=1)
-    bingo_check(bingo_sheet_bosses,bingo_sheet_skills,5)
+    #bingo_check(bingo_sheet_bosses,bingo_sheet_skills,5)
     #EXAMPLES
 
 
     #get_coded_name(start_sheet)
-    #remove_players(bosses_sheet,skills_sheet,start_sheet,names,["saund"])
+    print(new_remove(["Idiotium","Iron_Man_MkV","asdqwe","ironn_69","siphiwe_moyo","iron_lyfeee","weeeeeeeee"],start_sheet,bosses_sheet,skills_sheet,members_sheet))
     #update_all(bosses_sheet,skills_sheet,start_sheet)
     #update_player(bosses_sheet,skills_sheet,start_sheet,names,"hassinen42")
     #update_player(bosses_sheet,skills_sheet,start_sheet,names,"bonerrific",1)
-    #print(top_stat(bosses_sheet,skills_sheet,names,"Nightmare",10))
+    # print(top_stat(bosses_sheet,skills_sheet,names,"Zulrah",10))
     #print(get_pretty_name(start_sheet,"no_ge_canvey"))
     #print(compare_players(bosses_sheet, skills_sheet, names, "IronRok", "no ge canvey", "Attack"))
 
