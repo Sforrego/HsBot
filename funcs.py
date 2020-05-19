@@ -5,6 +5,7 @@ from constants import *
 import time
 import asyncio
 from datetime import datetime
+import itertools
 
 def get_stat(name):
     name = name.lower()
@@ -53,6 +54,23 @@ def get_stat_top(bosses_sheet, skills_sheet, start_sheet, names, stat, n):
     response += "\n"
     return response
 
+def get_tracked_top(tracked_sheet,start_sheet, names, stat, n):
+    top_stats = top_tracked(tracked_sheet, names, stat, n)
+    if top_stats != 404:
+        stat = get_stat(stat)
+        response = f'{stat}\n\n'
+        players = [x[-1] for x in top_stats]
+        players = get_pretty_names(start_sheet,players)
+        for i,player in enumerate(top_stats,start=1):
+            if len(player) == 2:
+                response += f"{i}. {players[i-1]} {player[0]} \n"
+            elif len(player) == 3:
+                response += f"{i}.  {players[i-1]} {player[0]} {player[1]}\n"
+    else:
+        response = f"Stat {stat} not found."
+    response += "\n"
+    return response
+
 def top_stat(bosses_sheet, skills_sheet, names, stat, n):
     stat = get_stat(stat)
     if stat == 404:
@@ -67,6 +85,19 @@ def top_stat(bosses_sheet, skills_sheet, names, stat, n):
         xp = skills_sheet.col_values(index+1)[1:]
         mylist = list(zip(xp,lvl))
         mylist = [(int(mylist[i][1]),int(mylist[i][0]),names[i]) if mylist[i][0] != "" else (-1,names[i]) for i in range(len(mylist))]
+
+    mylist = sorted(mylist, reverse=True)
+    mylist = mylist[:n]
+    return mylist
+
+def top_tracked(tracked_sheet, names, stat, n):
+    stat = get_stat(stat)
+    if stat == 404:
+        return stat
+    elif stat in SKILLS:
+        index = SKILLS.index(stat)+1
+        xp = tracked_sheet.col_values(index+1)[1:]
+        mylist = [(int(value),name) if value != "" else (-1,name) for value,name in zip(xp,names)]
 
     mylist = sorted(mylist, reverse=True)
     mylist = mylist[:n]
@@ -371,6 +402,71 @@ def update_all(bosses_sheet, skills_sheet, start_sheet, client, starting_cell=2)
     print("Sheets updated.")
     return not_found
 
+def tracker(tracker_sheet, start_sheet, client, start=0,starting_cell=2):
+    try:
+        names = start_sheet.col_values(2)[1:]
+    except gspread.exceptions.APIError as e:
+        client.login()
+        names = start_sheet.col_values(2)[1:]
+    tracker_values = tracker_sheet.get_all_values()[1:]
+    tracker_list = []
+    if start:
+        date_cell_list = tracker_sheet.range(f'AX2:AX{len(names)+1}')
+    else:
+        date_cell_list = tracker_sheet.range(f'AY2:AY{len(names)+1}')
+    # start_list = []
+    tracker_cell_list = tracker_sheet.range(f'B{starting_cell}:AW{len(names)+1}')
+    # start_cell_list = start_sheet.range(f'C{starting_cell}:F{len(names)+1}')
+    not_found = []
+
+    for index,name in enumerate(names[starting_cell-2:], start=starting_cell):
+        stats = getStats(playerURL(name,'iron'))
+        if stats != 404:
+            player_skills, player_clues , player_bosses = createDicts(parseStats(stats))
+            # start_list.append((player_skills["Overall"],player_skills["Overall"],player_skills["Overall_Xp"],player_skills["Overall_Xp"]))
+            player_skills = [value for key,value in player_skills.items() if "Xp" in key]
+
+            player_skills = [x for pair in zip(player_skills,player_skills) for x in pair]
+
+            print(f"updating {index}. {name} total {player_skills[0]} xp {player_skills[1]}")
+            tracker_list.append(player_skills)
+        else:
+
+            print(f"{name} not found in highscores.")
+            tracker_list.append(tracker_values[index-2][1:-2])
+            not_found.append(name)
+
+    tracker_list = [int(item) if item != "" else item for sublist in tracker_list for item in sublist]
+
+    for i, val in enumerate(tracker_list):
+        if val:
+            if not start:
+                if i%2==1:
+                    tracker_cell_list[i].value = int(val)
+            else:
+                tracker_cell_list[i].value = int(val)
+            if tracker_cell_list[i].value:
+                tracker_cell_list[i].value = int(tracker_cell_list[i].value)
+
+
+    today = datetime.now()
+    today = today.strftime("%Y/%m/%d")
+    for cell in date_cell_list:
+        cell.value = today
+
+
+    try:
+        names = start_sheet.col_values(2)[1:]
+    except gspread.exceptions.APIError as e:
+        client.login()
+        names = start_sheet.col_values(2)[1:]
+    tracker_sheet.update_cells(tracker_cell_list)
+    tracker_sheet.update_cells(date_cell_list)
+
+
+    print("Trackers updated.")
+    return not_found
+
 def update_bosses_names(BOSSES, sheet):
     # updates the columns names
     for i, boss in enumerate(BOSSES):
@@ -465,6 +561,8 @@ if __name__ == "__main__":
     skills_sheet = client.open("Members Ranks").worksheet('Skills')
     start_sheet = client.open("Members Ranks").worksheet('Start')
     members_sheet = client.open("Members Ranks").worksheet('Members')
+    tracker_sheet = client.open("Members Ranks").worksheet('WeeklyTracker')
+    tracked_sheet = client.open("Members Ranks").worksheet('TrackedXp')
 
     names = start_sheet.col_values(2)[1:]
     bingo_sheet_bosses = client.open("Lockdown Bingo").worksheet('BossTracker')
@@ -475,9 +573,11 @@ if __name__ == "__main__":
     #bingo_check(bingo_sheet_bosses,bingo_sheet_skills,5)
     #EXAMPLES
 
+    tracker(tracker_sheet,start_sheet,client)
+    #print(get_tracked_top(tracked_sheet,start_sheet,names,"overall",10))
 
     #get_coded_name(start_sheet)
-    print(new_remove(["Idiotium","Iron_Man_MkV","asdqwe","ironn_69","siphiwe_moyo","iron_lyfeee","weeeeeeeee"],start_sheet,bosses_sheet,skills_sheet,members_sheet))
+    # print(new_remove(["Idiotium","Iron_Man_MkV","asdqwe","ironn_69","siphiwe_moyo","iron_lyfeee","weeeeeeeee"],start_sheet,bosses_sheet,skills_sheet,members_sheet))
     #update_all(bosses_sheet,skills_sheet,start_sheet)
     #update_player(bosses_sheet,skills_sheet,start_sheet,names,"hassinen42")
     #update_player(bosses_sheet,skills_sheet,start_sheet,names,"bonerrific",1)

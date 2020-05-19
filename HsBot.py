@@ -24,6 +24,8 @@ bosses_sheet = client.open("Members Ranks").worksheet('Bosses')
 skills_sheet = client.open("Members Ranks").worksheet('Skills')
 start_sheet = client.open("Members Ranks").worksheet('Start')
 members_sheet = client.open("Members Ranks").worksheet('Members')
+tracker_sheet = client.open("Members Ranks").worksheet('WeeklyTracker')
+tracked_sheet = client.open("Members Ranks").worksheet('TrackedXp')
 
 bingo_sheet_bosses = client.open("Lockdown Bingo").worksheet('BossTracker')
 bingo_sheet_skills = client.open("Lockdown Bingo").worksheet('SkillsTracker')
@@ -37,7 +39,7 @@ bot1 = commands.Bot(command_prefix=['!hs ','!bingo '])
 async def on_ready():
     print(f'{bot1.user} has connected to Discord!')
     task = loop.create_task(do_stuff_every_x_seconds(60*29, client.login))
-    #task2 = loop.create_task(do_stuff_every_x_seconds(60*60*12, update_all,bosses_sheet,skills_sheet,start_sheet,client))
+    task2 = loop.create_task(do_stuff_every_x_seconds(60*60*24, update_all,bosses_sheet,skills_sheet,start_sheet,client))
 
 @bot1.command(name="updateteams",help="updates a bingo team progress. ")
 @commands.has_permissions(kick_members=True)
@@ -175,6 +177,44 @@ async def top(ctx, stat):
     response = get_stat_top(bosses_sheet, skills_sheet,start_sheet ,names, stat, 5)
     await ctx.send(response)
 
+@bot1.command(name='tracked', help='Shows the top 5 players and their xp gains for a specific skill.')
+async def top(ctx, stat):
+    try:
+        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+    except gspread.exceptions.APIError as e:
+        client.login()
+        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+
+    response = get_stat_top(bosses_sheet, skills_sheet,start_sheet ,names, stat, 5)
+    await ctx.send(response)
+
+@bot1.command(name='start_tracking', help='Shows the top 5 players and their xp gains for a specific skill.')
+async def top(ctx, stat):
+    try:
+        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+    except gspread.exceptions.APIError as e:
+        client.login()
+        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+
+    await ctx.send("Loading Tracker... (30 mins ~)")
+    tracker(tracker_sheet,start_sheet,client,1)
+    await ctx.send("Tracking started.")
+
+@bot1.command(name='update_tracker', help='Shows the top 5 players and their xp gains for a specific skill.')
+async def top(ctx, stat):
+    try:
+        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+    except gspread.exceptions.APIError as e:
+        client.login()
+        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+
+    await ctx.send("Updating Tracker... (30 mins ~)")
+    tracker(tracker_sheet,start_sheet,client)
+    await ctx.send("Tracker updated.")
+
+
+
+
 @bot1.command(name='top10', help='Shows the top X players and their kc for a specific stat.')
 async def topx(ctx, stat):
     try:
@@ -305,11 +345,10 @@ async def superadd(ctx, member,*args):
                     #members_cell_list = members_sheet.range(f'A{index}:B{index}')
                     members_sheet.update_acell(f"A{index}",rsn)
                     members_sheet.update_acell(f"K{index}",rsn)
-                    members_sheet.update_acell(f"L{index}",rsn.replace(" ","_"))
                     members_sheet.update_acell(f"B{index}",member.joined_at.strftime("%d %b, %Y"))
                     members_sheet.update_acell(f"U{index}",member.name)
                     names.append(rsn.replace(" ","_").lower())
-                    update_player(bosses_sheet,skills_sheet,start_sheet,names,rsn.replace(" ","_"),stats)
+                    update_player(bosses_sheet,skills_sheet,start_sheet,names,rsn.replace(" ","_"),stats,1)
                     response = f"{rsn} has been added to the memberlist, given nickname and role, and updated in the clan's HS."
     except discord.ext.commands.errors.BadArgument:
         response = f"Member {member} not found."
@@ -347,6 +386,8 @@ async def memberslit(ctx,*members):
 
             index = names.index(name.lower())+2
             names.remove(name.lower())
+            tracker_sheet.delete_row(index)
+            tracked_sheet.delete_row(index)
             start_sheet.delete_row(index)
             bosses_sheet.delete_row(index)
             members_sheet.delete_row(index)
