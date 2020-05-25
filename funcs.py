@@ -308,7 +308,7 @@ def bingo_check(bingo_sheet_bosses,bingo_sheet_skills,team):
 
     print(progress)
     return progress
-def update_all(bosses_sheet, skills_sheet, start_sheet, client, starting_cell=2):
+def update_all(bosses_sheet, skills_sheet, start_sheet, client, starting_cell=2, tracker_sheet=None):
     try:
         names = start_sheet.col_values(2)[1:]
     except gspread.exceptions.APIError as e:
@@ -321,6 +321,12 @@ def update_all(bosses_sheet, skills_sheet, start_sheet, client, starting_cell=2)
     skills_list = []
     start_list_lvl = []
     start_list_xp = []
+
+    if tracker_sheet:
+        tracker_values = tracker_sheet.get_all_values()[1:]
+        tracker_list = []
+        date_cell_list2 = tracker_sheet.range(f'AX2:AX{len(names)+1}')
+        tracker_cell_list = tracker_sheet.range(f'B{starting_cell}:AW{len(names)+1}')
     # start_list = []
     bosses_cell_list = bosses_sheet.range(f'B{starting_cell}:BA{len(names)+1}')
     skills_cell_list = skills_sheet.range(f'B{starting_cell}:AW{len(names)+1}')
@@ -337,7 +343,9 @@ def update_all(bosses_sheet, skills_sheet, start_sheet, client, starting_cell=2)
             player_skills, player_clues , player_bosses = createDicts(parseStats(stats))
             player_bosses = [player_skills["Overall"]]+list(player_clues.values())+list(player_bosses.values())
             # start_list.append((player_skills["Overall"],player_skills["Overall"],player_skills["Overall_Xp"],player_skills["Overall_Xp"]))
-
+            if tracker_sheet:
+                temp_list =  [value for key,value in player_skills.items() if "Xp" in key]
+                tracker_list.append([x for pair in zip(temp_list,temp_list) for x in pair])
 
 
             player_skills = list(player_skills.values())
@@ -346,20 +354,32 @@ def update_all(bosses_sheet, skills_sheet, start_sheet, client, starting_cell=2)
             skills_list.append(player_skills)
             start_list_lvl.append(player_skills[0])
             start_list_xp.append(player_skills[1])
+
+
         else:
 
             print(f"{name} not found in highscores.")
             bosses_list.append(bosses_values[index-2][1:])
-            skills_list.append(skills_values[index-2][1:])
+            skills_list.append(["" for i in range(48)])
             # start_list.append([int(x) if x else x for x in start_values[index-2][2:6]])
             start_list_lvl.append(start_values[index-2][3])
             start_list_xp.append(start_values[index-2][5])
-
+            if tracker_sheet:
+                tracker_list.append(tracker_values[index-2][1:-2])
             not_found.append(name)
 
     bosses_list = [item for sublist in bosses_list for item in sublist]
     skills_list = [item for sublist in skills_list for item in sublist]
     start_list = start_list_lvl+start_list_xp
+    if tracker_sheet:
+        tracker_list = [int(item) if item != "" else item for sublist in tracker_list for item in sublist]
+        for i, val in enumerate(tracker_list):
+            if val:
+                print(tracker_cell_list[i].value, val)
+                tracker_cell_list[i].value = int(val)
+                if tracker_cell_list[i].value:
+                        tracker_cell_list[i].value = int(tracker_cell_list[i].value)
+
 
 
     for i, val in enumerate(bosses_list):
@@ -367,8 +387,7 @@ def update_all(bosses_sheet, skills_sheet, start_sheet, client, starting_cell=2)
             bosses_cell_list[i].value = int(val)
 
     for i, val in enumerate(skills_list):
-        if val:
-            skills_cell_list[i].value = int(val)
+        skills_cell_list[i].value = int(val) if val != "" else ""
 
     for i, val in enumerate(start_list):
         if val:
@@ -565,20 +584,20 @@ if __name__ == "__main__":
     tracked_sheet = client.open("Members Ranks").worksheet('TrackedXp')
 
     names = start_sheet.col_values(2)[1:]
-    bingo_sheet_bosses = client.open("Lockdown Bingo").worksheet('BossTracker')
-    bingo_sheet_skills = client.open("Lockdown Bingo").worksheet('SkillsTracker')
+    #bingo_sheet_bosses = client.open("Lockdown Bingo").worksheet('BossTracker')
+    #bingo_sheet_skills = client.open("Lockdown Bingo").worksheet('SkillsTracker')
     #player_top_stats(bosses_sheet, skills_sheet, start_sheet, names, "IronRok", 1)
     #bingo_update(bingo_sheet_bosses,bingo_sheet_skills,skills=1)
     #bingo_update(bingo_sheet_bosses,bingo_sheet_skills,skills="both",init=1)
     #bingo_check(bingo_sheet_bosses,bingo_sheet_skills,5)
     #EXAMPLES
 
-    tracker(tracker_sheet,start_sheet,client)
+    # tracker(tracker_sheet,start_sheet,client)
     #print(get_tracked_top(tracked_sheet,start_sheet,names,"overall",10))
 
     #get_coded_name(start_sheet)
     # print(new_remove(["Idiotium","Iron_Man_MkV","asdqwe","ironn_69","siphiwe_moyo","iron_lyfeee","weeeeeeeee"],start_sheet,bosses_sheet,skills_sheet,members_sheet))
-    #update_all(bosses_sheet,skills_sheet,start_sheet)
+    update_all(bosses_sheet,skills_sheet,start_sheet,client,tracker_sheet=tracker_sheet)
     #update_player(bosses_sheet,skills_sheet,start_sheet,names,"hassinen42")
     #update_player(bosses_sheet,skills_sheet,start_sheet,names,"bonerrific",1)
     # print(top_stat(bosses_sheet,skills_sheet,names,"Zulrah",10))

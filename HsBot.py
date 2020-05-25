@@ -174,7 +174,7 @@ async def top(ctx, stat):
         client.login()
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
 
-    response = get_stat_top(bosses_sheet, skills_sheet,start_sheet ,names, stat, 5)
+    response = get_tracked_top(tracked_sheet, start_sheet ,names, stat, 5)
     await ctx.send(response)
 
 @bot1.command(name='tracked', help='Shows the top 5 players and their xp gains for a specific skill.')
@@ -346,7 +346,7 @@ async def superadd(ctx, member,*args):
                     members_sheet.update_acell(f"A{index}",rsn)
                     members_sheet.update_acell(f"K{index}",rsn)
                     members_sheet.update_acell(f"B{index}",member.joined_at.strftime("%d %b, %Y"))
-                    members_sheet.update_acell(f"U{index}",member.name)
+                    members_sheet.update_acell(f"M{index}",member.name)
                     names.append(rsn.replace(" ","_").lower())
                     update_player(bosses_sheet,skills_sheet,start_sheet,names,rsn.replace(" ","_"),stats,1)
                     response = f"{rsn} has been added to the memberlist, given nickname and role, and updated in the clan's HS."
