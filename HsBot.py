@@ -162,13 +162,14 @@ async def top(ctx, stat):
     await ctx.send(response)
 
 @bot1.command(name='start_tracking', help='Starts tracking all the players (skills) in the memberlist. To update use fullupdate (both take 30mins ~).')
-async def top(ctx, stat):
+async def top(ctx):
+    print("Start tracking")
     try:
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
     except gspread.exceptions.APIError as e:
         client.login()
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
-    print("Start tracking")
+
     await ctx.send("Loading Tracker... (30 mins ~)")
     update_all(bosses_sheet, skills_sheet, start_sheet, client, starting_cell=2, tracker_sheet=None)
     await ctx.send("Tracking started.")
