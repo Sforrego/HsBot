@@ -111,9 +111,6 @@ def update_player(bosses_sheet, skills_sheet, start_sheet, names, name, stats, a
         print("Player already in memberslist.")
     else:
         if stats != 404:
-            if addplayer:
-                bosses_sheet.append_row([name])
-                names.append(name)
 
             index = names.index(name)+2
 
@@ -591,13 +588,14 @@ if __name__ == "__main__":
     #bingo_update(bingo_sheet_bosses,bingo_sheet_skills,skills="both",init=1)
     #bingo_check(bingo_sheet_bosses,bingo_sheet_skills,5)
     #EXAMPLES
-
+    stats = getStats(playerURL('eehaap','iron'))
+    update_player(bosses_sheet,skills_sheet,start_sheet,names,"eehaap",stats,1)
     # tracker(tracker_sheet,start_sheet,client)
     #print(get_tracked_top(tracked_sheet,start_sheet,names,"overall",10))
 
     #get_coded_name(start_sheet)
     # print(new_remove(["Idiotium","Iron_Man_MkV","asdqwe","ironn_69","siphiwe_moyo","iron_lyfeee","weeeeeeeee"],start_sheet,bosses_sheet,skills_sheet,members_sheet))
-    update_all(bosses_sheet,skills_sheet,start_sheet,client,tracker_sheet=tracker_sheet)
+    #update_all(bosses_sheet,skills_sheet,start_sheet,client,tracker_sheet=tracker_sheet)
     #update_player(bosses_sheet,skills_sheet,start_sheet,names,"hassinen42")
     #update_player(bosses_sheet,skills_sheet,start_sheet,names,"bonerrific",1)
     # print(top_stat(bosses_sheet,skills_sheet,names,"Zulrah",10))
