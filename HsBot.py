@@ -168,9 +168,9 @@ async def top(ctx, stat):
     except gspread.exceptions.APIError as e:
         client.login()
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
-
+    print("Start tracking")
     await ctx.send("Loading Tracker... (30 mins ~)")
-    tracker(tracker_sheet,start_sheet,client,1)
+    update_all(bosses_sheet, skills_sheet, start_sheet, client, starting_cell=2, tracker_sheet=None):
     await ctx.send("Tracking started.")
 
 
