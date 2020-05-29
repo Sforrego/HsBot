@@ -107,8 +107,7 @@ def update_player(bosses_sheet, skills_sheet, start_sheet, names, name, stats, a
     name = name.lower()
     if name not in names and not addplayer:
         print("Player not in memberslist.")
-    elif name in names and addplayer:
-        print("Player already in memberslist.")
+
     else:
         if stats != 404:
 
