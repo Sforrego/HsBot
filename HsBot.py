@@ -184,7 +184,7 @@ async def top(ctx):
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
 
     await ctx.send("Loading Tracker... (30 mins ~)")
-    update_all(bosses_sheet, skills_sheet, start_sheet, client, starting_cell=2, tracker_sheet=None)
+    update_all(bosses_sheet, skills_sheet, start_sheet, client, starting_cell=2, tracker_sheet=tracker_sheet)
     await ctx.send("Tracking started.")
 
 
