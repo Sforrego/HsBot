@@ -321,8 +321,9 @@ def update_all(bosses_sheet, skills_sheet, start_sheet, client, starting_cell=2,
     if tracker_sheet:
         print("There is tracker sheet!")
         tracker_values = tracker_sheet.get_all_values()[1:]
+        tracker_values = [x[:-2] for x in tracker_values]
         tracker_list = []
-        date_cell_list2 = tracker_sheet.range(f'AX2:AX{len(names)+1}')
+        date_cell_list2 = tracker_sheet.range(f'AX{starting_cell}:AX{len(names)+1}')
         tracker_cell_list = tracker_sheet.range(f'B{starting_cell}:AW{len(names)+1}')
     # start_list = []
     bosses_cell_list = bosses_sheet.range(f'B{starting_cell}:BA{len(names)+1}')
@@ -342,7 +343,7 @@ def update_all(bosses_sheet, skills_sheet, start_sheet, client, starting_cell=2,
             # start_list.append((player_skills["Overall"],player_skills["Overall"],player_skills["Overall_Xp"],player_skills["Overall_Xp"]))
             if tracker_sheet:
                 temp_list =  [value for key,value in player_skills.items() if "Xp" in key]
-                tracker_list.append([x for pair in zip(temp_list,temp_list) for x in pair])
+                tracker_list.append(temp_list)
 
 
             player_skills = list(player_skills.values())
@@ -368,6 +369,7 @@ def update_all(bosses_sheet, skills_sheet, start_sheet, client, starting_cell=2,
     bosses_list = [item for sublist in bosses_list for item in sublist]
     skills_list = [item for sublist in skills_list for item in sublist]
     start_list = start_list_lvl+start_list_xp
+    tracker_cell_list = [x for i,x in enumerate(tracker_cell_list) if i%2==0 ]
     if tracker_sheet:
         tracker_list = [int(item) if item != "" else item for sublist in tracker_list for item in sublist]
         for i, val in enumerate(tracker_list):
@@ -375,14 +377,17 @@ def update_all(bosses_sheet, skills_sheet, start_sheet, client, starting_cell=2,
                 #print(tracker_cell_list[i].value, val)
                 tracker_cell_list[i].value = int(val)
                 if tracker_cell_list[i].value:
-                        tracker_cell_list[i].value = int(tracker_cell_list[i].value)
+                    tvar = tracker_cell_list[i].value
+                    tracker_cell_list[i].value = int(tvar)
 
         today = datetime.now()
         today = today.strftime("%Y/%m/%d")
         for cell in date_cell_list2:
+            print(today, cell.row, cell.col)
             cell.value = today
+
         tracker_sheet.update_cells(tracker_cell_list)
-        tracker_sheet.update_cells(date_cell_list)
+        tracker_sheet.update_cells(date_cell_list2)
 
     for i, val in enumerate(bosses_list):
         if val:
@@ -600,7 +605,7 @@ if __name__ == "__main__":
 
     #get_coded_name(start_sheet)
     # print(new_remove(["Idiotium","Iron_Man_MkV","asdqwe","ironn_69","siphiwe_moyo","iron_lyfeee","weeeeeeeee"],start_sheet,bosses_sheet,skills_sheet,members_sheet))
-    update_all(bosses_sheet,skills_sheet,start_sheet,client,tracker_sheet=tracker_sheet,starting_cell=400)
+    #update_all(bosses_sheet,skills_sheet,start_sheet,client,tracker_sheet=tracker_sheet,starting_cell=419)
     #update_player(bosses_sheet,skills_sheet,start_sheet,names,"hassinen42")
     #update_player(bosses_sheet,skills_sheet,start_sheet,names,"bonerrific",1)
     #print(top_stat(bosses_sheet,skills_sheet,names,"tob",10))
