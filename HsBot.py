@@ -147,8 +147,21 @@ async def top(ctx, stat):
         client.login()
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
 
-    response = get_stat_top(tracked_sheet, start_sheet ,names, stat, 5)
+    response = get_stat_top(bosses_sheet, skills_sheet,start_sheet ,names, stat, 5)
     await ctx.send(response)
+
+
+
+@bot1.command(name='top10', help='Shows the top 10 players and their kc for a specific stat.')
+async def topx(ctx, stat):
+    try:
+        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+    except gspread.exceptions.APIError as e:
+        client.login()
+        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+    response = get_stat_top(bosses_sheet, skills_sheet,start_sheet ,names, stat, 10)
+    await ctx.send(response)
+
 
 @bot1.command(name='tracked', help='Shows the top 5 players and their xp gains for a specific skill.')
 async def top(ctx, stat):
@@ -176,17 +189,6 @@ async def top(ctx):
 
 
 
-
-
-@bot1.command(name='top10', help='Shows the top 10 players and their kc for a specific stat.')
-async def topx(ctx, stat):
-    try:
-        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
-    except gspread.exceptions.APIError as e:
-        client.login()
-        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
-    response = get_stat_top(bosses_sheet, skills_sheet,start_sheet ,names, stat, 10)
-    await ctx.send(response)
 
 @bot1.command(name='clan_ranks', help='Return all players with a specific rank (Admin).')
 @commands.has_permissions(kick_members=True)
