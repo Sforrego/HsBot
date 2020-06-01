@@ -363,14 +363,16 @@ def update_all(bosses_sheet, skills_sheet, start_sheet, client, starting_cell=2,
             start_list_lvl.append(start_values[index-2][3])
             start_list_xp.append(start_values[index-2][5])
             if tracker_sheet:
-                tracker_list.append(tracker_values[index-2][1:-2])
+                #temp_list = [x for x,i in enumerate(tracker_values[index-2][1:-2]) if i%2==0]
+                tracker_list.append(["" for i in range(24)])
             not_found.append(name)
 
     bosses_list = [item for sublist in bosses_list for item in sublist]
     skills_list = [item for sublist in skills_list for item in sublist]
     start_list = start_list_lvl+start_list_xp
-    tracker_cell_list = [x for i,x in enumerate(tracker_cell_list) if i%2==0 ]
+
     if tracker_sheet:
+        tracker_cell_list = [x for i,x in enumerate(tracker_cell_list) if i%2==0 ]
         tracker_list = [int(item) if item != "" else item for sublist in tracker_list for item in sublist]
         for i, val in enumerate(tracker_list):
             if val:
@@ -383,7 +385,6 @@ def update_all(bosses_sheet, skills_sheet, start_sheet, client, starting_cell=2,
         today = datetime.now()
         today = today.strftime("%Y/%m/%d")
         for cell in date_cell_list2:
-            print(today, cell.row, cell.col)
             cell.value = today
 
         tracker_sheet.update_cells(tracker_cell_list)
@@ -605,7 +606,7 @@ if __name__ == "__main__":
 
     #get_coded_name(start_sheet)
     # print(new_remove(["Idiotium","Iron_Man_MkV","asdqwe","ironn_69","siphiwe_moyo","iron_lyfeee","weeeeeeeee"],start_sheet,bosses_sheet,skills_sheet,members_sheet))
-    #update_all(bosses_sheet,skills_sheet,start_sheet,client,tracker_sheet=tracker_sheet,starting_cell=419)
+    update_all(bosses_sheet,skills_sheet,start_sheet,client,tracker_sheet=tracker_sheet,starting_cell=390)
     #update_player(bosses_sheet,skills_sheet,start_sheet,names,"hassinen42")
     #update_player(bosses_sheet,skills_sheet,start_sheet,names,"bonerrific",1)
     #print(top_stat(bosses_sheet,skills_sheet,names,"tob",10))
