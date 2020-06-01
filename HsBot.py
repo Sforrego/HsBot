@@ -147,7 +147,7 @@ async def top(ctx, stat):
         client.login()
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
 
-    response = get_tracked_top(tracked_sheet, start_sheet ,names, stat, 5)
+    response = get_stat_top(tracked_sheet, start_sheet ,names, stat, 5)
     await ctx.send(response)
 
 @bot1.command(name='tracked', help='Shows the top 5 players and their xp gains for a specific skill.')
@@ -158,7 +158,7 @@ async def top(ctx, stat):
         client.login()
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
 
-    response = get_stat_top(bosses_sheet, skills_sheet,start_sheet ,names, stat, 5)
+    response = get_tracked_top(bosses_sheet, skills_sheet,start_sheet ,names, stat, 5)
     await ctx.send(response)
 
 @bot1.command(name='start_tracking', help='Starts tracking all the players (skills) in the memberlist. To update use fullupdate (both take 30mins ~).')

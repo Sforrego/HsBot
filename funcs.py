@@ -85,7 +85,7 @@ def top_stat(bosses_sheet, skills_sheet, names, stat, n):
         xp = skills_sheet.col_values(index+1)[1:]
         mylist = list(zip(xp,lvl))
         mylist = [(int(mylist[i][1]),int(mylist[i][0]),names[i]) if mylist[i][0] != "" else (-1,names[i]) for i in range(len(mylist))]
-
+    print("stat")
     mylist = sorted(mylist, reverse=True)
     mylist = mylist[:n]
     return mylist
@@ -319,6 +319,7 @@ def update_all(bosses_sheet, skills_sheet, start_sheet, client, starting_cell=2,
     start_list_xp = []
 
     if tracker_sheet:
+        print("There is tracker sheet!")
         tracker_values = tracker_sheet.get_all_values()[1:]
         tracker_list = []
         date_cell_list2 = tracker_sheet.range(f'AX2:AX{len(names)+1}')
@@ -587,17 +588,17 @@ if __name__ == "__main__":
     #bingo_update(bingo_sheet_bosses,bingo_sheet_skills,skills="both",init=1)
     #bingo_check(bingo_sheet_bosses,bingo_sheet_skills,5)
     #EXAMPLES
-    stats = getStats(playerURL('eehaap','iron'))
-    update_player(bosses_sheet,skills_sheet,start_sheet,names,"eehaap",stats,1)
+    # stats = getStats(playerURL('eehaap','iron'))
+    # update_player(bosses_sheet,skills_sheet,start_sheet,names,"eehaap",stats,1)
     # tracker(tracker_sheet,start_sheet,client)
     #print(get_tracked_top(tracked_sheet,start_sheet,names,"overall",10))
 
     #get_coded_name(start_sheet)
     # print(new_remove(["Idiotium","Iron_Man_MkV","asdqwe","ironn_69","siphiwe_moyo","iron_lyfeee","weeeeeeeee"],start_sheet,bosses_sheet,skills_sheet,members_sheet))
-    #update_all(bosses_sheet,skills_sheet,start_sheet,client,tracker_sheet=tracker_sheet)
+    #update_all(bosses_sheet,skills_sheet,start_sheet,client,tracker_sheet=tracker_sheet,starting_cell=400)
     #update_player(bosses_sheet,skills_sheet,start_sheet,names,"hassinen42")
     #update_player(bosses_sheet,skills_sheet,start_sheet,names,"bonerrific",1)
-    # print(top_stat(bosses_sheet,skills_sheet,names,"Zulrah",10))
+    print(top_stat(bosses_sheet,skills_sheet,names,"tob",10))
     #print(get_pretty_name(start_sheet,"no_ge_canvey"))
     #print(compare_players(bosses_sheet, skills_sheet, names, "IronRok", "no ge canvey", "Attack"))
 
