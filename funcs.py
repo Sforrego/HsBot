@@ -372,12 +372,17 @@ def update_all(bosses_sheet, skills_sheet, start_sheet, client, starting_cell=2,
         tracker_list = [int(item) if item != "" else item for sublist in tracker_list for item in sublist]
         for i, val in enumerate(tracker_list):
             if val:
-                print(tracker_cell_list[i].value, val)
+                #print(tracker_cell_list[i].value, val)
                 tracker_cell_list[i].value = int(val)
                 if tracker_cell_list[i].value:
                         tracker_cell_list[i].value = int(tracker_cell_list[i].value)
 
-
+        today = datetime.now()
+        today = today.strftime("%Y/%m/%d")
+        for cell in date_cell_list2:
+            cell.value = today
+        tracker_sheet.update_cells(tracker_cell_list)
+        tracker_sheet.update_cells(date_cell_list)
 
     for i, val in enumerate(bosses_list):
         if val:
@@ -590,15 +595,15 @@ if __name__ == "__main__":
     #EXAMPLES
     # stats = getStats(playerURL('eehaap','iron'))
     # update_player(bosses_sheet,skills_sheet,start_sheet,names,"eehaap",stats,1)
-    # tracker(tracker_sheet,start_sheet,client)
+    #tracker(tracker_sheet,start_sheet,client,start=1,starting_cell=400)
     #print(get_tracked_top(tracked_sheet,start_sheet,names,"overall",10))
 
     #get_coded_name(start_sheet)
     # print(new_remove(["Idiotium","Iron_Man_MkV","asdqwe","ironn_69","siphiwe_moyo","iron_lyfeee","weeeeeeeee"],start_sheet,bosses_sheet,skills_sheet,members_sheet))
-    #update_all(bosses_sheet,skills_sheet,start_sheet,client,tracker_sheet=tracker_sheet,starting_cell=400)
+    update_all(bosses_sheet,skills_sheet,start_sheet,client,tracker_sheet=tracker_sheet,starting_cell=400)
     #update_player(bosses_sheet,skills_sheet,start_sheet,names,"hassinen42")
     #update_player(bosses_sheet,skills_sheet,start_sheet,names,"bonerrific",1)
-    print(top_stat(bosses_sheet,skills_sheet,names,"tob",10))
+    #print(top_stat(bosses_sheet,skills_sheet,names,"tob",10))
     #print(get_pretty_name(start_sheet,"no_ge_canvey"))
     #print(compare_players(bosses_sheet, skills_sheet, names, "IronRok", "no ge canvey", "Attack"))
 
