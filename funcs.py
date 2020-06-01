@@ -147,7 +147,7 @@ def update_player(bosses_sheet, skills_sheet, start_sheet, names, name, stats, a
                 for i,cell in enumerate(date_cell_list):
                     cell.value = today
                 start_sheet.update_cells(start_cell_list)
-                start_sheet.update_cells(date_cell_list)
+                start_sheet.update_cells(date_celÖl_list)
 
             player_skills = list(player_skills.values())
             print(f"updating {name} total {player_skills[0]}")
@@ -375,12 +375,11 @@ def update_all(bosses_sheet, skills_sheet, start_sheet, client, starting_cell=2,
         tracker_cell_list = [x for i,x in enumerate(tracker_cell_list) if i%2==0 ]
         tracker_list = [int(item) if item != "" else item for sublist in tracker_list for item in sublist]
         for i, val in enumerate(tracker_list):
-            if val:
-                #print(tracker_cell_list[i].value, val)
-                tracker_cell_list[i].value = int(val)
-                if tracker_cell_list[i].value:
-                    tvar = tracker_cell_list[i].value
-                    tracker_cell_list[i].value = int(tvar)
+            #print(tracker_cell_list[i].value, val)
+            tracker_cell_list[i].value = int(val) if val else val
+            if tracker_cell_list[i].value:
+                tvar = tracker_cell_list[i].value
+                tracker_cell_list[i].value = int(tvar)
 
         today = datetime.now()
         today = today.strftime("%Y/%m/%d")
