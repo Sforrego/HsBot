@@ -147,7 +147,7 @@ def update_player(bosses_sheet, skills_sheet, start_sheet, names, name, stats, a
                 for i,cell in enumerate(date_cell_list):
                     cell.value = today
                 start_sheet.update_cells(start_cell_list)
-                start_sheet.update_cells(date_celÖl_list)
+                start_sheet.update_cells(date_cell_list)
 
             player_skills = list(player_skills.values())
             print(f"updating {name} total {player_skills[0]}")

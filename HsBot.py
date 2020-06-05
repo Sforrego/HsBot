@@ -303,7 +303,10 @@ async def superadd(ctx, member,*args):
                     response = f"{rsn} is already in the memberlist (spreadsheet)."
                 else:
                     role = discord.utils.get(ctx.guild.roles, name="Member")
+                    role2 = discord.utils.get(ctx.guild.roles, name="NotifyOn")
                     await member.add_roles(role)
+                    await member.add_roles(role2)
+
                     await member.edit(nick=rsn)
 
                     index = len(col0)+1
@@ -376,7 +379,7 @@ async def get_boss_list(ctx):
     await ctx.send(response)
 
 @bot1.command(name='check', help='Checks if a name is in the hiscores.')
-async def get_boss_list(ctx, *args):
+async def check(ctx, *args):
     rsn = "_".join(args)
     rsn2 = " ".join(args)
     try:
@@ -385,9 +388,9 @@ async def get_boss_list(ctx, *args):
         client.login()
         names = start_sheet.col_values(2)[1:]
     if check(names,rsn):
-        response = f"{rsn2} is in the highscores."
+        response = f"{rsn2} is in the clan's highscores."
     else:
-        response = f"{rsn2} is not in the highscores."
+        response = f"{rsn2} is not in the clan's highscores."
     await ctx.send(response)
 
 
