@@ -176,7 +176,7 @@ async def top(ctx, stat,*player):
         player = "_".join(player)
         player = player.lower()
         if player in names:
-            (xp,player) = tracked_player(tracked_sheet,start_sheet ,names, stat, player)
+            (xp,player) = tracked_player(tracked_sheet,names, stat, player)
             response = f"{player} has gained {xp} in {stat} this week."
         else:
             response = f"{player} not found."
