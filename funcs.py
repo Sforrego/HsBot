@@ -90,7 +90,7 @@ def top_stat(bosses_sheet, skills_sheet, names, stat, n):
     mylist = mylist[:n]
     return mylist
 
-def top_tracked(tracked_sheet, names, stat, n):
+def top_tracked(tracked_sheet, names, stat, name):
     stat = get_stat(stat)
     if stat == 404:
         return stat
@@ -101,6 +101,19 @@ def top_tracked(tracked_sheet, names, stat, n):
 
     mylist = sorted(mylist, reverse=True)
     mylist = mylist[:n]
+    return mylist
+
+def tracked_player(tracked_sheet, names, stat, name):
+    stat = get_stat(stat)
+    if stat == 404:
+        return stat
+    elif stat in SKILLS:
+        index = SKILLS.index(stat)+1
+        xp = tracked_sheet.col_values(index+1)[1:]
+        mylist = [(int(value),name) if value != "" else (-1,name) for value,name in zip(xp,names)]
+
+    #mylist = sorted(mylist, reverse=True)
+    mylist = mylist[names.index(name)]
     return mylist
 
 def update_player(bosses_sheet, skills_sheet, start_sheet, names, name, stats, addplayer=0):
@@ -602,10 +615,10 @@ if __name__ == "__main__":
     # update_player(bosses_sheet,skills_sheet,start_sheet,names,"eehaap",stats,1)
     #tracker(tracker_sheet,start_sheet,client,start=1,starting_cell=400)
     #print(get_tracked_top(tracked_sheet,start_sheet,names,"overall",10))
-
+    print(tracked_player(tracked_sheet,names,"agility","ironrok"))
     #get_coded_name(start_sheet)
     # print(new_remove(["Idiotium","Iron_Man_MkV","asdqwe","ironn_69","siphiwe_moyo","iron_lyfeee","weeeeeeeee"],start_sheet,bosses_sheet,skills_sheet,members_sheet))
-    update_all(bosses_sheet,skills_sheet,start_sheet,client,tracker_sheet=tracker_sheet,starting_cell=390)
+    #update_all(bosses_sheet,skills_sheet,start_sheet,client,tracker_sheet=tracker_sheet,starting_cell=390)
     #update_player(bosses_sheet,skills_sheet,start_sheet,names,"hassinen42")
     #update_player(bosses_sheet,skills_sheet,start_sheet,names,"bonerrific",1)
     #print(top_stat(bosses_sheet,skills_sheet,names,"tob",10))

@@ -164,15 +164,28 @@ async def topx(ctx, stat):
 
 
 @bot1.command(name='tracked', help='Shows the top 5 players and their xp gains for a specific skill.')
-async def top(ctx, stat):
+async def top(ctx, stat,*player):
     try:
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
     except gspread.exceptions.APIError as e:
         client.login()
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
-
-    response = get_tracked_top(tracked_sheet,start_sheet ,names, stat, 5)
+    if not player:
+        response = get_tracked_top(tracked_sheet,start_sheet ,names, stat, 5)
+    else:
+        player = "_".join(player)
+        player = player.lower()
+        if player in names:
+            (xp,player) = tracked_player(tracked_sheet,start_sheet ,names, stat, player)
+            response = f"{player} has gained {xp} in {stat} this week."
+        else:
+            response = f"{player} not found."
     await ctx.send(response)
+
+
+
+
+
 
 @bot1.command(name='start_tracking', help='Starts tracking all the players (skills) in the memberlist. To update use fullupdate (both take 30mins ~).')
 async def top(ctx):
@@ -379,7 +392,7 @@ async def get_boss_list(ctx):
     await ctx.send(response)
 
 @bot1.command(name='check', help='Checks if a name is in the hiscores.')
-async def check(ctx, *args):
+async def check1(ctx, *args):
     rsn = "_".join(args)
     rsn2 = " ".join(args)
     try:
