@@ -90,7 +90,7 @@ def top_stat(bosses_sheet, skills_sheet, names, stat, n):
     mylist = mylist[:n]
     return mylist
 
-def top_tracked(tracked_sheet, names, stat, name):
+def top_tracked(tracked_sheet, names, stat, n):
     stat = get_stat(stat)
     if stat == 404:
         return stat
