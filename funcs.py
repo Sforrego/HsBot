@@ -184,9 +184,8 @@ def update_rsn(members_sheet,bosses_sheet, skills_sheet, start_sheet, names, old
         index = names.index(old_name)+2
         members_sheet.update_acell(f"K{index}",new_name)
         names[index-2] = new_name.lower()
-        stats = getStats(playerURL(new_name,'iron'))
-        update_player(bosses_sheet, skills_sheet, start_sheet, names, new_name, stats)
-
+    else:
+        raise Exception(f"{old_name} is not in the spreadsheet.")
 def check(names,rsn):
     if rsn.lower() in names:
         return True

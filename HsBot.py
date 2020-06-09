@@ -108,14 +108,19 @@ async def ranks(ctx,stat,name):
 
 @bot1.command(name='change', help='Changes a players rsn in the spreadsheets (Admin).')
 @commands.has_permissions(kick_members=True)
-async def change_rsn(ctx, old_name,new_name):
+async def change_rsn(ctx, member,*new_name):
+    converter = MemberConverter()
+    new_name = " ".join(new_name)
     try:
         names = start_sheet.col_values(2)[1:]
     except gspread.exceptions.APIError as e:
         client.login()
         names = start_sheet.col_values(2)[1:]
     try:
-        update_rsn(members_sheet,bosses_sheet,skills_sheet,start_sheet,names,old_name,new_name)
+        member = await converter.convert(ctx,member)
+        old_name = member.nick
+        update_rsn(members_sheet,bosses_sheet,skills_sheet,start_sheet,names,old_name.replace(" ", "_"),new_name)
+        await member.edit(nick=rsn)
         response = f"{old_name} has been changed to {new_name} and his stats has been updated."
     except Exception as e:
         response = f"Something went wrong. Error {e}"
