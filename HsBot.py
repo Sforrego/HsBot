@@ -121,7 +121,7 @@ async def change_rsn(ctx, member,*new_name):
         old_name = member.nick
         update_rsn(members_sheet,bosses_sheet,skills_sheet,start_sheet,names,old_name.replace(" ", "_"),new_name)
         await member.edit(nick=new_name)
-        response = f"{old_name} has been changed to {new_name} and his stats has been updated."
+        response = f"{old_name} has been changed to {new_name}."
     except Exception as e:
         response = f"Something went wrong. Error {e}"
     await ctx.send(response)
