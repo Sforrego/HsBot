@@ -74,6 +74,10 @@ async def update_teams(ctx):
 
 @bot1.command(name='update', help='Updates a players stats in the spreadsheets (Admin). \n Ejemplo: !hs update ironrok Yaspy (updates both players)')
 async def update(ctx, *members):
+    first_msg = 'Updating '
+    for member in members:
+        first_msg += f'{member} '
+    await ctx.send(first_msg)
     try:
         names = start_sheet.col_values(2)[1:]
     except gspread.exceptions.APIError as e:
