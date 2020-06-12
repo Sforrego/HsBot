@@ -173,7 +173,7 @@ async def topx(ctx, stat):
 
 
 @bot1.command(name='tracked', help='Shows the top 5 players and their xp gains for a specific skill.')
-async def top(ctx, stat,*player):
+async def top2(ctx, stat,*player):
     try:
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
     except gspread.exceptions.APIError as e:
@@ -191,24 +191,17 @@ async def top(ctx, stat,*player):
         else:
             response = f"{orig_name} not found."
     await ctx.send(response)
-@bot1.command(name='tracked20', help='Shows the top 5 players and their xp gains for a specific skill.')
-async def top(ctx, stat,*player):
+    
+@bot1.command(name='tracked20', help='Shows the top 20 players and their xp gains for a specific skill.')
+async def top3(ctx, stat):
     try:
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
     except gspread.exceptions.APIError as e:
         client.login()
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
-    if not player:
-        response = get_tracked_top(tracked_sheet,start_sheet ,names, stat, 20)
-    else:
-        orig_name = " ".join(player)
-        player = "_".join(player)
-        player = player.lower()
-        if player in names:
-            (xp,player) = tracked_player(tracked_sheet,names, stat, player)
-            response = f"{orig_name} has gained {xp} in {stat} this week."
-        else:
-            response = f"{orig_name} not found."
+
+    response = get_tracked_top(tracked_sheet,start_sheet ,names, stat, 20)
+
     await ctx.send(response)
 
 
