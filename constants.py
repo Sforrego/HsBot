@@ -24,6 +24,42 @@ BINGO_SKILLS=[
 "Hunter"
 ]
 
+BINGO_TILES=[
+"4 GWD Uniques",
+"2 Wintertodt Uniques (No gloves/torch)",
+"2 Cox or Tob purples",
+"1 Champion Scroll",
+"1 Pyramid Plunder Sceptre",
+"Wildy Boss Ring or Dpick",
+"4 DK rings",
+"Medium Clue Boots",
+"2 Zenytes",
+"1 Master Unique",
+"Blood Shard",
+"10 Easy uniques",
+"2 Slayer Boss uniques",
+"16 Barrows Uniques",
+"3 Wildy Demi Boss Shards",
+"Hespori Bucket",
+"1 Blessed D'hide piece from Hard Clues",
+"Vorkath Head/Unique (NO guaranteed head)",
+"Beginner Clue Slippers/Parrot",
+"4 Zulrah Uniques",
+"2 Fishing Trawler PIeces",
+"Black mask or Jaw of basilisks"
+]
+
+BINGO_LIST=[
+"1	Instantly finish a random tile",
+"2	Re do a random finished tile",
+"3	2x Item drop rate for a DICED tile (need to do 2x LESS)",
+"4	0.5x Item drop rate for a DICED tile (need to do 2x MORE)",
+"5	Nothing happens!",
+"6	Double 1 tile and remove another by choice",
+"7	Nothing happens!",
+"8	Add 1 needed item to a random (DICED) tile of a CHOSEN team.",
+"9	Remove 1 needed item from a random (DICED) tile of a CHOSEN team.",
+"10	Nothing happens!"
 BINGO_BOSSES = [
     "Zulrah",
     "Grotesque Guardians",

@@ -10,7 +10,7 @@ import time
 import httplib2
 from discord.ext.commands import MemberConverter
 ## make one function that creates an object after calling rs.hs make the other funcs receive that.
-
+from random import randint
 
 load_dotenv()
 token1 = os.getenv('DISCORD_TOKEN1')
@@ -91,6 +91,15 @@ async def update(ctx, *members):
         else:
             update_player(bosses_sheet,skills_sheet,start_sheet,names,name,stats)
             response += f"{name} stats has been updated\n"
+    await ctx.send(response)
+@bot1.command(name='roll', help='Rolls randomly from the board or the list.')
+async def roll(ctx, type):
+    if type == "board":
+        response = BINGO_TILES[randint(len(BINGO_TILES))]
+    elif type == "list":
+        response = BINGO_LIST[randint(len(BINGO_LIST))]
+    else:
+        response = "You can either do !hs roll board or !hs roll list."
     await ctx.send(response)
 
 @bot1.command(name='ranks', help='Shows the rank within the clan of a member in all the skills. (!hs ranks bosses player or !hs ranks skills player)')
