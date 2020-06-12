@@ -179,6 +179,7 @@ async def top2(ctx, stat,*player):
     except gspread.exceptions.APIError as e:
         client.login()
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+    await ctx.send("Fetching Data...")
     if not player:
         response = get_tracked_top(tracked_sheet,start_sheet ,names, stat, 5)
     else:
@@ -191,7 +192,7 @@ async def top2(ctx, stat,*player):
         else:
             response = f"{orig_name} not found."
     await ctx.send(response)
-    
+
 @bot1.command(name='tracked20', help='Shows the top 20 players and their xp gains for a specific skill.')
 async def top3(ctx, stat):
     try:
@@ -199,7 +200,7 @@ async def top3(ctx, stat):
     except gspread.exceptions.APIError as e:
         client.login()
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
-
+    await ctx.send("Fetching data...")
     response = get_tracked_top(tracked_sheet,start_sheet ,names, stat, 20)
 
     await ctx.send(response)
