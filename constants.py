@@ -24,8 +24,7 @@ BINGO_SKILLS=[
 "Hunter"
 ]
 
-BINGO_TILES=[
-"4 GWD Uniques",
+BINGO_TILES=["4 GWD Uniques",
 "2 Wintertodt Uniques (No gloves/torch)",
 "2 Cox or Tob purples",
 "1 Champion Scroll",
@@ -49,8 +48,7 @@ BINGO_TILES=[
 "Black mask or Jaw of basilisks"
 ]
 
-BINGO_LIST=[
-"1	Instantly finish a random tile",
+BINGO_LIST=["1	Instantly finish a random tile",
 "2	Re do a random finished tile",
 "3	2x Item drop rate for a DICED tile (need to do 2x LESS)",
 "4	0.5x Item drop rate for a DICED tile (need to do 2x MORE)",
@@ -59,7 +57,7 @@ BINGO_LIST=[
 "7	Nothing happens!",
 "8	Add 1 needed item to a random (DICED) tile of a CHOSEN team.",
 "9	Remove 1 needed item from a random (DICED) tile of a CHOSEN team.",
-"10	Nothing happens!"
+"10	Nothing happens!"]
 BINGO_BOSSES = [
     "Zulrah",
     "Grotesque Guardians",
