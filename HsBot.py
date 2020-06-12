@@ -27,8 +27,8 @@ members_sheet = client.open("Members Ranks").worksheet('Members')
 tracker_sheet = client.open("Members Ranks").worksheet('WeeklyTracker')
 tracked_sheet = client.open("Members Ranks").worksheet('TrackedXp')
 
-bingo_sheet_bosses = client.open("Lockdown Bingo").worksheet('BossTracker')
-bingo_sheet_skills = client.open("Lockdown Bingo").worksheet('SkillsTracker')
+bingo_sheet_bosses = client.open("Bingo 07irons").worksheet('BossTracker')
+bingo_sheet_skills = client.open("Bingo 07irons").worksheet('SkillsTracker')
 
 #BOT
 
