@@ -95,9 +95,9 @@ async def update(ctx, *members):
 @bot1.command(name='roll', help='Rolls randomly from the board or the list.')
 async def roll(ctx, type):
     if type == "board":
-        response = BINGO_TILES[randint(len(BINGO_TILES))]
+        response = BINGO_TILES[randint(0,len(BINGO_TILES))]
     elif type == "list":
-        response = BINGO_LIST[randint(len(BINGO_LIST))]
+        response = BINGO_LIST[randint(0,len(BINGO_LIST))]
     else:
         response = "You can either do !hs roll board or !hs roll list."
     await ctx.send(response)
@@ -132,7 +132,8 @@ async def change_rsn(ctx, member,*new_name):
     try:
         member = await converter.convert(ctx,member)
         old_name = member.nick
-        update_rsn(members_sheet,bosses_sheet,skills_sheet,start_sheet,names,old_name.replace(" ", "_"),new_name)
+        olname = old_name.replace(" ", "_")
+        update_rsn(members_sheet,bosses_sheet,skills_sheet,start_sheet,names,ol_name,new_name)
         await member.edit(nick=new_name)
         response = f"{old_name} has been changed to {new_name}."
     except Exception as e:
@@ -391,7 +392,7 @@ async def memberslit(ctx,*members):
         client.login()
         names = start_sheet.col_values(2)[1:]
     not_found = []
-
+    await ctx.send("Deleting")
     for name in members:
         if name.lower() not in names:
             not_found.append(name)
@@ -405,7 +406,7 @@ async def memberslit(ctx,*members):
             bosses_sheet.delete_row(index)
             members_sheet.delete_row(index)
             skills_sheet.delete_row(index)
-
+            print(f"{name} deleted")
     found = [x for x in members if x not in not_found]
     response = f'Deleted \n{found}\n \nNot Found \n {not_found}'
 
