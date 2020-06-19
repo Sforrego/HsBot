@@ -9,12 +9,12 @@ def read_image(path):
     except Exception as e:
         print(e)
 
-def paint_tiles(img_array,tiles):
+def paint_tiles(tiles):
 
     img_path = "Bingo_board.png"
     image = read_image(img_path)
     img_array = np.array(image)
-    
+
     for tile in tiles:
         for i in range(tile//5*76, (tile//5)*76+75):
             for j in range(tile%5*91, (tile%5)*91+90):
