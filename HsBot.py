@@ -74,6 +74,7 @@ async def complete(ctx, team_num, *tile_name):
 @commands.has_permissions(kick_members=True)
 async def undo(ctx, team_num, *tile_name):
     tile_name = " ".join(tile_name)
+    team_num = int(team_num)
     if team_num not in range(1,9):
         response = "You need to specify the number of your team\n !bingo undo 1 gwd"
     elif tile_name not in TILES_TO_NUM.keys():
