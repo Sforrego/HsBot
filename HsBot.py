@@ -197,7 +197,7 @@ async def change_rsn(ctx, member,*new_name):
     try:
         member = await converter.convert(ctx,member)
         old_name = member.nick
-        olname = old_name.replace(" ", "_")
+        ol_name = old_name.replace(" ", "_")
         update_rsn(members_sheet,bosses_sheet,skills_sheet,start_sheet,names,ol_name,new_name)
         await member.edit(nick=new_name)
         response = f"{old_name} has been changed to {new_name}."
