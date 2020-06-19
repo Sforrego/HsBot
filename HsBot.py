@@ -95,7 +95,7 @@ async def check_done(ctx, team_num):
     if team_num not in range(1,9):
         response = "You need to specify the number of your team\n !bingo checkdone 1"
     else:
-        tiles_done = get_tiles_done(bingo_sheet, team_num)
+        tiles_done = get_tiles_done(bingo_sheet_tiles, team_num)
         if len(tiles_done==25):
             response = f"Team {team_num} has complete the bingo, such monsters."
         else:
@@ -109,7 +109,7 @@ async def check_left(ctx, team_num):
     if team_num not in range(1,9):
         response = "You need to specify the number of your team\n !bingo checkleft 1"
     else:
-        tiles_left = get_tiles_left(bingo_sheet, team_num)
+        tiles_left = get_tiles_left(bingo_sheet_tiles, team_num)
         if len(tiles_left==0):
             response = f"Team {team_num} has complete the bingo, such monsters."
         else:
