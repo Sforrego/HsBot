@@ -100,7 +100,6 @@ async def check_done(ctx, team_num):
         await ctx.send(response)
     else:
         _,tiles_done = get_tiles_done(bingo_sheet_tiles, team_num)
-        await ctx.send(tiles_done)
         if len(tiles_done)==25:
             response = f"Team {team_num} has complete the bingo, such monsters."
             await ctx.send(response)
@@ -108,7 +107,7 @@ async def check_done(ctx, team_num):
             # response = f"Team {team_num} has finished the following tiles:\n"
             # for tile in tiles_done:
             #     response += f"{tile}\n"
-            temp_img = paint_tiles(img_array,tiles_done)
+            temp_img = paint_tiles(tiles_done)
             temp_img.save(f"team{team_num}.png")
             await ctx.send(file=discord.File(f"team{team_num}.png"))
 
