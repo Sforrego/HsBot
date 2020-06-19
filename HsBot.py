@@ -108,8 +108,8 @@ async def check_done(ctx, team_num):
             # for tile in tiles_done:
             #     response += f"{tile}\n"
             temp_img = paint_tiles(img_array,tiles_done)
-            temp_img.save(f"team{team_num}")
-            await ctx.send(file=discord.File(f"team{team_num}"))
+            temp_img.save(f"team{team_num}.png")
+            await ctx.send(file=discord.File(f"team{team_num}.png"))
 
 @bot1.command(name='checkleft', help='Checks tiles that have not been done by a team.')
 async def check_left(ctx, team_num):
