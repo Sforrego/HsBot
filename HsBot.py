@@ -11,7 +11,7 @@ import httplib2
 from discord.ext.commands import MemberConverter
 ## make one function that creates an object after calling rs.hs make the other funcs receive that.
 from random import randint
-
+from imageediting import *
 load_dotenv()
 token1 = os.getenv('DISCORD_TOKEN1')
 
@@ -45,6 +45,7 @@ async def on_ready():
 
 #### BINGO ####
 @bot1.command(name='roll', help='Rolls randomly from the board or the list.')
+@commands.has_permissions(kick_members=True)
 async def roll(ctx, type):
     if type == "board":
         response = BINGO_TILES[randint(0,len(BINGO_TILES))]
@@ -96,15 +97,19 @@ async def check_done(ctx, team_num):
     team_num = int(team_num)
     if team_num not in range(1,9):
         response = "You need to specify the number of your team\n !bingo checkdone 1"
+        await ctx.send(response)
     else:
-        tiles_done = get_tiles_done(bingo_sheet_tiles, team_num)
+        _,tiles_done = get_tiles_done(bingo_sheet_tiles, team_num)
         if len(tiles_done)==25:
             response = f"Team {team_num} has complete the bingo, such monsters."
+            await ctx.send(response)
         else:
-            response = f"Team {team_num} has finished the following tiles:\n"
-            for tile in tiles_done:
-                response += f"{tile}\n"
-    await ctx.send(response)
+            # response = f"Team {team_num} has finished the following tiles:\n"
+            # for tile in tiles_done:
+            #     response += f"{tile}\n"
+            temp_img = paint_tiles(img_array,tiles_done)
+            await ctx.send(file=discord.File(temp_img))
+
 @bot1.command(name='checkleft', help='Checks tiles that have not been done by a team.')
 async def check_left(ctx, team_num):
     team_num = int(team_num)
