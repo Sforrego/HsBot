@@ -55,6 +55,7 @@ async def roll(ctx, type):
     await ctx.send(response)
 
 @bot1.command(name='complete', help='Completes a Tile.')
+@commands.has_permissions(kick_members=True)
 async def complete(ctx, team_num, *tile_name):
     tile_name = " ".join(tile_name)
     if team_num not in range(1,9):
@@ -70,6 +71,7 @@ async def complete(ctx, team_num, *tile_name):
         response = f"{tile_name} complete by team {team_num}."
     await ctx.send(response)
 @bot1.command(name='undo', help='Undo a Tile.')
+@commands.has_permissions(kick_members=True)
 async def undo(ctx, team_num, *tile_name):
     tile_name = " ".join(tile_name)
     if team_num not in range(1,9):
