@@ -23,5 +23,5 @@ img_path = "Bingo_board.png"
 image = read_image(img_path)
 img_array = np.array(image)
 if __name__ == '__main__':
-    image = paint_tiles([1,2,5,6,7,8,9,15])
-    image.show()
+    image = paint_tiles(img_array,[1,2])
+    image.save('team1.png')
