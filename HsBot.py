@@ -58,6 +58,7 @@ async def roll(ctx, type):
 @commands.has_permissions(kick_members=True)
 async def complete(ctx, team_num, *tile_name):
     tile_name = " ".join(tile_name)
+    team_num = int(team_num)
     if team_num not in range(1,9):
         response = "You need to specify the number of your team\n !bingo complete 1 gwd"
     elif tile_name not in TILES_TO_NUM.keys():
@@ -90,6 +91,7 @@ async def undo(ctx, team_num, *tile_name):
 
 @bot1.command(name='checkdone', help='Checks tiles done by a team.')
 async def check_done(ctx, team_num):
+    team_num = int(team_num)
     if team_num not in range(1,9):
         response = "You need to specify the number of your team\n !bingo checkdone 1"
     else:
@@ -102,7 +104,8 @@ async def check_done(ctx, team_num):
                 response += f"{tile}\n"
     await ctx.send(response)
 @bot1.command(name='checkleft', help='Checks tiles that have not been done by a team.')
-async def check_done(ctx, team_num):
+async def check_left(ctx, team_num):
+    team_num = int(team_num)
     if team_num not in range(1,9):
         response = "You need to specify the number of your team\n !bingo checkleft 1"
     else:
