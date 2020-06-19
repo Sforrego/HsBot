@@ -27,13 +27,15 @@ members_sheet = client.open("Members Ranks").worksheet('Members')
 tracker_sheet = client.open("Members Ranks").worksheet('WeeklyTracker')
 tracked_sheet = client.open("Members Ranks").worksheet('TrackedXp')
 
-bingo_sheet_bosses = client.open("Bingo 07irons").worksheet('BossTracker')
-bingo_sheet_skills = client.open("Bingo 07irons").worksheet('SkillsTracker')
+# bingo_sheet_bosses = client.open("Bingo 07irons").worksheet('BossTracker')
+# bingo_sheet_skills = client.open("Bingo 07irons").worksheet('SkillsTracker')
+bingo_sheet_tiles = client.open("Bingo 07irons").worksheet('Tile Tracker')
 
 #BOT
 
 bot1 = commands.Bot(command_prefix=['!hs ','!bingo '])
 
+#await channel.send(file=discord.File('my_file.png'))
 
 @bot1.event
 async def on_ready():
@@ -41,6 +43,80 @@ async def on_ready():
     task = loop.create_task(do_stuff_every_x_seconds(60*29, client.login))
     #task2 = loop.create_task(do_stuff_every_x_seconds(60*60*24, update_all,bosses_sheet,skills_sheet,start_sheet,client))
 
+#### BINGO ####
+@bot1.command(name='roll', help='Rolls randomly from the board or the list.')
+async def roll(ctx, type):
+    if type == "board":
+        response = BINGO_TILES[randint(0,len(BINGO_TILES))]
+    elif type == "list":
+        response = BINGO_LIST[randint(0,len(BINGO_LIST))]
+    else:
+        response = "You can either do !hs roll board or !hs roll list."
+    await ctx.send(response)
+
+@bot1.command(name='complete', help='Completes a Tile.')
+async def complete(ctx, team_num, *tile_name):
+    tile_name = " ".join(tile_name)
+    if team_num not in range(1,9):
+        response = "You need to specify the number of your team\n !bingo complete 1 gwd"
+    elif tile_name not in TILES_TO_NUM.keys():
+        response = "The tile options are: "
+        for key in TILES_TO_NUM:
+            response += f"{key},"
+        response = response[:-1]
+    else:
+        tile_num = TILES_TO_NUM[tile_name]
+        complete_tile(bingo_sheet_tiles, team_num, tile_num)
+        response = f"{tile_name} complete by team {team_num}."
+    await ctx.send(response)
+@bot1.command(name='undo', help='Undo a Tile.')
+async def undo(ctx, team_num, *tile_name):
+    tile_name = " ".join(tile_name)
+    if team_num not in range(1,9):
+        response = "You need to specify the number of your team\n !bingo undo 1 gwd"
+    elif tile_name not in TILES_TO_NUM.keys():
+        response = "The tile options are: "
+        for key in TILES_TO_NUM:
+            response += f"{key},"
+        response = response[:-1]
+    else:
+        tile_num = TILES_TO_NUM[tile_name]
+        undo_tile(bingo_sheet_tiles, team_num, tile_num)
+        response = f"{tile_name} has not been done by team {team_num}."
+    await ctx.send(response)
+
+@bot1.command(name='checkdone', help='Checks tiles done by a team.')
+async def check_done(ctx, team_num):
+    if team_num not in range(1,9):
+        response = "You need to specify the number of your team\n !bingo checkdone 1"
+    else:
+        tiles_done = get_tiles_done(bingo_sheet, team_num)
+        if len(tiles_done==25):
+            response = f"Team {team_num} has complete the bingo, such monsters."
+        else:
+            response = f"Team {team_num} has finished the following tiles:\n"
+            for tile in tiles_done:
+                response += f"{tile}\n"
+    await ctx.send(response)
+@bot1.command(name='checkleft', help='Checks tiles that have not been done by a team.')
+async def check_done(ctx, team_num):
+    if team_num not in range(1,9):
+        response = "You need to specify the number of your team\n !bingo checkleft 1"
+    else:
+        tiles_left = get_tiles_left(bingo_sheet, team_num)
+        if len(tiles_left==0):
+            response = f"Team {team_num} has complete the bingo, such monsters."
+        else:
+            response = f"Team {team_num} has not finished the following tiles:\n"
+            for tile in tiles_left:
+                response += f"{tile}\n"
+    await ctx.send(response)
+
+
+
+
+
+#### END BINGO ####
 @bot1.command(name="updateteams",help="updates a bingo team progress. ")
 @commands.has_permissions(kick_members=True)
 async def update_teams(ctx):
@@ -53,24 +129,6 @@ async def update_teams(ctx):
     bingo_update(bingo_sheet_bosses,bingo_sheet_skills,skills="both")
     await ctx.send("Teams progress updated!")
 
-
-
-
-# @bot1.command(name='add', help='Adds a player to the spreadsheets (Admin).')
-# @commands.has_permissions(kick_members=True)
-# async def add(ctx, name):
-#     try:
-#         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
-#     except gspread.exceptions.APIError as e:
-#         client.login()
-#         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
-#     stats = getStats(playerURL(name,'iron'))
-#     if stats == 404:
-#         response = f"{name} not found in the highscores."
-#     else:
-#         update_player(bosses_sheet,skills_sheet,start_sheet,names,name,stats,1)
-#         response = f"{name} has been added to the memberslist."
-#     await ctx.send(response)
 
 @bot1.command(name='update', help='Updates a players stats in the spreadsheets (Admin). \n Ejemplo: !hs update ironrok Yaspy (updates both players)')
 async def update(ctx, *members):
@@ -92,15 +150,8 @@ async def update(ctx, *members):
             update_player(bosses_sheet,skills_sheet,start_sheet,names,name,stats)
             response += f"{name} stats has been updated\n"
     await ctx.send(response)
-@bot1.command(name='roll', help='Rolls randomly from the board or the list.')
-async def roll(ctx, type):
-    if type == "board":
-        response = BINGO_TILES[randint(0,len(BINGO_TILES))]
-    elif type == "list":
-        response = BINGO_LIST[randint(0,len(BINGO_LIST))]
-    else:
-        response = "You can either do !hs roll board or !hs roll list."
-    await ctx.send(response)
+
+
 
 @bot1.command(name='ranks', help='Shows the rank within the clan of a member in all the skills. (!hs ranks bosses player or !hs ranks skills player)')
 async def ranks(ctx,stat,name):

@@ -590,19 +590,38 @@ def new_remove(members, start_sheet,bosses_sheet,skills_sheet,members_sheet):
     found = [x for x in members if x not in not_found]
     return found
 
+def get_tiles_done(bingo_sheet, team_num):
+    tiles = bingo_sheet.col_values(1)[1:26]
+    team_tiles = bingo_sheet.col_values(team_num+1)[1:26]
+    tiles_done = [tiles[i] for i in range(len(team_tiles)) if team_tiles[i] != ""]
+    return tiles_done
+def get_tiles_left(bingo_sheet, team_num):
+    tiles = bingo_sheet.col_values(1)[1:26]
+    team_tiles = bingo_sheet.col_values(team_num+1)[1:26]
+    tiles_left = [tiles[i] for i in range(len(team_tiles)) if team_tiles[i] == ""]
+    return tiles_left
+
+def complete_tile(bingo_sheet, team_num, tile_num):
+    bingo_sheet.update_cell(tile_num+1,team_num+1, "DONE")
+
+def undo_tile(bingo_sheet, team_num, tile_num):
+    bingo_sheet.update_cell(tile_num+1,team_num+1, "")
 if __name__ == "__main__":
     scope = ['https://spreadsheets.google.com/feeds',
         'https://www.googleapis.com/auth/drive']
     creds = ServiceAccountCredentials.from_json_keyfile_name('client_secret.json', scope)
     client = gspread.authorize(creds)
-    bosses_sheet = client.open("Members Ranks").worksheet('Bosses')
-    skills_sheet = client.open("Members Ranks").worksheet('Skills')
-    start_sheet = client.open("Members Ranks").worksheet('Start')
-    members_sheet = client.open("Members Ranks").worksheet('Members')
-    tracker_sheet = client.open("Members Ranks").worksheet('WeeklyTracker')
-    tracked_sheet = client.open("Members Ranks").worksheet('TrackedXp')
+    # bosses_sheet = client.open("Members Ranks").worksheet('Bosses')
+    # skills_sheet = client.open("Members Ranks").worksheet('Skills')
+    # start_sheet = client.open("Members Ranks").worksheet('Start')
+    # members_sheet = client.open("Members Ranks").worksheet('Members')
+    # tracker_sheet = client.open("Members Ranks").worksheet('WeeklyTracker')
+    # tracked_sheet = client.open("Members Ranks").worksheet('TrackedXp')
+    # names = start_sheet.col_values(2)[1:]
 
-    names = start_sheet.col_values(2)[1:]
+    bingo_sheet = client.open("Bingo 07irons").worksheet('Tile Tracker')
+    # print(get_tiles_left(bingo_sheet, 2))
+    undo_tile(bingo_sheet, 1, 1)
     #bingo_sheet_bosses = client.open("Lockdown Bingo").worksheet('BossTracker')
     #bingo_sheet_skills = client.open("Lockdown Bingo").worksheet('SkillsTracker')
     #player_top_stats(bosses_sheet, skills_sheet, start_sheet, names, "IronRok", 1)
@@ -614,7 +633,7 @@ if __name__ == "__main__":
     # update_player(bosses_sheet,skills_sheet,start_sheet,names,"eehaap",stats,1)
     #tracker(tracker_sheet,start_sheet,client,start=1,starting_cell=400)
     #print(get_tracked_top(tracked_sheet,start_sheet,names,"overall",10))
-    print(tracked_player(tracked_sheet,names,"agility","ironrok"))
+    # print(tracked_player(tracked_sheet,names,"agility","ironrok"))
     #get_coded_name(start_sheet)
     # print(new_remove(["Idiotium","Iron_Man_MkV","asdqwe","ironn_69","siphiwe_moyo","iron_lyfeee","weeeeeeeee"],start_sheet,bosses_sheet,skills_sheet,members_sheet))
     #update_all(bosses_sheet,skills_sheet,start_sheet,client,tracker_sheet=tracker_sheet,starting_cell=390)
