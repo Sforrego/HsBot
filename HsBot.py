@@ -69,7 +69,7 @@ async def complete(ctx, team_num, *tile_name):
     else:
         tile_num = TILES_TO_NUM[tile_name]
         complete_tile(bingo_sheet_tiles, team_num, tile_num)
-        response = f"{tile_name} complete by team {team_num}."
+        response = f"{tile_name} completed by team {team_num}."
     await ctx.send(response)
 @bot1.command(name='undo', help='Undo a Tile.')
 @commands.has_permissions(kick_members=True)
