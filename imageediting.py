@@ -11,6 +11,10 @@ def read_image(path):
 
 def paint_tiles(img_array,tiles):
 
+    img_path = "Bingo_board.png"
+    image = read_image(img_path)
+    img_array = np.array(image)
+    
     for tile in tiles:
         for i in range(tile//5*76, (tile//5)*76+75):
             for j in range(tile%5*91, (tile%5)*91+90):
@@ -19,9 +23,6 @@ def paint_tiles(img_array,tiles):
     return Image.fromarray(img_array)
 
 
-img_path = "Bingo_board.png"
-image = read_image(img_path)
-img_array = np.array(image)
 if __name__ == '__main__':
     image = paint_tiles(img_array,[1,2])
     image.save('team1.png')
