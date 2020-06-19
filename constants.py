@@ -74,16 +74,16 @@ TILES_TO_NUM={"gwd":1,
 "mask jaw":25,
 
 }
-BINGO_LIST=["1	Instantly finish a random tile",
-"2	Re do a random finished tile",
-"3	2x Item drop rate for a DICED tile (need to do 2x LESS)",
-"4	0.5x Item drop rate for a DICED tile (need to do 2x MORE)",
-"5	Nothing happens!",
-"6	Double 1 tile and remove another by choice",
-"7	Nothing happens!",
-"8	Add 1 needed item to a random (DICED) tile of a CHOSEN team.",
-"9	Remove 1 needed item from a random (DICED) tile of a CHOSEN team.",
-"10	Nothing happens!"]
+BINGO_LIST=["Instantly finish a random tile",
+"Re do a random finished tile",
+"2x Item drop rate for a DICED tile (need to do 2x LESS)",
+"0.5x Item drop rate for a DICED tile (need to do 2x MORE)",
+"Nothing happens!",
+"Double 1 tile and remove another by choice",
+"Nothing happens!",
+"Add 1 needed item to a random (DICED) tile of a CHOSEN team.",
+"Remove 1 needed item from a random (DICED) tile of a CHOSEN team.",
+"Nothing happens!"]
 BINGO_BOSSES = [
     "Zulrah",
     "Grotesque Guardians",
