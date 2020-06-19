@@ -1,8 +1,6 @@
 from PIL import Image
 import numpy as np
-img_path = "Bingo_board.png"
-image = read_image(img_path)
-img_array = np.array(image)
+
 
 def read_image(path):
     try:
@@ -19,6 +17,11 @@ def paint_tiles(img_array,tiles):
 
                 img_array[i][j] = np.array([0,200, 0, 255])
     return Image.fromarray(img_array)
+
+
+img_path = "Bingo_board.png"
+image = read_image(img_path)
+img_array = np.array(image)
 if __name__ == '__main__':
     image = paint_tiles([1,2,5,6,7,8,9,15])
     image.show()
