@@ -58,6 +58,11 @@ async def roll(ctx, type):
 @bot1.command(name='complete', help='Completes a Tile.')
 @commands.has_permissions(kick_members=True)
 async def complete(ctx, team_num, *tile_name):
+    try:
+        names = start_sheet.col_values(2)
+    except gspread.exceptions.APIError as e:
+        client.login()
+        names = start_sheet.col_values(2)
     tile_name = " ".join(tile_name)
     tile_name = tile_name.lower()
     team_num = int(team_num)
@@ -76,6 +81,11 @@ async def complete(ctx, team_num, *tile_name):
 @bot1.command(name='undo', help='Undo a Tile.')
 @commands.has_permissions(kick_members=True)
 async def undo(ctx, team_num, *tile_name):
+    try:
+        names = start_sheet.col_values(2)
+    except gspread.exceptions.APIError as e:
+        client.login()
+        names = start_sheet.col_values(2)
     tile_name = " ".join(tile_name)
     tile_name = tile_name.lower()
     team_num = int(team_num)
@@ -94,6 +104,11 @@ async def undo(ctx, team_num, *tile_name):
 
 @bot1.command(name='checkdone', help='Checks tiles done by a team.')
 async def check_done(ctx, team_num):
+    try:
+        names = start_sheet.col_values(2)
+    except gspread.exceptions.APIError as e:
+        client.login()
+        names = start_sheet.col_values(2)
     team_num = int(team_num)
     if team_num not in range(1,9):
         response = "You need to specify the number of your team\n !bingo checkdone 1"
@@ -113,6 +128,11 @@ async def check_done(ctx, team_num):
 
 @bot1.command(name='checkleft', help='Checks tiles that have not been done by a team.')
 async def check_left(ctx, team_num):
+    try:
+        names = start_sheet.col_values(2)
+    except gspread.exceptions.APIError as e:
+        client.login()
+        names = start_sheet.col_values(2)
     team_num = int(team_num)
     if team_num not in range(1,9):
         response = "You need to specify the number of your team\n !bingo checkleft 1"
