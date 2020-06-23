@@ -48,9 +48,9 @@ async def on_ready():
 @commands.has_permissions(kick_members=True)
 async def roll(ctx, type):
     if type == "board":
-        response = BINGO_TILES[randint(0,len(BINGO_TILES))]
+        response = BINGO_TILES[randint(0,len(BINGO_TILES)-1)]
     elif type == "list":
-        response = BINGO_LIST[randint(0,len(BINGO_LIST))]
+        response = BINGO_LIST[randint(0,len(BINGO_LIST)-1)]
     else:
         response = "You can either do !hs roll board or !hs roll list."
     await ctx.send(response)
