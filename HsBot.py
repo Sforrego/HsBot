@@ -348,6 +348,7 @@ async def track(ctx,*names):
 @bot1.command(name='updatetracker', help='Updates all the players that are being tracked(skills).')
 async def update_tracker(ctx):
     print("Updating tracking")
+    await ctx.send("Updating tracker...")
     with open('tracking.txt','r') as file:
         tracked_players = [x.strip() for x in file.readlines()]
     try:
@@ -356,8 +357,12 @@ async def update_tracker(ctx):
         client.login()
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
     for name in tracked_players:
-        update_player(bosses_sheet,skills_sheet,start_sheet,names,name,stats)
-
+        stats = getStats(playerURL(name,'iron'))
+        if stats == 404:
+            not_founds.append(name)
+        else:
+            update_player(bosses_sheet,skills_sheet,start_sheet,names,name,stats)
+    await ctx.send("Tracker updated!")
 @bot1.command(name='checktracker', help='Checks all the players that are being tracked(skills).')
 async def check_tracker(ctx):
     with open('tracking.txt','r') as file:
