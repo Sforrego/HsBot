@@ -315,6 +315,7 @@ async def top_track20(ctx, stat):
 
 
 @bot1.command(name='track', help='Adds players to the tracker.')
+@commands.has_permissions(kick_members=True)
 async def track(ctx,*names):
     print("Start tracking")
     await ctx.send("Fetching Started...")
@@ -336,7 +337,6 @@ async def track(ctx,*names):
                     if stats == 404:
                         not_founds.append(name)
                     else:
-                        update_player(bosses_sheet,skills_sheet,start_sheet,fix,name,stats,tracker_sheet=tracker_sheet)
                         name = name.lower()
                         file.write(f"{name}\n")
                         tracked_players.append(name)
@@ -368,7 +368,9 @@ async def check_tracker(ctx):
     with open('tracking.txt','r') as file:
         tracked_players = [x.strip() for x in file.readlines()]
     await ctx.send(f"Players being tracked: {tracked_players}.")
+    
 @bot1.command(name='resettracker', help='Reset all the players that are being tracked(skills).')
+@commands.has_permissions(kick_members=True)
 async def reset_tracker(ctx):
     with open('tracking.txt','r+') as file:
         file.truncate(0)
