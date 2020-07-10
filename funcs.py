@@ -54,8 +54,8 @@ def get_stat_top(bosses_sheet, skills_sheet, start_sheet, names, stat, n):
     response += "\n"
     return response
 
-def get_tracked_top(tracked_sheet,start_sheet, names, stat, n):
-    top_stats = top_tracked(tracked_sheet, names, stat, n)
+def get_tracked_top(tracked_sheet,start_sheet, names, stat, n,tracked_players):
+    top_stats = top_tracked(tracked_sheet, names, stat, n,tracked_players)
     if top_stats != 404:
         stat = get_stat(stat)
         response = f'{stat}\n\n'
@@ -90,14 +90,14 @@ def top_stat(bosses_sheet, skills_sheet, names, stat, n):
     mylist = mylist[:n]
     return mylist
 
-def top_tracked(tracked_sheet, names, stat, n):
+def top_tracked(tracked_sheet, names, stat, n,tracked_players):
     stat = get_stat(stat)
     if stat == 404:
         return stat
     elif stat in SKILLS:
         index = SKILLS.index(stat)+1
         xp = tracked_sheet.col_values(index+1)[1:]
-        mylist = [(int(value),name) if value != "" else (-1,name) for value,name in zip(xp,names)]
+        mylist = [(int(value),name) if value != "" else (-1,name) for value,name in zip(xp,names) if name in tracked_players]
 
     mylist = sorted(mylist, reverse=True)
     mylist = mylist[:n]
@@ -116,7 +116,7 @@ def tracked_player(tracked_sheet, names, stat, name):
     mylist = mylist[names.index(name)]
     return mylist
 
-def update_player(bosses_sheet, skills_sheet, start_sheet, names, name, stats, addplayer=0):
+def update_player(bosses_sheet, skills_sheet, start_sheet, names, name, stats, addplayer=0,tracker_sheet=None):
     name = name.lower()
     if name not in names and not addplayer:
         print("Player not in memberslist.")
@@ -126,10 +126,24 @@ def update_player(bosses_sheet, skills_sheet, start_sheet, names, name, stats, a
 
             index = names.index(name)+2
 
+            if tracker_sheet:
+                print("There is tracker sheet!")
+                tracker_values = tracker_sheet.get_all_values()[1:]
+                tracker_values = [x[:-2] for x in tracker_values]
+                date_cell_list2 = tracker_sheet.range(f'AX{index}:AX{index}')
+                tracker_cell_list = tracker_sheet.range(f'B{index}:AW{index}')
+
+
+
 
             skills_cell_list = skills_sheet.range(f'B{index}:AW{index}')
             bosses_cell_list = bosses_sheet.range(f'B{index}:BA{index}')
             player_skills, player_clues , player_bosses = createDicts(parseStats(stats))
+
+            if tracker_sheet:
+                temp_list =  [value for key,value in player_skills.items() if "Xp" in key]
+                tracked_player_stats  = temp_list
+                print(tracked_player_stats)
             player_bosses = [player_skills["Overall"]]+list(player_clues.values())+list(player_bosses.values())
 
             if addplayer:
@@ -170,7 +184,14 @@ def update_player(bosses_sheet, skills_sheet, start_sheet, names, name, stats, a
                 cell.value = int(player_skills[j])
             for j,cell in enumerate(bosses_cell_list):
                 cell.value = int(player_bosses[j])
-
+            if tracker_sheet:
+                tracker_cell_list = [x for i,x in enumerate(tracker_cell_list) if i%2==0 ]
+                for i,val in enumerate(tracked_player_stats):
+                    tracker_cell_list[i].value = int(val) if val else val
+                    if tracker_cell_list[i].value:
+                        tvar = tracker_cell_list[i].value
+                        tracker_cell_list[i].value = int(tvar)
+                tracker_sheet.update_cells(tracker_cell_list)
             skills_sheet.update_cells(skills_cell_list)
             bosses_sheet.update_cells(bosses_cell_list)
 
@@ -612,17 +633,17 @@ if __name__ == "__main__":
         'https://www.googleapis.com/auth/drive']
     creds = ServiceAccountCredentials.from_json_keyfile_name('client_secret.json', scope)
     client = gspread.authorize(creds)
-    # bosses_sheet = client.open("Members Ranks").worksheet('Bosses')
-    # skills_sheet = client.open("Members Ranks").worksheet('Skills')
-    # start_sheet = client.open("Members Ranks").worksheet('Start')
-    # members_sheet = client.open("Members Ranks").worksheet('Members')
-    # tracker_sheet = client.open("Members Ranks").worksheet('WeeklyTracker')
-    # tracked_sheet = client.open("Members Ranks").worksheet('TrackedXp')
-    # names = start_sheet.col_values(2)[1:]
+    bosses_sheet = client.open("Members Ranks").worksheet('Bosses')
+    skills_sheet = client.open("Members Ranks").worksheet('Skills')
+    start_sheet = client.open("Members Ranks").worksheet('Start')
+    members_sheet = client.open("Members Ranks").worksheet('Members')
+    tracker_sheet = client.open("Members Ranks").worksheet('WeeklyTracker')
+    tracked_sheet = client.open("Members Ranks").worksheet('TrackedXp')
+    names = start_sheet.col_values(2)[1:]
 
-    bingo_sheet = client.open("Bingo 07irons").worksheet('Tile Tracker')
+    # bingo_sheet = client.open("Bingo 07irons").worksheet('Tile Tracker')
     # print(get_tiles_left(bingo_sheet, 2))
-    undo_tile(bingo_sheet, 1, 1)
+    # undo_tile(bingo_sheet, 1, 1)
     #bingo_sheet_bosses = client.open("Lockdown Bingo").worksheet('BossTracker')
     #bingo_sheet_skills = client.open("Lockdown Bingo").worksheet('SkillsTracker')
     #player_top_stats(bosses_sheet, skills_sheet, start_sheet, names, "IronRok", 1)
@@ -630,7 +651,7 @@ if __name__ == "__main__":
     #bingo_update(bingo_sheet_bosses,bingo_sheet_skills,skills="both",init=1)
     #bingo_check(bingo_sheet_bosses,bingo_sheet_skills,5)
     #EXAMPLES
-    # stats = getStats(playerURL('eehaap','iron'))
+    stats = getStats(playerURL('ironrok','iron'))
     # update_player(bosses_sheet,skills_sheet,start_sheet,names,"eehaap",stats,1)
     #tracker(tracker_sheet,start_sheet,client,start=1,starting_cell=400)
     #print(get_tracked_top(tracked_sheet,start_sheet,names,"overall",10))
@@ -638,7 +659,7 @@ if __name__ == "__main__":
     #get_coded_name(start_sheet)
     # print(new_remove(["Idiotium","Iron_Man_MkV","asdqwe","ironn_69","siphiwe_moyo","iron_lyfeee","weeeeeeeee"],start_sheet,bosses_sheet,skills_sheet,members_sheet))
     #update_all(bosses_sheet,skills_sheet,start_sheet,client,tracker_sheet=tracker_sheet,starting_cell=390)
-    #update_player(bosses_sheet,skills_sheet,start_sheet,names,"hassinen42")
+    update_player(bosses_sheet,skills_sheet,start_sheet,names,"ironrok",stats,tracker_sheet=tracker_sheet)
     #update_player(bosses_sheet,skills_sheet,start_sheet,names,"bonerrific",1)
     #print(top_stat(bosses_sheet,skills_sheet,names,"tob",10))
     #print(get_pretty_name(start_sheet,"no_ge_canvey"))

@@ -148,23 +148,24 @@ async def check_left(ctx, team_num):
 
 
 
-
-
 #### END BINGO ####
-@bot1.command(name="updateteams",help="updates a bingo team progress. ")
-@commands.has_permissions(kick_members=True)
-async def update_teams(ctx):
-    try:
-        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
-    except gspread.exceptions.APIError as e:
-        client.login()
-        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
-    await ctx.send("Teams updating... (this takes like 1-2 mins)")
-    bingo_update(bingo_sheet_bosses,bingo_sheet_skills,skills="both")
-    await ctx.send("Teams progress updated!")
 
 
-@bot1.command(name='update', help='Updates a players stats in the spreadsheets (Admin). \n Ejemplo: !hs update ironrok Yaspy (updates both players)')
+
+# @bot1.command(name="updateteams",help="updates a bingo team progress. ")
+# @commands.has_permissions(kick_members=True)
+# async def update_teams(ctx):
+#     try:
+#         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+#     except gspread.exceptions.APIError as e:
+#         client.login()
+#         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+#     await ctx.send("Teams updating... (this takes like 1-2 mins)")
+#     bingo_update(bingo_sheet_bosses,bingo_sheet_skills,skills="both")
+#     await ctx.send("Teams progress updated!")
+
+
+@bot1.command(name='update', help='Updates a players stats in the spreadsheets (Admin). \n eg: !hs update ironrok Yaspy (updates both players)')
 async def update(ctx, *members):
     first_msg = 'Updating '
     for member in members:
@@ -216,7 +217,10 @@ async def change_rsn(ctx, member,*new_name):
         names = start_sheet.col_values(2)[1:]
     try:
         member = await converter.convert(ctx,member)
-        old_name = member.nick
+        if member.nick:
+            old_name = member.nick:
+        else:
+            old_name = member.name
         ol_name = old_name.replace(" ", "_")
         update_rsn(members_sheet,bosses_sheet,skills_sheet,start_sheet,names,ol_name,new_name)
         await member.edit(nick=new_name)
@@ -267,16 +271,21 @@ async def topx(ctx, stat):
     await ctx.send(response)
 
 
+
+####### TRACKER #######
+
 @bot1.command(name='tracked', help='Shows the top 5 players and their xp gains for a specific skill.')
-async def top2(ctx, stat,*player):
+async def top_track(ctx, stat,*player):
     try:
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
     except gspread.exceptions.APIError as e:
         client.login()
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
     await ctx.send("Fetching Data...")
+    with open('tracking.txt','r') as file:
+        tracked_players = [x.strip() for x in file.readlines()]
     if not player:
-        response = get_tracked_top(tracked_sheet,start_sheet ,names, stat, 5)
+        response = get_tracked_top(tracked_sheet,start_sheet ,names, stat, 5,tracked_players)
     else:
         orig_name = " ".join(player)
         player = "_".join(player)
@@ -289,37 +298,70 @@ async def top2(ctx, stat,*player):
     await ctx.send(response)
 
 @bot1.command(name='tracked20', help='Shows the top 20 players and their xp gains for a specific skill.')
-async def top3(ctx, stat):
+async def top_track20(ctx, stat):
     try:
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
     except gspread.exceptions.APIError as e:
         client.login()
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
     await ctx.send("Fetching data...")
-    response = get_tracked_top(tracked_sheet,start_sheet ,names, stat, 20)
+    with open('tracking.txt','r') as file:
+        tracked_players = [x.strip() for x in file.readlines()]
+    response = get_tracked_top(tracked_sheet,start_sheet ,names, stat, 20,tracked_players)
 
     await ctx.send(response)
 
 
 
 
-
-
-@bot1.command(name='start_tracking', help='Starts tracking all the players (skills) in the memberlist. To update use fullupdate (both take 30mins ~).')
-async def top(ctx):
+@bot1.command(name='track', help='Adds players to the tracker.')
+async def track(ctx,*names):
     print("Start tracking")
     try:
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
     except gspread.exceptions.APIError as e:
         client.login()
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+    not_founds = []
+    with open('tracking.txt','r') as file:
+        tracked_players = [x.strip() for x in file.readlines()]
+        for name in names:
+            if name not in tracked_players:
+                stats = getStats(playerURL(name,'iron'))
+                if stats == 404:
+                    not_found.append(name)
+                else:
+                    update_player(bosses_sheet,skills_sheet,start_sheet,names,name,stats,tracker_sheet=tracker_sheet)
+                    file.write(f"{name.lower()}")
+    await ctx.send(f"{not_founds} Not Found in hs.\n The rest of the players are being tracked.")
 
-    await ctx.send("Loading Tracker... (30 mins ~)")
-    update_all(bosses_sheet, skills_sheet, start_sheet, client, starting_cell=2, tracker_sheet=tracker_sheet)
-    await ctx.send("Tracking started.")
+@bot1.command(name='updatetracker', help='Updates all the players that are being tracked(skills).')
+async def update_tracker(ctx):
+    print("Updating tracking")
+    with open('tracking.txt','r') as file:
+        tracked_players = [x.strip() for x in file.readlines()]
+    try:
+        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+    except gspread.exceptions.APIError as e:
+        client.login()
+        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+    for name in tracked_players:
+        update_player(bosses_sheet,skills_sheet,start_sheet,names,name,stats)
+
+@bot1.command(name='checktracker', help='Checks all the players that are being tracked(skills).')
+async def check_tracker(ctx):
+    with open('tracking.txt','r') as file:
+        tracked_players = [x.strip() for x in file.readlines()]
+    await ctx.send(f"Players being tracked: {tracked_players}.")
+@bot1.command(name='resettracker', help='Reset all the players that are being tracked(skills).')
+async def reset_tracker(ctx):
+    with open('tracking.txt','r+') as file:
+        file.truncate(0)
+    await ctx.send(f"There are no players being tracked.")
 
 
 
+####### END TRACKER ######
 
 @bot1.command(name='clan_ranks', help='Return all players with a specific rank (Admin).')
 @commands.has_permissions(kick_members=True)
@@ -543,29 +585,43 @@ async def do_stuff_every_x_seconds(timeout, stuff, *args):
 ##########################################################
 token2 = os.getenv('DISCORD_TOKEN2')
 
-bot2 = commands.Bot(command_prefix=['!corner ','!notify '])
+bot2 = commands.Bot(command_prefix=['!command ','!notify '])
 
 @bot2.event
 async def on_ready():
     print(f'{bot2.user} has connected to Discord!')
 
+#Courtroom
 
-@bot2.command(name='send', help='Assigns corner role to member for duration minutes')
+@bot2.command(name='send', help='Assigns corner/court role to member for duration minutes')
 @commands.has_permissions(kick_members=True)
-async def restrict(ctx, member:discord.Member, duration: int):
-    role = discord.utils.get(ctx.guild.roles, name="Corner")
-    await member.add_roles(role)
-    name = member.nick if member.nick else member.name
-    response = f"{name} has been sent to the corner for {duration} minutes."
-    await ctx.send(response)
-    await asyncio.sleep(duration*60)
-    await member.remove_roles(role)
+async def restrict(ctx, role, member:discord.Member, duration=60):
+    duration = int(duration)
+    if role == "corner":
+        role = discord.utils.get(ctx.guild.roles, name="Corner")
+        await member.add_roles(role)
+        name = member.nick if member.nick else member.name
+        response = f"{name} has been sent to the corner for {duration} minutes."
+        await ctx.send(response)
+        await asyncio.sleep(duration*60)
+        await member.remove_roles(role)
+    if role == "court":
+        role = discord.utils.get(ctx.guild.roles, name="Courtroom")
+        await member.add_roles(role)
+        name = member.nick if member.nick else member.name
+        response = f"{name} has been sent to the court for {duration} minutes."
+        await ctx.send(response)
+        await asyncio.sleep(duration*60)
+        await member.remove_roles(role)
 
 
-@bot2.command(name='remove',help ='Removes Corner role from a specific member.')
+@bot2.command(name='remove',help ='Removes corner/court role from a specific member.')
 @commands.has_permissions(kick_members=True)
-async def remove_corners(ctx, member:discord.Member):
-    role = discord.utils.get(ctx.guild.roles, name="Corner")
+async def remove_corners(ctx, role, member:discord.Member):
+    if role == "corner":
+        role = discord.utils.get(ctx.guild.roles, name="Corner")
+    elif role =="court":
+        role = discord.utils.get(ctx.guild.roles, name="Courtroom")
     await member.remove_roles(role)
 
 @bot2.command(name='reset', help ='Removes Corner role from every member.')
@@ -575,17 +631,18 @@ async def remove_corners(ctx):
     for member in ctx.guild.members:
         await member.remove_roles(role)
 
-@bot2.command(name='members')
+@bot2.command(name='members', help= "Shows all the members with a role. eg: !command members Corner.")
 @commands.has_permissions(kick_members=True)
-async def remove_corners(ctx):
-    role = discord.utils.get(ctx.guild.roles, name="Corner")
+async def members(ctx,role):
+
+    role = discord.utils.get(ctx.guild.roles, name=role)
     members_in_corner = ''
     for member in ctx.guild.members:
         if role in member.roles:
             name = member.nick if member.nick else member.name
             members_in_corner += f'{name}\n'
     if members_in_corner == '':
-        members_in_corner = 'No members in the corner.'
+        members_in_corner = f'No members with role {role}.'
     await ctx.send(members_in_corner)
 
 @bot2.command(name='on')
