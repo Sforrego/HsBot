@@ -317,6 +317,7 @@ async def top_track20(ctx, stat):
 @bot1.command(name='track', help='Adds players to the tracker.')
 async def track(ctx,*names):
     print("Start tracking")
+    await ctx.send("Fetching Started...")
     try:
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
     except gspread.exceptions.APIError as e:
@@ -324,7 +325,7 @@ async def track(ctx,*names):
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
     try:
         not_founds = []
-        with open('tracking.txt','r') as file:
+        with open('tracking.txt','a') as file:
             tracked_players = [x.strip() for x in file.readlines()]
             for name in names:
                 if name not in tracked_players:
