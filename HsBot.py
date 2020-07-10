@@ -319,10 +319,10 @@ async def track(ctx,*names):
     print("Start tracking")
     await ctx.send("Fetching Started...")
     try:
-        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+        fix = [x.lower() for x in start_sheet.col_values(2)[1:]]
     except gspread.exceptions.APIError as e:
         client.login()
-        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+        fix2 = [x.lower() for x in start_sheet.col_values(2)[1:]]
     try:
         not_founds = []
 
@@ -334,7 +334,7 @@ async def track(ctx,*names):
                 if name not in tracked_players:
                     stats = getStats(playerURL(name,'iron'))
                     if stats == 404:
-                        not_found.append(name)
+                        not_founds.append(name)
                     else:
                         update_player(bosses_sheet,skills_sheet,start_sheet,names,name,stats,tracker_sheet=tracker_sheet)
                         name = name.lower()
