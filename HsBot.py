@@ -325,8 +325,11 @@ async def track(ctx,*names):
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
     try:
         not_founds = []
-        with open('tracking.txt','a') as file:
+
+        with open('tracking.txt','r') as file:
             tracked_players = [x.strip() for x in file.readlines()]
+
+        with open('tracking.txt','a') as file:
             for name in names:
                 if name not in tracked_players:
                     stats = getStats(playerURL(name,'iron'))
@@ -336,6 +339,7 @@ async def track(ctx,*names):
                         update_player(bosses_sheet,skills_sheet,start_sheet,names,name,stats,tracker_sheet=tracker_sheet)
                         name = name.lower()
                         file.write(f"{name}")
+                        tracked_players.append(name)
         await ctx.send(f"{not_founds} Not Found in hs.\n The rest of the players are being tracked.")
     except Exception as e:
         response = f"Something went wrong. Error {e}"
