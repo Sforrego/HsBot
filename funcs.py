@@ -128,8 +128,6 @@ def update_player(bosses_sheet, skills_sheet, start_sheet, names, name, stats, a
 
             if tracker_sheet:
                 print("There is tracker sheet!")
-                tracker_values = tracker_sheet.get_all_values()[1:]
-                tracker_values = [x[:-2] for x in tracker_values]
                 date_cell_list2 = tracker_sheet.range(f'AX{index}:AX{index}')
                 tracker_cell_list = tracker_sheet.range(f'B{index}:AW{index}')
 
