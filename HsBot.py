@@ -218,7 +218,7 @@ async def change_rsn(ctx, member,*new_name):
     try:
         member = await converter.convert(ctx,member)
         if member.nick:
-            old_name = member.nick:
+            old_name = member.nick
         else:
             old_name = member.name
         ol_name = old_name.replace(" ", "_")
