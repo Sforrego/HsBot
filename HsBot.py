@@ -338,7 +338,7 @@ async def track(ctx,*names):
                     else:
                         update_player(bosses_sheet,skills_sheet,start_sheet,names,name,stats,tracker_sheet=tracker_sheet)
                         name = name.lower()
-                        file.write(f"{name}")
+                        file.write(f"{name}\n")
                         tracked_players.append(name)
         await ctx.send(f"{not_founds} Not Found in hs.\n The rest of the players are being tracked.")
     except Exception as e:
