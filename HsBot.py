@@ -322,7 +322,7 @@ async def track(ctx,*names):
         fix = [x.lower() for x in start_sheet.col_values(2)[1:]]
     except gspread.exceptions.APIError as e:
         client.login()
-        fix2 = [x.lower() for x in start_sheet.col_values(2)[1:]]
+        fix = [x.lower() for x in start_sheet.col_values(2)[1:]]
     try:
         not_founds = []
 
@@ -336,7 +336,7 @@ async def track(ctx,*names):
                     if stats == 404:
                         not_founds.append(name)
                     else:
-                        update_player(bosses_sheet,skills_sheet,start_sheet,names,name,stats,tracker_sheet=tracker_sheet)
+                        update_player(bosses_sheet,skills_sheet,start_sheet,fix,name,stats,tracker_sheet=tracker_sheet)
                         name = name.lower()
                         file.write(f"{name}\n")
                         tracked_players.append(name)
