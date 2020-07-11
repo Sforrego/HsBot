@@ -285,7 +285,7 @@ async def top_track(ctx, stat,*player):
     with open('tracking.txt','r') as file:
         tracked_players = [x.strip() for x in file.readlines()]
     if not player:
-        response = get_tracked_top(tracked_sheet,start_sheet ,names, stat, 5,tracked_players)
+        response = get_tracked_top(tracked_sheet,start_sheet ,names, stat, 10,tracked_players)
     else:
         orig_name = " ".join(player)
         player = "_".join(player)
