@@ -1,8 +1,35 @@
-def save_tracked(names):
-    with open('tracking.txt','a') as file:
-        for name in names:
-            file.write(name+'\n')
+text = """
+ijsberg2
+IronRok
+Iron Rar
+DeadLinaty
+CluelessProd
+NoobForSoup
+maxitaxi777
+J osho
+Kwartje
+83 openkey
+Iron Natedwg
+Polybos
+Und3r0ath
+i r 0 n 3 d
+Spooned Soul
+No GE Canvey
+Ciaran Sor
+Toad Event
+chrizzoz95
+SalmonLemone
+R a df o r d
+Rkylem
+IM Knight
+TheBranFlake
+Its Ruhspect
+Superhcfire
+HCb
+fdsd
+"""
+list = text.replace(" ", "_").split(" ")
+for i in range(len(list)):
+    list[i] = list[i].lower()
 
-with open('tracking.txt','r') as file:
-    names = [x.strip() for x in file.readlines()]
-    print(name)
+print(" ".join(list))
