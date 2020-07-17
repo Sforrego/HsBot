@@ -21,8 +21,8 @@ host = os.getenv("host")
 port = os.getenv("port")
 database = os.getenv("database")
 
-conn = psycopg2.connect(user=user,password=password,host=host,port=port,database=database)
-cur = conn.cursor()
+# conn = psycopg2.connect(user=user,password=password,host=host,port=port,database=database)
+cur = None#conn.cursor()
 ## SHEETS
 scope = ['https://spreadsheets.google.com/feeds',
     'https://www.googleapis.com/auth/drive']
