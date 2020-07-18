@@ -191,7 +191,7 @@ async def update_hs(ctx, *members):
         response+= f"{not_found_cc} were not found on the clan's hiscores.\n"
     await ctx.send(response)
 
-@bot1.command(name='addhs', help="Adds players to the clan's hiscores. \n eg: !hs addhs ironrok r_a_df_o_r_d (updates both players you can do as many as you want)")
+@bot1.command(name='add', help="Adds players to the clan's hiscores. \n eg: !hs addhs ironrok r_a_df_o_r_d (updates both players you can do as many as you want)")
 @commands.has_permissions(kick_members=True)
 async def add_hs(ctx, *members):
     first_msg = 'Adding '
@@ -231,11 +231,25 @@ async def top_hs(ctx, stat):
     except Exception as e:
         response = e
     finally:
+        print(response)
+        await ctx.send(response)
+
+@bot1.command(name='top10', help="Shows the top 10 players and their kc/lvl+xp for a specific stat.")
+async def top_hs(ctx, stat):
+    response = ""
+    try:
+        skill = is_skill(stat)
+        result = sql_top_stat(cur,stat,10,skill,stats_col_names)
+        response = top_stat_to_string(result)
+    except Exception as e:
+        response = e
+    finally:
+        print(response)
         await ctx.send(response)
 
 
 @bot1.command(name='checkhs', help="Checks if a player is in the clan´s hs.")
-async def top_hs(ctx, name):
+async def check_hs(ctx, name):
     players = get_players_in_hs(cur)
     if name in players:
         response = f"{name} is in the clan´s hiscores."
@@ -244,7 +258,21 @@ async def top_hs(ctx, name):
 
     await ctx.send(response)
 
+@bot1.command(name='my', help="Gets the person using the command lvl/kc in a stat.")
+async def check_hs(ctx, stat):
+    name = coded_string(ctx.message.author.nick)
+    try:
+        skill = is_skill(stat)
+        result = get_player_stat(cur,name,stat,skill,col_names)[0]
+        if skill:
+            response = f"{name}'s {stat} level: {result[1]} with {reult[2]} xp."
+        else:
+            response = f"{name}'s {stat} kc: {result[1]}."
 
+    except Exception as e:
+        response = e
+    finally:
+        await ctx.send(response)
 
 ##### END OF DB HS COMMANDS ######
 

@@ -98,11 +98,14 @@ def get_players_in_hs(cur):
     names = cur.fetchall()
     return [x[0] for x in names]
 
-def get_player_stat(cur,name,stat,col_names):
+def get_player_stat(cur,name,stat,skill,col_names):
     """ get a single player stat"""
     if stat not in col_names:
         raise Exception(f"{stat} is not a  valid stat.")
-    query = f"""SELECT rsn,"{stat}" FROM stats WHERE rsn='{name}'"""
+    if skill:
+        query = f"""SELECT rsn,"{stat}","{stat}_xp" FROM stats WHERE rsn='{name}'"""
+    else:
+        query = f"""SELECT rsn,"{stat}" FROM stats WHERE rsn='{name}'"""
     cur.execute(query)
     response = cur.fetchall()
     return response
