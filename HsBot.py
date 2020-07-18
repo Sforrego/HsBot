@@ -222,7 +222,8 @@ async def add_hs(ctx, *members):
 
 
 @bot1.command(name='top', help="Shows the top 5 players and their kc/lvl+xp for a specific stat.")
-async def top_hs(ctx, stat):
+async def top_hs(ctx, *stat):
+    stat = (" ").join(stat)
     response = "```"
     stat = coded_string(get_stat(stat))
     try:
@@ -237,7 +238,8 @@ async def top_hs(ctx, stat):
         await ctx.send(response)
 
 @bot1.command(name='top10', help="Shows the top 10 players and their kc/lvl+xp for a specific stat.")
-async def top_hs(ctx, stat):
+async def top_hs(ctx, *stat):
+    stat = (" ").join(stat)
     response = ""
     stat = coded_string(get_stat(stat))
     try:
@@ -262,7 +264,8 @@ async def check_hs(ctx, name):
     await ctx.send(response)
 
 @bot1.command(name='my', help="Gets the person using the command lvl/kc in a stat.")
-async def check_hs(ctx, stat):
+async def check_hs(ctx, *stat):
+    stat = (" ").join(stat)
     name = coded_string(ctx.message.author.display_name)
     stat = coded_string(get_stat(stat))
     try:
