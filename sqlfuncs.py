@@ -60,7 +60,7 @@ def sql_top_stat(cur,stat,n,skill,col_names):
     if stat not in col_names:
         raise Exception(f"{stat} is not a  valid stat.")
     if skill:
-        query = f"""SELECT rsn,"{stat}" FROM stats ORDER BY ("{stat}","{stat}_xp") DESC LIMIT {n}"""
+        query = f"""SELECT rsn,"{stat}","{stat}_xp" FROM stats ORDER BY ("{stat}","{stat}_xp") DESC LIMIT {n}"""
     else:
         query = f"""SELECT rsn,"{stat}" FROM stats ORDER BY "{stat}" DESC LIMIT {n}"""
     cur.execute(query)
@@ -71,7 +71,11 @@ def top_stat_to_string(response):
     """ Turns the response from sql_top_stat into a pretty string """
     str_response = ""
     for i,tup in enumerate(response):
-        str_response += f"{i+1:<3} {tup[0]:<20} {str(tup[1])}\n"
+        if len(tup)==2:
+            str_response += f"{i+1:<3} {tup[0]:<20} {str(tup[1])}\n"
+        elif len(tup)==3:
+            str_response += f"{i+1:<3} {tup[0]:<20} {str(tup[1])} {str(tup[2])}\n"
+
     return str_response
 
 def is_skill(stat):

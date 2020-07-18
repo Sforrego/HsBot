@@ -191,7 +191,7 @@ async def update_hs(ctx, *members):
 
 @bot1.command(name='addhs', help="Adds players to the clan's hiscores. \n eg: !hs addhs ironrok r_a_df_o_r_d (updates both players you can do as many as you want)")
 @commands.has_permissions(kick_members=True)
-async def update_hs(ctx, *members):
+async def add_hs(ctx, *members):
     first_msg = 'Adding '
     for member in members:
         first_msg += f'{member} '
@@ -215,6 +215,39 @@ async def update_hs(ctx, *members):
     if not_found_osrs:
         response+= f"{not_found_cc} something went wrong adding these players.\n"
     await ctx.send(response)
+
+
+@bot1.command(name='top', help="Shows the top 5 players and their kc/lvl+xp for a specific stat.")
+async def update_hs(ctx, stat):
+    first_msg = 'Updating '
+    for member in members:
+        first_msg += f'{member} '
+    await ctx.send(first_msg)
+    not_found_osrs = []
+    not_found_cc = []
+    for name in members:
+        stats = getStats(playerURL(name,'iron'))
+        if stats == 404:
+            not_found_osrs.append(name)
+        else:
+            try:
+                sql_update_player_hs(cur,name,stats_col_names,stats)
+                sql_add_player_hs_historic(cur,name,stats)
+            except Exception as e:
+                not_found_cc.append(name)
+    cur.commit()
+    found = members-not_found_cc-not_found_osrs
+    response = f"{found} has been updated!"
+    if not_found_osrs:
+        response+= f"{not_found_osrs} were not found in the osrs' hiscores.\n"
+    if not_found_osrs:
+        response+= f"{not_found_cc} were not found on the clan's hiscores.\n"
+    await ctx.send(response)
+
+
+
+
+
 
 
 @bot1.command(name='ranks', help='Shows the rank within the clan of a member in all the skills. (!hs ranks bosses player or !hs ranks skills player)')
@@ -276,7 +309,7 @@ async def full_update(ctx):
         response = "There was an error, please try again later."
     await ctx.send(response)
 
-@bot1.command(name='top', help='Shows the top 5 players and their kc for a specific stat.')
+@bot1.command(name='oldtop', help='Shows the top 5 players and their kc for a specific stat.')
 async def top(ctx, stat):
     try:
         names = [x.lower() for x in start_sheet.col_values(2)[1:]]
