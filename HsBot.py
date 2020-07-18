@@ -185,7 +185,7 @@ async def update_hs(ctx, *members):
     response = f"{found} has been updated!"
     if not_found_osrs:
         response+= f"{not_found_osrs} were not found in the osrs' hiscores.\n"
-    if not_found_osrs:
+    if not_found_cc:
         response+= f"{not_found_cc} were not found on the clan's hiscores.\n"
     await ctx.send(response)
 
@@ -197,6 +197,8 @@ async def add_hs(ctx, *members):
         first_msg += f'{member} '
     first_msg += "to the clan's hs."
     await ctx.send(first_msg)
+    not_found_osrs = []
+    not_found_cc = []
     for name in members:
         stats = getStats(playerURL(name,'iron'))
         if stats == 404:
@@ -212,13 +214,13 @@ async def add_hs(ctx, *members):
     response = f"{found} has been added!"
     if not_found_osrs:
         response+= f"{not_found_osrs} were not found in the osrs' hiscores.\n"
-    if not_found_osrs:
+    if not_found_cc:
         response+= f"{not_found_cc} something went wrong adding these players.\n"
     await ctx.send(response)
 
 
 @bot1.command(name='top', help="Shows the top 5 players and their kc/lvl+xp for a specific stat.")
-async def update_hs(ctx, stat):
+async def top_hs(ctx, stat):
     response = ""
     try:
         skill = is_skill(stat)
@@ -229,6 +231,15 @@ async def update_hs(ctx, stat):
     await ctx.send(response)
 
 
+@bot1.command(name='checkhs', help="Checks if a player is in the clan´s hs.")
+async def top_hs(ctx, name):
+    players = get_players_in_hs(cur)
+    if name in players:
+        response = f"{name} is in the clan´s hiscores."
+    else:
+        response = f"{name} is not in the clan´s hiscores."
+
+    await ctx.send(response)
 
 
 

@@ -95,7 +95,7 @@ def get_players_in_hs(cur):
     query = "SELECT rsn FROM stats";
     cur.execute(query)
     names = cur.fetchall()
-    return names
+    return [x[0] for x in names]
 
 def get_player_stat(cur,name,stat,col_names):
     """ get a single player stat"""
