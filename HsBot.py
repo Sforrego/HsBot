@@ -224,6 +224,7 @@ async def add_hs(ctx, *members):
 @bot1.command(name='top', help="Shows the top 5 players and their kc/lvl+xp for a specific stat.")
 async def top_hs(ctx, stat):
     response = ""
+    stat = get_stat(stat)
     try:
         skill = is_skill(stat)
         result = sql_top_stat(cur,stat,5,skill,stats_col_names)
@@ -237,6 +238,7 @@ async def top_hs(ctx, stat):
 @bot1.command(name='top10', help="Shows the top 10 players and their kc/lvl+xp for a specific stat.")
 async def top_hs(ctx, stat):
     response = ""
+    stat = get_stat(stat)
     try:
         skill = is_skill(stat)
         result = sql_top_stat(cur,stat,10,skill,stats_col_names)
@@ -261,9 +263,10 @@ async def check_hs(ctx, name):
 @bot1.command(name='my', help="Gets the person using the command lvl/kc in a stat.")
 async def check_hs(ctx, stat):
     name = coded_string(ctx.message.author.nick)
+    stat = get_stat(stat)
     try:
         skill = is_skill(stat)
-        result = get_player_stat(cur,name,stat,skill,col_names)[0]
+        result = get_player_stat(cur,name,stat,skill,stats_col_names)[0]
         if skill:
             response = f"{name}'s {stat} level: {result[1]} with {reult[2]} xp."
         else:
@@ -273,6 +276,29 @@ async def check_hs(ctx, stat):
         response = e
     finally:
         await ctx.send(response)
+
+@bot1.command(name='fullupdate', help="Updates every player in the clan's hiscores.")
+async def fullupdate(ctx):
+    await ctx.send("Updating all players...")
+    members = get_players_in_hs(cur)
+    not_found_osrs = []
+    for name in members:
+        stats = getStats(playerURL(name,'iron'))
+        if stats == 404:
+            not_found_osrs.append(name)
+        else:
+            try:
+                sql_update_player_hs(cur,name,stats_col_names,stats)
+                sql_add_player_hs_historic(cur,name,stats)
+            except Exception as e:
+                not_found_cc.append(name)
+    conn.commit()
+
+    if not_found_osrs:
+        response+= f"{not_found_osrs} were not found in the osrs' hiscores.\n"
+        await ctx.send(response)
+
+    await ctx.send("Finished updating.")
 
 ##### END OF DB HS COMMANDS ######
 
