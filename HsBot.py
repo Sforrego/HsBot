@@ -317,49 +317,6 @@ async def change_rsn(ctx, member,*new_name):
         response = f"Something went wrong. Error {e}"
     await ctx.send(response)
 
-@bot1.command(name='fullupdate', help='Updates every player (Admin).')
-@commands.has_permissions(kick_members=True)
-async def full_update(ctx):
-    msg = f"All players are being updated ..."
-    await ctx.send(msg)
-    try:
-        names = start_sheet.col_values(2)[1:]
-    except gspread.exceptions.APIError as e:
-        client.login()
-        names = start_sheet.col_values(2)[1:]
-    try:
-        update_all(bosses_sheet,skills_sheet,start_sheet,client)
-        response = f"All players have been updated."
-    except Exception:
-        print(Exception)
-        response = "There was an error, please try again later."
-    await ctx.send(response)
-
-@bot1.command(name='oldtop', help='Shows the top 5 players and their kc for a specific stat.')
-async def top(ctx, stat):
-    try:
-        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
-    except gspread.exceptions.APIError as e:
-        client.login()
-        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
-
-    response = get_stat_top(bosses_sheet, skills_sheet,start_sheet ,names, stat, 5)
-    await ctx.send(response)
-
-
-
-@bot1.command(name='top10', help='Shows the top 10 players and their kc for a specific stat.')
-async def topx(ctx, stat):
-    try:
-        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
-    except gspread.exceptions.APIError as e:
-        client.login()
-        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
-    response = get_stat_top(bosses_sheet, skills_sheet,start_sheet ,names, stat, 10)
-    await ctx.send(response)
-
-
-
 ####### TRACKER #######
 
 @bot1.command(name='tracked', help='Shows the top 5 players and their xp gains for a specific skill.')
