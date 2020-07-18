@@ -224,7 +224,7 @@ async def add_hs(ctx, *members):
 @bot1.command(name='top', help="Shows the top 5 players and their kc/lvl+xp for a specific stat.")
 async def top_hs(ctx, stat):
     response = "```"
-    stat = get_stat(stat).lower()
+    stat = coded_string(get_stat(stat))
     try:
         skill = is_skill(stat)
         result = sql_top_stat(cur,stat,5,skill,stats_col_names)
@@ -239,7 +239,7 @@ async def top_hs(ctx, stat):
 @bot1.command(name='top10', help="Shows the top 10 players and their kc/lvl+xp for a specific stat.")
 async def top_hs(ctx, stat):
     response = ""
-    stat = get_stat(stat).lower()
+    stat = coded_string(get_stat(stat))
     try:
         skill = is_skill(stat)
         result = sql_top_stat(cur,stat,10,skill,stats_col_names)
@@ -263,8 +263,8 @@ async def check_hs(ctx, name):
 
 @bot1.command(name='my', help="Gets the person using the command lvl/kc in a stat.")
 async def check_hs(ctx, stat):
-    name = coded_string(ctx.message.author.nick)
-    stat = get_stat(stat).lower()
+    name = coded_string(ctx.message.author.display_name)
+    stat = coded_string(get_stat(stat))
     try:
         skill = is_skill(stat)
         result = get_player_stat(cur,name,stat,skill,stats_col_names)[0]
