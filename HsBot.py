@@ -272,7 +272,7 @@ async def check_hs(ctx, *stat):
         skill = is_skill(stat)
         result = get_player_stat(cur,name,stat,skill,stats_col_names)[0]
         if skill:
-            response = f"{name}'s {stat} level: {result[1]} with {reult[2]} xp."
+            response = f"{name}'s {stat} level: {result[1]} with {result[2]} xp."
         else:
             response = f"{name}'s {stat} kc: {result[1]}."
 
