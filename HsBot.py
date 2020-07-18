@@ -13,16 +13,15 @@ from discord.ext.commands import MemberConverter
 from random import randint
 from imageediting import *
 from sqlfuncs import *
-load_dotenv()
-token1 = os.getenv('DISCORD_TOKEN1')
-user = os.getenv("user")
-password = os.getenv("password")
-host = os.getenv("host")
-port = os.getenv("port")
-database = os.getenv("database")
 
-#conn = psycopg2.connect(user=user,password=password,host=host,port=port,database=database)
-cur = None#conn.cursor()
+import psycopg2
+load_dotenv()
+
+
+DATABASE_URL = os.environ['DATABASE_URL']
+
+conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+cur = conn.cursor()
 ## SHEETS
 scope = ['https://spreadsheets.google.com/feeds',
     'https://www.googleapis.com/auth/drive']
