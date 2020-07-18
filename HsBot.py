@@ -219,29 +219,13 @@ async def add_hs(ctx, *members):
 
 @bot1.command(name='top', help="Shows the top 5 players and their kc/lvl+xp for a specific stat.")
 async def update_hs(ctx, stat):
-    first_msg = 'Updating '
-    for member in members:
-        first_msg += f'{member} '
-    await ctx.send(first_msg)
-    not_found_osrs = []
-    not_found_cc = []
-    for name in members:
-        stats = getStats(playerURL(name,'iron'))
-        if stats == 404:
-            not_found_osrs.append(name)
-        else:
-            try:
-                sql_update_player_hs(cur,name,stats_col_names,stats)
-                sql_add_player_hs_historic(cur,name,stats)
-            except Exception as e:
-                not_found_cc.append(name)
-    cur.commit()
-    found = members-not_found_cc-not_found_osrs
-    response = f"{found} has been updated!"
-    if not_found_osrs:
-        response+= f"{not_found_osrs} were not found in the osrs' hiscores.\n"
-    if not_found_osrs:
-        response+= f"{not_found_cc} were not found on the clan's hiscores.\n"
+    response = ""
+    try:
+        skill = is_skill(stat)
+        result = sql_top_stat(cur,stat,5,skill,stats_col_names)
+        response = top_stat_to_string(response)
+    except Exception as e:
+        response = e
     await ctx.send(response)
 
 
