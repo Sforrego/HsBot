@@ -180,7 +180,7 @@ async def update_hs(ctx, *members):
                 sql_add_player_hs_historic(cur,name,stats)
             except Exception as e:
                 not_found_cc.append(name)
-    cur.commit()
+    conn.commit()
     found = members-not_found_cc-not_found_osrs
     response = f"{found} has been updated!"
     if not_found_osrs:
@@ -209,7 +209,7 @@ async def add_hs(ctx, *members):
                 sql_add_player_hs_historic(cur,name,stats)
             except Exception as e:
                 not_found_cc.append(name)
-    cur.commit()
+    conn.commit()
     found = members-not_found_cc-not_found_osrs
     response = f"{found} has been added!"
     if not_found_osrs:
@@ -225,10 +225,12 @@ async def top_hs(ctx, stat):
     try:
         skill = is_skill(stat)
         result = sql_top_stat(cur,stat,5,skill,stats_col_names)
+        print(f"Result: {result}")
         response = top_stat_to_string(response)
     except Exception as e:
         response = e
-    await ctx.send(response)
+    finally:
+        await ctx.send(response)
 
 
 @bot1.command(name='checkhs', help="Checks if a player is in the clan´s hs.")
