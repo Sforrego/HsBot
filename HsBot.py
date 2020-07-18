@@ -225,8 +225,8 @@ async def top_hs(ctx, stat):
     try:
         skill = is_skill(stat)
         result = sql_top_stat(cur,stat,5,skill,stats_col_names)
-        print(f"Result: {result}")
         response = top_stat_to_string(response)
+        print(response)
     except Exception as e:
         response = e
     finally:

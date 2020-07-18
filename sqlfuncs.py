@@ -71,6 +71,7 @@ def top_stat_to_string(response):
     """ Turns the response from sql_top_stat into a pretty string """
     str_response = ""
     for i,tup in enumerate(response):
+        print(tup,len(tup))
         if len(tup)==2:
             str_response += f"{i+1:<3} {tup[0]:<20} {str(tup[1])}\n"
         elif len(tup)==3:
@@ -125,8 +126,8 @@ if __name__ == '__main__':
     ##### TESTING FUNCTIONS
 
     # response = is_skill("Chambers of xeric")
-    # response = top_stat_to_string(sql_top_stat(cur,"kree'arra",10,0,stats_col_names))
-    response = get_player_stat(cur,"ironrok","kree'arra",stats_col_names)
+    response = top_stat_to_string(sql_top_stat(cur,"kree'arra",10,0,stats_col_names))
+    # response = get_player_stat(cur,"ironrok","kree'arra",stats_col_names)
     #
     #
     #
