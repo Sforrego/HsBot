@@ -181,7 +181,7 @@ async def update_hs(ctx, *members):
             except Exception as e:
                 not_found_cc.append(name)
     conn.commit()
-    found = members-not_found_cc-not_found_osrs
+    found = list(members)-not_found_cc-not_found_osrs
     response = f"{found} has been updated!"
     if not_found_osrs:
         response+= f"{not_found_osrs} were not found in the osrs' hiscores.\n"
@@ -210,7 +210,7 @@ async def add_hs(ctx, *members):
             except Exception as e:
                 not_found_cc.append(name)
     conn.commit()
-    found = members-not_found_cc-not_found_osrs
+    found = list(members)-not_found_cc-not_found_osrs
     response = f"{found} has been added!"
     if not_found_osrs:
         response+= f"{not_found_osrs} were not found in the osrs' hiscores.\n"
@@ -225,8 +225,7 @@ async def top_hs(ctx, stat):
     try:
         skill = is_skill(stat)
         result = sql_top_stat(cur,stat,5,skill,stats_col_names)
-        response = top_stat_to_string(response)
-        print(response)
+        response = top_stat_to_string(result)
     except Exception as e:
         response = e
     finally:
