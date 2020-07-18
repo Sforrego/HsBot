@@ -159,7 +159,7 @@ async def check_left(ctx, team_num):
 #### END BINGO ####
 
 
-
+#### NEW HS DB COMMANDS #####
 
 
 @bot1.command(name='update', help="Updates a players stats in the clan's hiscores. \n eg: !hs update ironrok r_a_df_o_r_d (updates both players you can do as many as you want)")
@@ -244,7 +244,7 @@ async def top_hs(ctx, name):
 
 
 
-
+##### END OF DB HS COMMANDS ######
 
 @bot1.command(name='ranks', help='Shows the rank within the clan of a member in all the skills. (!hs ranks bosses player or !hs ranks skills player)')
 async def ranks(ctx,stat,name):
