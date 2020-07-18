@@ -38,7 +38,8 @@ tracked_sheet = client.open("Members Ranks").worksheet('TrackedXp')
 # bingo_sheet_skills = client.open("Bingo 07irons").worksheet('SkillsTracker')
 bingo_sheet_tiles = client.open("Bingo 07irons").worksheet('Tile Tracker')
 
-#BOT
+#BOT 1
+token1 = os.getenv('DISCORD_TOKEN1')
 
 bot1 = commands.Bot(command_prefix=['!hs ','!bingo '])
 
