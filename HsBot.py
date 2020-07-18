@@ -17,11 +17,13 @@ from sqlfuncs import *
 import psycopg2
 load_dotenv()
 
-
+### DB ####
 DATABASE_URL = os.environ['DATABASE_URL']
 
 conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 cur = conn.cursor()
+
+
 ## SHEETS
 scope = ['https://spreadsheets.google.com/feeds',
     'https://www.googleapis.com/auth/drive']
@@ -181,7 +183,7 @@ async def update_hs(ctx, *members):
             except Exception as e:
                 not_found_cc.append(name)
     conn.commit()
-    found = list(members)-not_found_cc-not_found_osrs
+    found = [x for x in members if (x not in not_found_cc and x not in not_found_osrs)]
     response = f"{found} has been updated!"
     if not_found_osrs:
         response+= f"{not_found_osrs} were not found in the osrs' hiscores.\n"
@@ -210,7 +212,7 @@ async def add_hs(ctx, *members):
             except Exception as e:
                 not_found_cc.append(name)
     conn.commit()
-    found = list(members)-not_found_cc-not_found_osrs
+    found = [x for x in members if (x not in not_found_cc and x not in not_found_osrs)]
     response = f"{found} has been added!"
     if not_found_osrs:
         response+= f"{not_found_osrs} were not found in the osrs' hiscores.\n"
