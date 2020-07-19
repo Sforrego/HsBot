@@ -110,7 +110,7 @@ def get_player_stat(cur,name,stat,skill,col_names):
     response = cur.fetchall()
     return response
 
-def change_player_name(cur,old_name,new_name,stats):
+def change_player_name(cur,old_name,new_name):
     query = f"""UPDATE stats SET rsn =  '{new_name}' WHERE rsn='{old_name}'"""
     cur.execute(query)
 
@@ -129,12 +129,26 @@ if __name__ == '__main__':
     ##### TESTING FUNCTIONS
 
     # response = is_skill("Chambers of xeric")
-    response = top_stat_to_string(sql_top_stat(cur,"farming",5,1,stats_col_names))
+    # response = top_stat_to_string(sql_top_stat(cur,"farming",5,1,stats_col_names))
     # response = get_player_stat(cur,"ironrok","kree'arra",stats_col_names)
     #
     #
     #
+
     #
     #
-    print(response)
     conn.commit()
+    stat = ["bandos"]
+    response = "```"
+    try:
+        stat = ("_").join(stat).lower()
+        stat = coded_string(get_stat(stat))
+        response += f"{stat.capitalize()}\n"
+        skill = is_skill(stat)
+        result = sql_top_stat(cur,stat,5,skill,stats_col_names)
+        response += top_stat_to_string(result)
+    except Exception as e:
+        response += str(e)
+    finally:
+        response += "```"
+    print(response)

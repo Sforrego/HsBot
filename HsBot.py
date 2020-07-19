@@ -201,7 +201,9 @@ async def add_hs(ctx, *members):
     await ctx.send(first_msg)
     not_found_osrs = []
     not_found_cc = []
+    all_names = get_players_in_hs
     for name in members:
+        name = name.lower()
         stats = getStats(playerURL(name,'iron'))
         if stats == 404:
             not_found_osrs.append(name)
@@ -213,7 +215,7 @@ async def add_hs(ctx, *members):
                 not_found_cc.append(name)
     conn.commit()
     found = [x for x in members if (x not in not_found_cc and x not in not_found_osrs)]
-    response = f"{found} has been added!"
+    response = f"{found} has been added!\n"
     if not_found_osrs:
         response+= f"{not_found_osrs} were not found in the osrs' hiscores.\n"
     if not_found_cc:
@@ -224,11 +226,13 @@ async def add_hs(ctx, *members):
 @bot1.command(name='top', help="Shows the top 5 players and their kc/lvl+xp for a specific stat.")
 async def top_hs(ctx, *stat):
 
-
+    response = "```"
     try:
         stat = ("_").join(stat).lower()
-        stat = coded_string(get_stat(stat))
-        response = f"```{stat.capitalize()}\n"
+        stat_pretty = get_stat(stat)
+        stat = coded_string(stat_pretty)
+
+        response += f"{stat_pretty}\n"
         skill = is_skill(stat)
         result = sql_top_stat(cur,stat,5,skill,stats_col_names)
         response += top_stat_to_string(result)
@@ -241,11 +245,13 @@ async def top_hs(ctx, *stat):
 @bot1.command(name='top10', help="Shows the top 10 players and their kc/lvl+xp for a specific stat.")
 async def top10_hs(ctx, *stat):
 
-
+    response = "```"
     try:
         stat = ("_").join(stat).lower()
-        stat = coded_string(get_stat(stat))
-        response = f"```{stat.capitalize()}\n"
+        stat_pretty = get_stat(stat)
+        stat = coded_string(stat_pretty)
+
+        response += f"{stat_pretty}\n"
         skill = is_skill(stat)
         result = sql_top_stat(cur,stat,10,skill,stats_col_names)
         response += top_stat_to_string(result)
@@ -256,13 +262,14 @@ async def top10_hs(ctx, *stat):
         await ctx.send(response)
 
 
-@bot1.command(name='check', help="Checks if a player is in the clan´s hs.")
+@bot1.command(name='check', help="Checks if a player is in the clan's hs.")
 async def check_hs(ctx, name):
+    name = name.lower()
     players = get_players_in_hs(cur)
     if name in players:
-        response = f"{name} is in the clan´s hiscores."
+        response = f"{name} is in the clan's hiscores."
     else:
-        response = f"{name} is not in the clan´s hiscores."
+        response = f"{name} is not in the clan's hiscores."
 
     await ctx.send(response)
 
