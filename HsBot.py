@@ -166,70 +166,78 @@ async def check_left(ctx, team_num):
 
 @bot1.command(name='update', help="Updates a players stats in the clan's hiscores. \n eg: !hs update ironrok r_a_df_o_r_d (updates both players you can do as many as you want)")
 async def update_hs(ctx, *members):
-    first_msg = 'Updating '
-    for member in members:
-        first_msg += f'{member} '
-    await ctx.send(first_msg)
-    not_found_osrs = []
-    sth_wrong = []
-    for name in members:
-        stats = getStats(playerURL(name,'iron'))
-        if stats == 404:
-            not_found_osrs.append(name)
-        else:
-            try:
-                sql_update_player_hs(cur,name,stats_col_names,stats)
-                sql_add_player_hs_historic(cur,name,stats)
-            except Exception as e:
-                sth_wrong.append(name)
-    conn.commit()
-    found = [x for x in members if (x not in in_cc and x not in not_found_osrs)]
-    response = f"{found} has been updated!"
-    if not_found_osrs:
-        response+= f"{not_found_osrs} were not found in the osrs' hiscores.\n"
-    if sth_wrong:
-        response+= f"{sth_wrong} were not found on the clan's hiscores.\n"
-    await ctx.send(response)
+    try:
+        first_msg = 'Updating '
+        for member in members:
+            first_msg += f'{member} '
+        await ctx.send(first_msg)
+        not_found_osrs = []
+        sth_wrong = []
+        for name in members:
+            stats = getStats(playerURL(name,'iron'))
+            if stats == 404:
+                not_found_osrs.append(name)
+            else:
+                try:
+                    sql_update_player_hs(cur,name,stats_col_names,stats)
+                    sql_add_player_hs_historic(cur,name,stats)
+                except Exception as e:
+                    sth_wrong.append(name)
+        conn.commit()
+        found = [x for x in members if (x not in sth_wrong and x not in not_found_osrs)]
+        response = f"{found} were updated!"
+        if not_found_osrs:
+            response+= f"{not_found_osrs} were not found in the osrs' hiscores.\n"
+        if sth_wrong:
+            response+= f"{sth_wrong} were not found on the clan's hiscores.\n"
+    except Exception as e:
+        response = str(e)
+    finally:
+        await ctx.send(response)
 
 @bot1.command(name='add', help="Adds players to the clan's hiscores. \n eg: !hs addhs ironrok r_a_df_o_r_d (updates both players you can do as many as you want)")
 @commands.has_permissions(kick_members=True)
 async def add_hs(ctx, *members):
-    first_msg = 'Adding '
-    for member in members:
-        first_msg += f'{member} '
-    first_msg += "to the clan's hs."
-    await ctx.send(first_msg)
-    not_found_osrs = []
-    in_cc = []
-    all_names = get_players_in_hs(cur)
-    for name in members:
-        name = name.lower()
-        stats = getStats(playerURL(name,'iron'))
-        if stats == 404:
-            not_found_osrs.append(name)
-        elif name in all_names:
-            in_cc.append(name)
-        else:
-            try:
-                sql_add_player_hs(cur,name,stats)
-                sql_add_player_hs_historic(cur,name,stats)
-            except Exception as e:
+    try:
+        first_msg = 'Adding '
+        for member in members:
+            first_msg += f'{member} '
+        first_msg += "to the clan's hs."
+        await ctx.send(first_msg)
+        not_found_osrs = []
+        in_cc = []
+        all_names = get_players_in_hs(cur)
+        for name in members:
+            name = name.lower()
+            stats = getStats(playerURL(name,'iron'))
+            if stats == 404:
+                not_found_osrs.append(name)
+            elif name in all_names:
                 in_cc.append(name)
-    conn.commit()
-    found = [x for x in members if (x not in in_cc and x not in not_found_osrs)]
-    response = f"{found} has been added!\n"
-    if not_found_osrs:
-        response+= f"{not_found_osrs} were not found in the osrs' hiscores.\n"
-    if in_cc:
-        response+= f"{in_cc} these players are already in the clan's hiscores.\n"
-    await ctx.send(response)
+            else:
+                try:
+                    sql_add_player_hs(cur,name,stats)
+                    sql_add_player_hs_historic(cur,name,stats)
+                except Exception as e:
+                    in_cc.append(name)
+        conn.commit()
+        found = [x for x in members if (x not in in_cc and x not in not_found_osrs)]
+        response = f"{found} were added!\n"
+        if not_found_osrs:
+            response+= f"{not_found_osrs} were not found in the osrs' hiscores.\n"
+        if in_cc:
+            response+= f"{in_cc} these players are already in the clan's hiscores.\n"
+    except Exception as e:
+        response = str(e)
+    finally:
+        await ctx.send(response)
 
 
 @bot1.command(name='top', help="Shows the top 5 players and their kc/lvl+xp for a specific stat.")
 async def top_hs(ctx, *stat):
 
-    response = "```"
     try:
+        response = "```"
         stat = ("_").join(stat).lower()
         stat_pretty = get_stat(stat)
         stat = coded_string(stat_pretty)
@@ -238,17 +246,17 @@ async def top_hs(ctx, *stat):
         skill = is_skill(stat)
         result = sql_top_stat(cur,stat,5,skill,stats_col_names)
         response += top_stat_to_string(result)
-    except Exception as e:
-        response += str(e)
-    finally:
         response += "```"
+    except Exception as e:
+        response = str(e)
+    finally:
         await ctx.send(response)
 
 @bot1.command(name='top10', help="Shows the top 10 players and their kc/lvl+xp for a specific stat.")
 async def top10_hs(ctx, *stat):
 
-    response = "```"
     try:
+        response = "```"
         stat = ("_").join(stat).lower()
         stat_pretty = get_stat(stat)
         stat = coded_string(stat_pretty)
@@ -257,10 +265,10 @@ async def top10_hs(ctx, *stat):
         skill = is_skill(stat)
         result = sql_top_stat(cur,stat,10,skill,stats_col_names)
         response += top_stat_to_string(result)
-    except Exception as e:
-        response += str(e)
-    finally:
         response += "```"
+    except Exception as e:
+        response = str(e)
+    finally:
         await ctx.send(response)
 
 
