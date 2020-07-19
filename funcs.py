@@ -14,7 +14,7 @@ def get_stat(name):
     elif name in boss_shorts:
         return boss_shorts[name]
     else:
-        return 0
+        raise Exception(f"{stat} is not a  valid stat.")
 
 def get_stats_shorts():
     newdict = {stat:[] for stat in BOSSES}
