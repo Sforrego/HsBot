@@ -243,9 +243,9 @@ async def top10_hs(ctx, *stat):
 
 
     try:
-    stat = ("_").join(stat).lower()
-    stat = coded_string(get_stat(stat))
-    response = f"```{stat.capitalize()}\n"
+        stat = ("_").join(stat).lower()
+        stat = coded_string(get_stat(stat))
+        response = f"```{stat.capitalize()}\n"
         skill = is_skill(stat)
         result = sql_top_stat(cur,stat,10,skill,stats_col_names)
         response += top_stat_to_string(result)
