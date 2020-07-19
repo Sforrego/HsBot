@@ -309,7 +309,9 @@ boss_shorts = {
 "str":"Strength",
 "def":"Defence",
 "atk":"Attack",
-"con":"Construction"
+"con":"Construction",
+"clues":"Clues total",
+"total":"Overall"
 }
 
 # INDEX IN THE SPREADSHEET

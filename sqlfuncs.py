@@ -86,7 +86,7 @@ def is_skill(stat):
 
     if stat_clean in SKILLS:
         return 1
-    elif stat_clean in BOSSES:
+    elif stat_clean in BOSSES+CLUES:
         return 0
     else:
         raise Exception(f"{stat} is not a  valid stat.")
