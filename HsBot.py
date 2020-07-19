@@ -640,7 +640,7 @@ async def memberslit(ctx,*members):
 
 @bot1.command(name='shorts', help='Gets all the short ways of calling each stat (Case insensitive and spaces must be replaced with _).')
 async def get_boss_list(ctx):
-    response = str(get_stats_shorts())
+    response = str(boss_shorts.keys())
     response += "\nIf the name is not on the list use the correct stat name\n"
     await ctx.send(response)
 
