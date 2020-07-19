@@ -232,25 +232,24 @@ async def top_hs(ctx, *stat):
         result = sql_top_stat(cur,stat,5,skill,stats_col_names)
         response += top_stat_to_string(result)
     except Exception as e:
-        response += e
+        response += str(e)
     finally:
         response += "```"
-        print(response)
         await ctx.send(response)
 
 @bot1.command(name='top10', help="Shows the top 10 players and their kc/lvl+xp for a specific stat.")
 async def top_hs(ctx, *stat):
     stat = (" ").join(stat)
-    response = ""
+    response = "```"
     stat = coded_string(get_stat(stat))
     try:
         skill = is_skill(stat)
         result = sql_top_stat(cur,stat,10,skill,stats_col_names)
-        response = top_stat_to_string(result)
+        response += top_stat_to_string(result)
     except Exception as e:
-        response = e
+        response += str(e)
     finally:
-        print(response)
+        response += "```"
         await ctx.send(response)
 
 
