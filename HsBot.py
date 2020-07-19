@@ -325,23 +325,31 @@ async def fullupdate(ctx):
 
     await ctx.send("Finished updating.")
 
-##### END OF DB HS COMMANDS ######
 
-@bot1.command(name='ranks', help='Shows the rank within the clan of a member in all the skills. (!hs ranks bosses player or !hs ranks skills player)')
+@bot1.command(name='rank', help='Shows the rank within the clan of a member in a specific stat. (!hs rank zulrah spniz_uim)')
 async def ranks(ctx,stat,name):
     try:
-        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
-    except gspread.exceptions.APIError as e:
-        client.login()
-        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
+        name = name.lower()
+        stat_pretty = get_stat(stat.lower())
+        stat = coded_string(stat_pretty)
+        names = get_players_in_hs(cur)
+        if name in names:
+            skill = is_skill(stat)
+            rank = get_player_rank(cur,name,stat,skill)
+            response = f"{name} is rank {rank} in {stat_pretty}"
+        else:
+            response = f"{name} is not on the clan's hiscores."
 
-    stat = 1 if stat == "bosses" else 0
-    answer_dict = player_top_stats(bosses_sheet, skills_sheet, start_sheet, names, name, stat)
-    [name] = get_pretty_names(start_sheet,[name.lower()])
-    response = f"\n{name}\n\n"
-    for key in answer_dict:
-        response += f"{key}: {answer_dict[key]}\n"
-    await ctx.send(response)
+
+    except Exception as e:
+        response = str(e)
+    finally:
+        await ctx.send(response)
+
+
+##### END OF DB HS COMMANDS ######
+
+
 
 
 @bot1.command(name='change', help='Changes a players rsn in the spreadsheets (Admin).')

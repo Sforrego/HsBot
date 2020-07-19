@@ -114,6 +114,14 @@ def change_player_name(cur,old_name,new_name):
     query = f"""UPDATE stats SET rsn =  '{new_name}' WHERE rsn='{old_name}'"""
     cur.execute(query)
 
+def get_player_rank(cur,name,stat,skill):
+    if skill:
+        query = f"""SELECT Row FROM (SELECT row_number() OVER(ORDER BY ("{stat}","{stat}_xp") DESC) AS Row,rsn FROM stats) as tempstats WHERE rsn='{name}' """
+    else:
+        query = f"""SELECT Row FROM (SELECT row_number() OVER(ORDER BY "{stat}" DESC) AS Row,rsn FROM stats) as tempstats WHERE rsn='{name}'"""
+    cur.execute(query)
+    response = cur.fetchall()
+    return response[0][0]
 if __name__ == '__main__':
     load_dotenv()
 
@@ -131,24 +139,12 @@ if __name__ == '__main__':
     # response = is_skill("Chambers of xeric")
     # response = top_stat_to_string(sql_top_stat(cur,"farming",5,1,stats_col_names))
     # response = get_player_stat(cur,"ironrok","kree'arra",stats_col_names)
-    #
+    response = get_player_rank(cur,"ironrok","corporeal_beast",0)
     #
     #
 
     #
     #
     conn.commit()
-    stat = ["bandos"]
-    response = "```"
-    try:
-        stat = ("_").join(stat).lower()
-        stat = coded_string(get_stat(stat))
-        response += f"{stat.capitalize()}\n"
-        skill = is_skill(stat)
-        result = sql_top_stat(cur,stat,5,skill,stats_col_names)
-        response += top_stat_to_string(result)
-    except Exception as e:
-        response += str(e)
-    finally:
-        response += "```"
+
     print(response)
