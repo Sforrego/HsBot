@@ -226,6 +226,7 @@ async def top_hs(ctx, *stat):
     stat = (" ").join(stat)
     response = "```"
     stat = coded_string(get_stat(stat))
+    print(f"CHECKING THIS STAT:{stat}")
     try:
         skill = is_skill(stat)
         result = sql_top_stat(cur,stat,5,skill,stats_col_names)
