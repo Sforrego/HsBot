@@ -224,9 +224,9 @@ async def add_hs(ctx, *members):
 @bot1.command(name='top', help="Shows the top 5 players and their kc/lvl+xp for a specific stat.")
 async def top_hs(ctx, *stat):
     stat = (" ").join(stat)
-    response = "```"
     stat = coded_string(get_stat(stat))
-    print(f"CHECKING THIS STAT:{stat}")
+    response = f"```{stat.capitalize()}\n"
+
     try:
         skill = is_skill(stat)
         result = sql_top_stat(cur,stat,5,skill,stats_col_names)
@@ -238,10 +238,11 @@ async def top_hs(ctx, *stat):
         await ctx.send(response)
 
 @bot1.command(name='top10', help="Shows the top 10 players and their kc/lvl+xp for a specific stat.")
-async def top_hs(ctx, *stat):
+async def top10_hs(ctx, *stat):
     stat = (" ").join(stat)
-    response = "```"
     stat = coded_string(get_stat(stat))
+    response = f"```{stat.capitalize()}\n"
+
     try:
         skill = is_skill(stat)
         result = sql_top_stat(cur,stat,10,skill,stats_col_names)
@@ -253,7 +254,7 @@ async def top_hs(ctx, *stat):
         await ctx.send(response)
 
 
-@bot1.command(name='checkhs', help="Checks if a player is in the clan´s hs.")
+@bot1.command(name='check', help="Checks if a player is in the clan´s hs.")
 async def check_hs(ctx, name):
     players = get_players_in_hs(cur)
     if name in players:
@@ -264,7 +265,7 @@ async def check_hs(ctx, name):
     await ctx.send(response)
 
 @bot1.command(name='my', help="Gets the person using the command lvl/kc in a stat.")
-async def check_hs(ctx, *stat):
+async def my_hs(ctx, *stat):
     stat = (" ").join(stat)
     name = coded_string(ctx.message.author.display_name)
     stat = coded_string(get_stat(stat))
@@ -643,20 +644,7 @@ async def get_boss_list(ctx):
     response += "\nIf the name is not on the list use the regular name (change spaces with _)\n"
     await ctx.send(response)
 
-@bot1.command(name='check', help='Checks if a name is in the hiscores.')
-async def check1(ctx, *args):
-    rsn = "_".join(args)
-    rsn2 = " ".join(args)
-    try:
-        names = start_sheet.col_values(2)[1:]
-    except gspread.exceptions.APIError as e:
-        client.login()
-        names = start_sheet.col_values(2)[1:]
-    if check(names,rsn):
-        response = f"{rsn2} is in the clan's highscores."
-    else:
-        response = f"{rsn2} is not in the clan's highscores."
-    await ctx.send(response)
+
 
 
 
