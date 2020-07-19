@@ -191,7 +191,7 @@ SKILLS = [
   'Thieving',
   'Slayer',
   'Farming',
-  'Runecrafting',
+  'Runecraft',
   'Hunter',
   'Construction',
 ]
@@ -303,7 +303,8 @@ boss_shorts = {
 "med":"Medium",
 'clues':'Clues total',
 "hydra":"Alchemical Hydra",
-"rc": "Runecrafting",
+"rc": "Runecraft",
+"runecrafting":"Runecraft",
 "wc":"Woodcutting",
 "hp":"Hitpoints",
 "str":"Strength",

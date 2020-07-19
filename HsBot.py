@@ -638,10 +638,10 @@ async def memberslit(ctx,*members):
 # async def full_bosses_print(ctx):
 #     pass
 
-@bot1.command(name='list', help='Gets all the short ways of calling each stat (Case insensitive and spaces must be replaced with _).')
+@bot1.command(name='shorts', help='Gets all the short ways of calling each stat (Case insensitive and spaces must be replaced with _).')
 async def get_boss_list(ctx):
     response = str(get_stats_shorts())
-    response += "\nIf the name is not on the list use the regular name (change spaces with _)\n"
+    response += "\nIf the name is not on the list use the correct stat name\n"
     await ctx.send(response)
 
 
