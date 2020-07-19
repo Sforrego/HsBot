@@ -171,7 +171,7 @@ async def update_hs(ctx, *members):
         first_msg += f'{member} '
     await ctx.send(first_msg)
     not_found_osrs = []
-    not_found_cc = []
+    sth_wrong = []
     for name in members:
         stats = getStats(playerURL(name,'iron'))
         if stats == 404:
@@ -181,14 +181,14 @@ async def update_hs(ctx, *members):
                 sql_update_player_hs(cur,name,stats_col_names,stats)
                 sql_add_player_hs_historic(cur,name,stats)
             except Exception as e:
-                not_found_cc.append(name)
+                sth_wrong.append(name)
     conn.commit()
-    found = [x for x in members if (x not in not_found_cc and x not in not_found_osrs)]
+    found = [x for x in members if (x not in in_cc and x not in not_found_osrs)]
     response = f"{found} has been updated!"
     if not_found_osrs:
         response+= f"{not_found_osrs} were not found in the osrs' hiscores.\n"
-    if not_found_cc:
-        response+= f"{not_found_cc} were not found on the clan's hiscores.\n"
+    if sth_wrong:
+        response+= f"{sth_wrong} were not found on the clan's hiscores.\n"
     await ctx.send(response)
 
 @bot1.command(name='add', help="Adds players to the clan's hiscores. \n eg: !hs addhs ironrok r_a_df_o_r_d (updates both players you can do as many as you want)")
@@ -200,26 +200,28 @@ async def add_hs(ctx, *members):
     first_msg += "to the clan's hs."
     await ctx.send(first_msg)
     not_found_osrs = []
-    not_found_cc = []
-    all_names = get_players_in_hs
+    in_cc = []
+    all_names = get_players_in_hs(cur)
     for name in members:
         name = name.lower()
         stats = getStats(playerURL(name,'iron'))
         if stats == 404:
             not_found_osrs.append(name)
+        elif name in all_names:
+            in_cc.append(name)
         else:
             try:
                 sql_add_player_hs(cur,name,stats)
                 sql_add_player_hs_historic(cur,name,stats)
             except Exception as e:
-                not_found_cc.append(name)
+                in_cc.append(name)
     conn.commit()
-    found = [x for x in members if (x not in not_found_cc and x not in not_found_osrs)]
+    found = [x for x in members if (x not in in_cc and x not in not_found_osrs)]
     response = f"{found} has been added!\n"
     if not_found_osrs:
         response+= f"{not_found_osrs} were not found in the osrs' hiscores.\n"
-    if not_found_cc:
-        response+= f"{not_found_cc} something went wrong adding these players.\n"
+    if in_cc:
+        response+= f"{in_cc} these players are already in the clan's hiscores.\n"
     await ctx.send(response)
 
 
@@ -306,7 +308,7 @@ async def fullupdate(ctx):
                 sql_update_player_hs(cur,name,stats_col_names,stats)
                 sql_add_player_hs_historic(cur,name,stats)
             except Exception as e:
-                not_found_cc.append(name)
+                in_cc.append(name)
     conn.commit()
 
     if not_found_osrs:
