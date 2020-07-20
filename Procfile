@@ -1,1 +1,1 @@
-worker: python HsBot.py
+worker: python main.py
