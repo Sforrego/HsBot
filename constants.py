@@ -12,17 +12,6 @@ GAMEMODE_URL = {
   'ult': '_ultimate/',
 }
 
-BINGO_SKILLS=[
-"Woodcutting",
-"Fishing",
-"Mining",
-"Agility",
-"Thieving",
-"Slayer",
-"Runecrafting",
-"Firemaking",
-"Hunter"
-]
 
 BINGO_TILES=["4 GWD Uniques",
 "2 Wintertodt Uniques (No gloves/torch)",
@@ -84,59 +73,8 @@ BINGO_LIST=["Instantly finish a random tile",
 "Add 1 needed item to a random (DICED) tile of a CHOSEN team.",
 "Remove 1 needed item from a random (DICED) tile of a CHOSEN team.",
 "Nothing happens!"]
-BINGO_BOSSES = [
-    "Zulrah",
-    "Grotesque Guardians",
-    "Chaos Fanatic",
-    "Scorpia",
-    "Crazy Archaeologist",
-    "Cerberus",
-    "Callisto",
-    "Venenatis",
-    "Sarachnis",
-    "Commander Zilyana",
-    "K'ril Tsutsaroth",
-    "Kree'Arra",
-    "Giant Mole",
-    "Hespori",
-    "TzTok-Jad"
 
-]
 
-BINGO_TEAMS = ["1","2","3","4","5","6","7","8","ghost"]
-
-Bingo_SKILL_TILES = {"Woodcutting":1000000,
-    "Fishing":800000,
-    "Mining":500000,
-    "Agility":1000000,
-    "Thieving":1500000,
-    "Slayer":500000,
-    "Runecrafting":400000,
-    "Firemaking":2000000,
-    "Hunter":1000000,
-}
-
-BINGO_BOSS_TILES = {
-    "GWD":150,
-    "Wildy":60,
-    "Wildy_Demi":100,
-    "Zulrah":128,
-    "Grotesque Guardians":75,
-    "Chaos Fanatic":100,
-    "Scorpia":100,
-    "Crazy Archaeologist":100,
-    "Cerberus":128,
-    "Callisto":30,
-    "Venenatis":30,
-    "Sarachnis":100,
-    "Commander Zilyana":50,
-    "K'ril Tsutsaroth":50,
-    "Kree'Arra":50,
-    "Giant Mole":75,
-    "Hespori":10,
-    "TzTok-Jad":3
-
-}
 
 RANKS = {
     'smiley':4,

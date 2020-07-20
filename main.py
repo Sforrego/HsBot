@@ -11,16 +11,36 @@ import httplib2
 from discord.ext.commands import MemberConverter
 ## make one function that creates an object after calling rs.hs make the other funcs receive that.
 from random import randint
-from imageediting import *
-from sqlfuncs import *
+from image_editing import *
+from sql_funcs import *
 
 import psycopg2
 load_dotenv()
 
-### DB ####
-DATABASE_URL = os.environ['DATABASE_URL']
 
+
+### DB ####
+
+# live mode
+DATABASE_URL = os.environ['DATABASE_URL']
 conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+token1 = os.getenv('DISCORD_TOKEN1')
+# remember loop bot2
+bot1 = commands.Bot(command_prefix=['!hs '])
+
+# test mode
+# comment bot 2
+# user = os.getenv('user')
+# password = os.getenv('password')
+# host = os.getenv('host')
+# port = os.getenv('port')
+# database = os.getenv('database')
+# conn = psycopg2.connect(user=user,password=password,host=host,port=port,database=database)
+#
+# token1 = os.getenv('TEST_TOKEN')
+# bot1 = commands.Bot(command_prefix=['!test '])
+## end test mode ###
+
 cur = conn.cursor()
 
 
@@ -33,17 +53,14 @@ bosses_sheet = client.open("Members Ranks").worksheet('Bosses')
 skills_sheet = client.open("Members Ranks").worksheet('Skills')
 start_sheet = client.open("Members Ranks").worksheet('Start')
 members_sheet = client.open("Members Ranks").worksheet('Members')
-tracker_sheet = client.open("Members Ranks").worksheet('WeeklyTracker')
-tracked_sheet = client.open("Members Ranks").worksheet('TrackedXp')
+
 
 # bingo_sheet_bosses = client.open("Bingo 07irons").worksheet('BossTracker')
 # bingo_sheet_skills = client.open("Bingo 07irons").worksheet('SkillsTracker')
 bingo_sheet_tiles = client.open("Bingo 07irons").worksheet('Tile Tracker')
 
 #BOT 1
-token1 = os.getenv('DISCORD_TOKEN1')
 
-bot1 = commands.Bot(command_prefix=['!hs ','!bingo '])
 
 #await channel.send(file=discord.File('my_file.png'))
 
@@ -378,109 +395,7 @@ async def change_rsn(ctx, member,*new_name):
 
 ####### TRACKER #######
 
-@bot1.command(name='tracked', help='Shows the top 5 players and their xp gains for a specific skill.')
-async def top_track(ctx, stat,*player):
-    try:
-        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
-    except gspread.exceptions.APIError as e:
-        client.login()
-        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
-    await ctx.send("Fetching Data...")
-    with open('tracking.txt','r') as file:
-        tracked_players = [x.strip() for x in file.readlines()]
-    if not player:
-        response = get_tracked_top(tracked_sheet,start_sheet ,names, stat, 10,tracked_players)
-    else:
-        orig_name = " ".join(player)
-        player = "_".join(player)
-        player = player.lower()
-        if player in names:
-            (xp,player) = tracked_player(tracked_sheet,names, stat, player)
-            response = f"{orig_name} has gained {xp} in {stat} this week."
-        else:
-            response = f"{orig_name} not found."
-    await ctx.send(response)
 
-@bot1.command(name='tracked20', help='Shows the top 20 players and their xp gains for a specific skill.')
-async def top_track20(ctx, stat):
-    try:
-        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
-    except gspread.exceptions.APIError as e:
-        client.login()
-        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
-    await ctx.send("Fetching data...")
-    with open('tracking.txt','r') as file:
-        tracked_players = [x.strip() for x in file.readlines()]
-    response = get_tracked_top(tracked_sheet,start_sheet ,names, stat, 20,tracked_players)
-
-    await ctx.send(response)
-
-
-
-
-@bot1.command(name='track', help='Adds players to the tracker.')
-@commands.has_permissions(kick_members=True)
-async def track(ctx,*names):
-    print("Start tracking")
-    await ctx.send("Fetching Started...")
-    try:
-        fix = [x.lower() for x in start_sheet.col_values(2)[1:]]
-    except gspread.exceptions.APIError as e:
-        client.login()
-        fix = [x.lower() for x in start_sheet.col_values(2)[1:]]
-    try:
-        not_founds = []
-
-        with open('tracking.txt','r') as file:
-            tracked_players = [x.strip() for x in file.readlines()]
-
-        with open('tracking.txt','a') as file:
-            for name in names:
-                if name not in tracked_players:
-                    stats = getStats(playerURL(name,'iron'))
-                    if stats == 404:
-                        not_founds.append(name)
-                    else:
-                        update_player(bosses_sheet,skills_sheet,start_sheet,fix,name,stats,tracker_sheet=tracker_sheet)
-                        name = name.lower()
-                        file.write(f"{name}\n")
-                        tracked_players.append(name)
-        await ctx.send(f"{not_founds} Not Found in hs.\n The rest of the players are being tracked.")
-    except Exception as e:
-        response = f"Something went wrong. Error {e}"
-        await ctx.send(response)
-
-@bot1.command(name='updatetracker', help='Updates all the players that are being tracked(skills).')
-async def update_tracker(ctx):
-    print("Updating tracking")
-    await ctx.send("Updating tracker...")
-    with open('tracking.txt','r') as file:
-        tracked_players = [x.strip() for x in file.readlines()]
-    try:
-        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
-    except gspread.exceptions.APIError as e:
-        client.login()
-        names = [x.lower() for x in start_sheet.col_values(2)[1:]]
-    for name in tracked_players:
-        stats = getStats(playerURL(name,'iron'))
-        if stats == 404:
-            not_founds.append(name)
-        else:
-            update_player(bosses_sheet,skills_sheet,start_sheet,names,name,stats)
-    await ctx.send("Tracker updated!")
-
-@bot1.command(name='checktracker', help='Checks all the players that are being tracked(skills).')
-async def check_tracker(ctx):
-    with open('tracking.txt','r') as file:
-        tracked_players = [x.strip() for x in file.readlines()]
-    await ctx.send(f"Players being tracked: {tracked_players}.")
-
-@bot1.command(name='resettracker', help='Reset all the players that are being tracked(skills).')
-@commands.has_permissions(kick_members=True)
-async def reset_tracker(ctx):
-    with open('tracking.txt','r+') as file:
-        file.truncate(0)
-    await ctx.send(f"There are no players being tracked.")
 
 
 

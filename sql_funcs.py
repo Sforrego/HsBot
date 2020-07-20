@@ -122,6 +122,11 @@ def get_player_rank(cur,name,stat,skill):
     cur.execute(query)
     response = cur.fetchall()
     return response[0][0]
+
+
+
+
+
 if __name__ == '__main__':
     load_dotenv()
 
