@@ -207,4 +207,4 @@ def setup(bot):
     DATABASE_URL = os.environ['DATABASE_URL']
     conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 
-    bot.add_cog(HsCog(bot,conn))
+    bot.add_cog(Hiscores(bot,conn))
