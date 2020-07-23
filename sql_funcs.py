@@ -71,7 +71,6 @@ def top_stat_to_string(response):
     """ Turns the response from sql_top_stat into a pretty string """
     str_response = ""
     for i,tup in enumerate(response):
-        print(tup,len(tup))
         if len(tup)==2:
             str_response += f"{i+1:<3} {tup[0]:<14} {str(tup[1]):<5}\n"
         elif len(tup)==3:
