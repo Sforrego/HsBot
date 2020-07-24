@@ -27,7 +27,7 @@ class Hiscores(commands.Cog):
                     not_found_osrs.append(name)
                 else:
                     try:
-                        sql_update_player_hs(self.cur,name,stats_col_names,stats)
+                        sql_update_player_hs(self.cur,name,stats,stats_col_names)
                         sql_add_player_hs_historic(self.cur,name,stats)
                     except Exception as e:
                         sth_wrong.append(name)

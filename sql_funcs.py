@@ -4,6 +4,10 @@ from dotenv import load_dotenv
 from time import time
 from funcs import *
 
+def seconds_to_hours_mins(int):
+    hours = int//3600
+    mins = (int%3600)//60
+    return hours,mins
 def coded_string(string):
     return string.replace(" ", "_").lower()
 
@@ -30,8 +34,7 @@ def sql_add_player_hs_historic(cur,name,stats):
     string_of_values = stats_to_string(stats)
     cur.execute(f"""INSERT INTO historic_stats VALUES ('{name}',{string_of_values},current_timestamp)""")
 
-
-def sql_update_player_hs(cur,name,col_names,stats):
+def sql_update_player_hs(cur,name,stats,col_names):
     """
     col_names is a lsit of all the column names of the table stats
     Updates the row corresponding to name with updated stats
@@ -46,11 +49,10 @@ def sql_update_player_hs(cur,name,col_names,stats):
         stat_name = col_names[i] if "'" not in col_names[i] else col_names[i].replace("'", "''")
         query += f""" "{col_names[i]}" = {value},"""
 
-    query = query[:-1]
+    query += f""" updated_at = current_timestamp """
     query += f" WHERE rsn = '{name}'"
 
     cur.execute(query)
-
 
 def sql_top_stat(cur,stat,n,skill,col_names):
     """
@@ -97,6 +99,13 @@ def get_players_in_hs(cur):
     names = cur.fetchall()
     return [x[0] for x in names]
 
+def get_players_in_personal_tracker(cur):
+    """ return a list of all the players in the personal_tracker table"""
+    query = "SELECT rsn FROM personal_tracker";
+    cur.execute(query)
+    names = cur.fetchall()
+    return [x[0] for x in names]
+
 def get_player_stat(cur,name,stat,skill,col_names):
     """ get a single player stat"""
     if stat not in col_names:
@@ -122,9 +131,35 @@ def get_player_rank(cur,name,stat,skill):
     response = cur.fetchall()
     return response[0][0]
 
+def add_personal_tracker(cur,name,stats):
+    string_of_values = stats_to_string(stats)
+    cur.execute(f"""INSERT INTO personal_tracker VALUES ('{name}',{string_of_values},current_timestamp)""")
 
+def xp_gained(cur,name,stat,skill):
+    if skill:
+        query = f"""SELECT s.{stat}_xp-t.{stat}_xp FROM stats as s, personal_tracker as t WHERE s.rsn = '{name}'  """
+    else:
+        query = f""" SELECT s."{stat}"-t."{stat}" FROM stats as s, personal_tracker as t WHERE s.rsn = '{name}' """
+    cur.execute(query)
+    stat_delta = cur.fetchone()[0]
+    time_query = f"""SELECT s.updated_at-t.created_at FROM stats as s, personal_tracker as t WHERE s.rsn = '{name}'  """
+    cur.execute(time_query)
+    time_delta = cur.fetchone()[0]
+    return (int(stat_delta),time_delta)
 
+def reset_personal_tracker(cur,name):
+    query = f"""Delete from personal_tracker where rsn = '{name}'  """
+    cur.execute(query)
 
+def personal_tracker_starting_stat(cur,name,stat,skill):
+    if skill:
+        query = f"""SELECT "{stat}_xp" FROM stats WHERE rsn = '{name}'  """
+    else:
+        query = f""" SELECT "{stat}" FROM stats WHERE rsn = '{name}' """
+
+    cur.execute(query)
+    starting_stat = cur.fetchone()[0]
+    return starting_stat
 
 if __name__ == '__main__':
     load_dotenv()
@@ -139,16 +174,22 @@ if __name__ == '__main__':
     cur = conn.cursor()
 
     ##### TESTING FUNCTIONS
+    name = 'ironrok'
+    stats = getStats(playerURL(name,'iron'))
+
+    # sql_update_player_hs(cur,name,stats_col_names,stats)
+
+
+    xp,time_delta = xp_gained(cur,name,"kree'arra",0)
 
     # response = is_skill("Chambers of xeric")
     # response = top_stat_to_string(sql_top_stat(cur,"farming",5,1,stats_col_names))
-    # response = get_player_stat(cur,"ironrok","kree'arra",stats_col_names)
-    response = get_player_rank(cur,"ironrok","corporeal_beast",0)
+    response = get_player_stat(cur,"ironrok","slayer",1,stats_col_names)
+    # response =
     #
     #
 
     #
     #
-    conn.commit()
 
-    print(response)
+    print(personal_tracker_starting_stat(cur,name,"nightmare", 0))

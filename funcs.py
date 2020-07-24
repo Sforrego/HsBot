@@ -7,14 +7,14 @@ import asyncio
 from datetime import datetime
 import itertools
 
-def get_stat(name):
-    name = name.lower()
-    if name in NAMES_LOWER:
-        return NAMES_LOWER[name]
-    elif name in boss_shorts:
-        return boss_shorts[name]
+def get_stat(stat):
+    stat = stat.lower()
+    if stat in NAMES_LOWER:
+        return NAMES_LOWER[stat]
+    elif stat in boss_shorts:
+        return boss_shorts[stat]
     else:
-        raise Exception(f"{stat} is not a  valid stat.")
+        raise Exception(f"{stat} is not a valid stat.")
 
 def get_stats_shorts():
     newdict = {stat:[] for stat in BOSSES}
