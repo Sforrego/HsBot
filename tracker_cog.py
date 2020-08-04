@@ -11,6 +11,28 @@ class Tracker(commands.Cog):
         self.conn = conn
         self.cur = conn.cursor()
 
+
+    @commands.command(name='startmytracker', help="Starts a player's personal tracker. \n eg: !hs startmytracker")
+    async def start_my_tracker(self,ctx):
+        try:
+            name = coded_string(ctx.message.author.display_name)
+            personal_tracker_names = get_players_in_personal_tracker(self.cur)
+            if name not in personal_tracker_names:
+                stats = getStats(playerURL(name,'iron'))
+                if stats == 404:
+                    response = f"{name} is not on the osrs hiscores."
+                else:
+                    add_personal_tracker(self.cur,name,stats)
+                    sql_update_player_hs(self.cur,name,stats,stats_col_names)
+                    self.conn.commit()
+                    response = f"You are now being tracked. use !hs update 'your_name' to update your stats and !hs mytracker 'skill' to check your progress."
+            else:
+                response = "You are already being tracked. do: !hs resetmytracker, to restart your tracker. "
+        except Exception as e:
+            response = str(e)
+        finally:
+            await ctx.send(response)
+
     @commands.command(name='mytracker', help="Check's xp/kills gained since being tracked with the personal tracker. \n eg: !hs mytracker hunter")
     async def my_tracker(self,ctx,*stat):
         try:
@@ -42,26 +64,6 @@ class Tracker(commands.Cog):
                 response = "You are not being tracked, to start your tracker do !hs startmytracker"
 
 
-        except Exception as e:
-            response = str(e)
-        finally:
-            await ctx.send(response)
-
-    @commands.command(name='startmytracker', help="Starts a player's personal tracker. \n eg: !hs startmytracker")
-    async def start_my_tracker(self,ctx):
-        try:
-            name = coded_string(ctx.message.author.display_name)
-            personal_tracker_names = get_players_in_personal_tracker(self.cur)
-            if name not in personal_tracker_names:
-                stats = getStats(playerURL(name,'iron'))
-                if stats == 404:
-                    response = f"{name} is not on the osrs hiscores."
-                else:
-                    add_personal_tracker(self.cur,name,stats)
-                    sql_update_player_hs(self.cur,name,stats,stats_col_names)
-                    self.conn.commit()
-            else:
-                response = "You are already being tracked. do: !hs resetmytracker, to restart your tracker. "
         except Exception as e:
             response = str(e)
         finally:

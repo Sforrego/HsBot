@@ -431,7 +431,7 @@ async def do_stuff_every_x_seconds(timeout, stuff, *args):
 ##########################################################
 token2 = os.getenv('DISCORD_TOKEN2')
 
-bot2 = commands.Bot(command_prefix=['!command ','!notify '])
+bot2 = commands.Bot(command_prefix=['!command '])
 
 @bot2.event
 async def on_ready():
