@@ -137,12 +137,12 @@ def add_personal_tracker(cur,name,stats):
 
 def xp_gained(cur,name,stat,skill):
     if skill:
-        query = f"""SELECT s.{stat}_xp-t.{stat}_xp FROM stats as s, personal_tracker as t WHERE s.rsn = '{name}'  """
+        query = f"""SELECT s.{stat}_xp-t.{stat}_xp FROM stats as s, personal_tracker as t WHERE s.rsn = '{name}' and t.rsn = '{name}'  """
     else:
-        query = f""" SELECT s."{stat}"-t."{stat}" FROM stats as s, personal_tracker as t WHERE s.rsn = '{name}' """
+        query = f""" SELECT s."{stat}"-t."{stat}" FROM stats as s, personal_tracker as t WHERE s.rsn = '{name}' and t.rsn = '{name}' """
     cur.execute(query)
     stat_delta = cur.fetchone()[0]
-    time_query = f"""SELECT s.updated_at-t.created_at FROM stats as s, personal_tracker as t WHERE s.rsn = '{name}'  """
+    time_query = f"""SELECT s.updated_at-t.created_at FROM stats as s, personal_tracker as t WHERE s.rsn = '{name}' and t.rsn = '{name}'  """
     cur.execute(time_query)
     time_delta = cur.fetchone()[0]
     return (int(stat_delta),time_delta)
@@ -161,6 +161,15 @@ def personal_tracker_starting_stat(cur,name,stat,skill):
     starting_stat = cur.fetchone()[0]
     return starting_stat
 
+
+def get_ranks(cur,name,skill):
+    ranks = []
+    if skill:
+        for stat in SKILLS:
+            rank = get_player_rank(cur,name,stat.lower(),skill)
+            ranks.append((skill,rank))
+    print(ranks)
+
 if __name__ == '__main__':
     load_dotenv()
 
@@ -174,17 +183,17 @@ if __name__ == '__main__':
     cur = conn.cursor()
 
     ##### TESTING FUNCTIONS
-    name = 'ironrok'
-    stats = getStats(playerURL(name,'iron'))
+    name = 'spniz_uim'
+    # stats = getStats(playerURL(name,'iron'))
 
     # sql_update_player_hs(cur,name,stats_col_names,stats)
 
 
-    xp,time_delta = xp_gained(cur,name,"kree'arra",0)
+    xp,time_delta = xp_gained(cur,name,"wintertodt",0)
 
     # response = is_skill("Chambers of xeric")
     # response = top_stat_to_string(sql_top_stat(cur,"farming",5,1,stats_col_names))
-    response = get_player_stat(cur,"ironrok","slayer",1,stats_col_names)
+    # response = get_player_stat(cur,"ironrok","slayer",1,stats_col_names)
     # response =
     #
     #
@@ -192,4 +201,4 @@ if __name__ == '__main__':
     #
     #
 
-    print(personal_tracker_starting_stat(cur,name,"nightmare", 0))
+    print(xp)
