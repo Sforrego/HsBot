@@ -183,7 +183,7 @@ if __name__ == '__main__':
     cur = conn.cursor()
 
     ##### TESTING FUNCTIONS
-    name = 'spniz_uim'
+    name = 'its_ruhspect'
     # stats = getStats(playerURL(name,'iron'))
 
     # sql_update_player_hs(cur,name,stats_col_names,stats)
@@ -201,4 +201,4 @@ if __name__ == '__main__':
     #
     #
 
-    print(xp)
+    print(xp,time_delta)

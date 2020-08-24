@@ -367,6 +367,16 @@ async def memberslit(ctx,*member):
     response = f"{str(member)} {member.nick} Joined: {member.joined_at}.\n"
     await ctx.send(response)
 
+@bot1.command(name='myjoindate', help='Shows your join date.')
+@commands.has_permissions(kick_members=True)
+async def memberslit(ctx):
+    member = ctx.message.author.display_name
+    converter = MemberConverter()
+    member = await converter.convert(ctx,member)
+    print(f"Member name: {member.name}. Nickname: {member.nick}")
+    response = f"{str(member)} {member.nick} Joined: {member.joined_at}.\n"
+    await ctx.send(response)
+
 @bot1.command(name='remove', help='Removes players from the cc (sheets) (Admin) (Replace spaces in names with underscore)\n Example: !hs remove Ironrok b_Ee_Z.')
 @commands.has_permissions(kick_members=True)
 async def memberslit(ctx,*members):
