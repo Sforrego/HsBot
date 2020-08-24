@@ -368,7 +368,6 @@ async def memberslit(ctx,*member):
     await ctx.send(response)
 
 @bot1.command(name='myjoindate', help='Shows your join date.')
-@commands.has_permissions(kick_members=True)
 async def memberslit(ctx):
     member = ctx.message.author.display_name
     converter = MemberConverter()
