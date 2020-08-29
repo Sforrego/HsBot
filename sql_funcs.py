@@ -183,13 +183,17 @@ if __name__ == '__main__':
     cur = conn.cursor()
 
     ##### TESTING FUNCTIONS
-    name = 'its_ruhspect'
+    name = 'tawer'
     # stats = getStats(playerURL(name,'iron'))
+
+    stats = getStats(playerURL(name,'iron'))
+
+    sql_update_player_hs(self.cur,name,stats,stats_col_names)
 
     # sql_update_player_hs(cur,name,stats_col_names,stats)
 
 
-    xp,time_delta = xp_gained(cur,name,"wintertodt",0)
+    # xp,time_delta = xp_gained(cur,name,"wintertodt",0)
 
     # response = is_skill("Chambers of xeric")
     # response = top_stat_to_string(sql_top_stat(cur,"farming",5,1,stats_col_names))
@@ -197,8 +201,7 @@ if __name__ == '__main__':
     # response =
     #
     #
-
+    change_player_name(cur,"spooned_soul","salvagedsoul")
     #
     #
-
-    print(xp,time_delta)
+    conn.commit()

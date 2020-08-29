@@ -359,7 +359,7 @@ async def superadd(ctx, member,*args):
 
 @bot1.command(name='joindate', help='Shows a player and their join date.')
 @commands.has_permissions(kick_members=True)
-async def memberslit(ctx,*member):
+async def joindate(ctx,*member):
     member = " ".join(member)
     converter = MemberConverter()
     member = await converter.convert(ctx,member)
@@ -368,7 +368,7 @@ async def memberslit(ctx,*member):
     await ctx.send(response)
 
 @bot1.command(name='myjoindate', help='Shows your join date.')
-async def memberslit(ctx):
+async def myjoindate(ctx):
     member = ctx.message.author.display_name
     converter = MemberConverter()
     member = await converter.convert(ctx,member)

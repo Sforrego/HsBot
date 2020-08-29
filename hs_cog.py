@@ -15,29 +15,32 @@ class Hiscores(commands.Cog):
     @commands.command(name='update', help="Updates a players stats in the clan's hiscores. \n eg: !hs update ironrok r_a_df_o_r_d (updates both players you can do as many as you want)")
     async def update_hs(self,ctx, *members):
         try:
+            players = get_players_in_personal_tracker(cur)
             first_msg = 'Updating '
             for member in members:
                 first_msg += f'{member} '
             await ctx.send(first_msg)
             not_found_osrs = []
-            sth_wrong = []
+            not_in_cc = []
             for name in members:
                 stats = getStats(playerURL(name,'iron'))
                 if stats == 404:
                     not_found_osrs.append(name)
-                else:
+                elif name in players:
                     try:
                         sql_update_player_hs(self.cur,name,stats,stats_col_names)
                         sql_add_player_hs_historic(self.cur,name,stats)
                     except Exception as e:
-                        sth_wrong.append(name)
+                        print(e)
+                else:
+                    not_in_cc.append(name)
             self.conn.commit()
-            found = [x for x in members if (x not in sth_wrong and x not in not_found_osrs)]
+            found = [x for x in members if (x not in not_in_cc and x not in not_found_osrs)]
             response = f"{found} were updated!"
             if not_found_osrs:
                 response+= f"{not_found_osrs} were not found in the osrs' hiscores.\n"
-            if sth_wrong:
-                response+= f"{sth_wrong} were not found on the clan's hiscores.\n"
+            if not_in_cc:
+                response+= f"{not_in_cc} were not found on the clan's hiscores.\n"
         except Exception as e:
             response = str(e)
         finally:
@@ -190,6 +193,23 @@ class Hiscores(commands.Cog):
                 response = f"{name} is not on the clan's hiscores."
 
 
+        except Exception as e:
+            response = str(e)
+        finally:
+            await ctx.send(response)
+
+    @commands.command(name='change2',help='Changes the name in the hiscores database.')
+    async def change2(self,ctx,old_name,*new_name):
+        try:
+            players = get_players_in_personal_tracker(cur)
+            new_name = ("_").join(new_name).lower()
+            old_name = old_name.lower()
+            if old_name in players:
+                change_player_name(cur,old_name,new_name)
+                self.conn.commit()
+                response = f"{old_name} changed to {new_name} in the hiscores database."
+            else:
+                response = f"{old_name} not found in the hiscores."
         except Exception as e:
             response = str(e)
         finally:
