@@ -36,9 +36,9 @@ class Hiscores(commands.Cog):
                     not_in_cc.append(name)
             self.conn.commit()
             found = [x for x in members if (x not in not_in_cc and x not in not_found_osrs)]
-            response = f"{found} were updated!"
+            response = f"{found} were updated!\n"
             if not_found_osrs:
-                response+= f"{not_found_osrs} were not found in the osrs' hiscores.\n"
+                response+= f"{not_found_osrs} were not found in the osrs' ironman hiscores.\n"
             if not_in_cc:
                 response+= f"{not_in_cc} were not found on the clan's hiscores.\n"
         except Exception as e:
@@ -204,12 +204,12 @@ class Hiscores(commands.Cog):
             players = get_players_in_personal_tracker(cur)
             new_name = ("_").join(new_name).lower()
             old_name = old_name.lower()
-            if old_name in players:
+            if old_name in players and new_name not in players:
                 change_player_name(self.cur,old_name,new_name)
                 self.conn.commit()
-                response = f"{old_name} changed to {new_name} in the hiscores database."
+                response = f"{old_name} changed to {new_name} in the clan's hiscores."
             else:
-                response = f"{old_name} not found in the hiscores."
+                response = f"{old_name} not found in the clan's hiscores."
         except Exception as e:
             response = str(e)
         finally:
