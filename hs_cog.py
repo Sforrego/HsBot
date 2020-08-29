@@ -15,7 +15,7 @@ class Hiscores(commands.Cog):
     @commands.command(name='update', help="Updates a players stats in the clan's hiscores. \n eg: !hs update ironrok r_a_df_o_r_d (updates both players you can do as many as you want)")
     async def update_hs(self,ctx, *members):
         try:
-            players = get_players_in_personal_tracker(cur)
+            players = get_players_in_personal_tracker(self.cur)
             first_msg = 'Updating '
             for member in members:
                 first_msg += f'{member} '
@@ -205,7 +205,7 @@ class Hiscores(commands.Cog):
             new_name = ("_").join(new_name).lower()
             old_name = old_name.lower()
             if old_name in players:
-                change_player_name(cur,old_name,new_name)
+                change_player_name(self.cur,old_name,new_name)
                 self.conn.commit()
                 response = f"{old_name} changed to {new_name} in the hiscores database."
             else:
