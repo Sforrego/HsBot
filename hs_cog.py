@@ -15,7 +15,7 @@ class Hiscores(commands.Cog):
     @commands.command(name='update', help="Updates a players stats in the clan's hiscores. \n eg: !hs update ironrok r_a_df_o_r_d (updates both players you can do as many as you want)")
     async def update_hs(self,ctx, *members):
         try:
-            players = get_players_in_personal_tracker(self.cur)
+            players = get_players_in_hs(self.cur)
             first_msg = 'Updating '
             for member in members:
                 first_msg += f'{member} '

@@ -201,7 +201,7 @@ if __name__ == '__main__':
     # response =
     #
     #
-    change_player_name(cur,"spooned_soul","salvagedsoul")
+    players = get_players_in_personal_tracker(self.cur)    #
     #
-    #
+    print(players)
     conn.commit()
