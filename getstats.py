@@ -45,6 +45,5 @@ def createDicts(statsList):
   return (skills,clues,bosses)
 
 if __name__ == '__main__':
-  rsn = "CH Product"
-
-  print(createDicts(parseStats(getStats(playerURL(rsn,'iron')))))
+  rsn = "ironrok"
+  print(playerURL(rsn,'iron'))

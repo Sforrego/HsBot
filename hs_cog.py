@@ -23,6 +23,7 @@ class Hiscores(commands.Cog):
             not_found_osrs = []
             not_in_cc = []
             for name in members:
+                name = name.lower()
                 stats = getStats(playerURL(name,'iron'))
                 if stats == 404:
                     not_found_osrs.append(name)
