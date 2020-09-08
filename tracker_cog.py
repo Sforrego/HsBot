@@ -47,7 +47,7 @@ class Tracker(commands.Cog):
     async def check_clan_tracker(self,ctx,name,stat):
         try:
             name = name.lower()
-            clan_tracker_names = get_players_in_clan_tracker(self.cur)
+            clan_tracker_names = get_players_in_tracker(self.cur)
             if name in clan_tracker_names:
                 if stat:
                     stat = ("_").join(stat).lower()
