@@ -42,6 +42,9 @@ class Tracker(commands.Cog):
         finally:
             await ctx.send(response)
 
+    @commands.command(name='updatetracker',help='Updates all players in the tracker.')
+    async def update_clan_tracker(self,ctx,*members):
+        pass
 
     @commands.command(name='checktracker', help="Checks a players progress according to the clan tracker. \n eg: !hs checktracker ironrok Mining")
     async def check_clan_tracker(self,ctx,name,*stat):
@@ -83,7 +86,7 @@ class Tracker(commands.Cog):
         response = f'```\n{top}```'
         await ctx.send(response)
 
-    @commands.command(name='toptracker10', help="Checks the top 5 progress according to the clan tracker in a stat. \n eg: !hs toptracker mining")
+    @commands.command(name='toptracker10', help="Checks the top 10 progress according to the clan tracker in a stat. \n eg: !hs toptracker mining")
     async def toptracker10(self,ctx,stat):
         top = top_stat_to_string(top_tracked(self.cur,stat,skill,10))
         response = f'```\n{top}```'

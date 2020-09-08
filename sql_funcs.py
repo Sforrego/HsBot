@@ -188,7 +188,7 @@ def top_tracked(cur,stat,skill,n):
     if skill:
         query = f"""SELECT s.rsn,s.{stat}_xp-t.{stat}_xp as xp_gained FROM stats as s, clan_tracker as t WHERE s.rsn = t.rsn  ORDER BY xp_gained DESC LIMIT {n}"""
     else:
-        query = f""" SELECT s.rsn,s."{stat}"-t."{stat}" as kc_gained FROM stats as s, clan_tracker as t WHERE s.rsn = t.rsn ORDER BY xp_gained DESC LIMIT {n}"""
+        query = f""" SELECT s.rsn,s."{stat}"-t."{stat}" as kc_gained FROM stats as s, clan_tracker as t WHERE s.rsn = t.rsn and t."{stat}" != -1 ORDER BY kc_gained DESC LIMIT {n}"""
     cur.execute(query)
     return cur.fetchall()
 def get_ranks(cur,name,skill):
@@ -217,7 +217,7 @@ if __name__ == '__main__':
 
     # stats = getStats(playerURL(name,'iron'))
 
-    print(top_stat_to_string(top_tracked(cur,'runecraft',1,2)))
+    print(top_stat_to_string(top_tracked(cur,'skotizo',0,5)))
 
     # sql_update_player_hs(cur,name,stats_col_names,stats)
 
