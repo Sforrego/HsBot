@@ -25,10 +25,10 @@ def get_stats_shorts():
     newdict = {key:value for key,value in newdict.items() if value != [] }
     return newdict
 
-def get_pretty_names(start_sheet,names):
+def get_pretty_names(members_sheet,names):
     pretty_names_list = []
-    ugly_names = start_sheet.col_values(2)[1:]
-    pretty_names = start_sheet.col_values(1)[1:]
+    ugly_names = members_sheet.col_values(12)[1:]
+    pretty_names = members_sheet.col_values(11)[1:]
     for name in names:
         index = ugly_names.index(name)
         pretty_name = pretty_names[index]
@@ -197,7 +197,7 @@ def update_player(bosses_sheet, skills_sheet, start_sheet, names, name, stats, a
         else:
             print(f"{name} not found in hiscores.")
 
-def update_rsn(members_sheet,bosses_sheet, skills_sheet, start_sheet, names, old_name, new_name):
+def update_rsn(members_sheet, names, old_name, new_name):
     old_name = old_name.lower()
     if old_name in names:
         index = names.index(old_name)+2

@@ -50,9 +50,7 @@ scope = ['https://spreadsheets.google.com/feeds',
     'https://www.googleapis.com/auth/drive']
 creds = ServiceAccountCredentials.from_json_keyfile_name('client_secret.json', scope)
 client = gspread.authorize(creds)
-bosses_sheet = client.open("Members Ranks").worksheet('Bosses')
-skills_sheet = client.open("Members Ranks").worksheet('Skills')
-start_sheet = client.open("Members Ranks").worksheet('Start')
+
 members_sheet = client.open("Members Ranks").worksheet('Members')
 
 
@@ -88,10 +86,10 @@ async def roll(ctx, type):
 @commands.has_permissions(kick_members=True)
 async def complete(ctx, team_num, *tile_name):
     try:
-        names = start_sheet.col_values(2)
+        names = members_sheet.col_values(12)
     except gspread.exceptions.APIError as e:
         client.login()
-        names = start_sheet.col_values(2)
+        names = members_sheet.col_values(12)
     tile_name = " ".join(tile_name)
     tile_name = tile_name.lower()
     team_num = int(team_num)
@@ -111,10 +109,10 @@ async def complete(ctx, team_num, *tile_name):
 @commands.has_permissions(kick_members=True)
 async def undo(ctx, team_num, *tile_name):
     try:
-        names = start_sheet.col_values(2)
+        names = members_sheet.col_values(12)
     except gspread.exceptions.APIError as e:
         client.login()
-        names = start_sheet.col_values(2)
+        names = members_sheet.col_values(12)
     tile_name = " ".join(tile_name)
     tile_name = tile_name.lower()
     team_num = int(team_num)
@@ -134,10 +132,10 @@ async def undo(ctx, team_num, *tile_name):
 @bot1.command(name='checkdone', help='Checks tiles done by a team.')
 async def check_done(ctx, team_num):
     try:
-        names = start_sheet.col_values(2)
+        names = members_sheet.col_values(12)
     except gspread.exceptions.APIError as e:
         client.login()
-        names = start_sheet.col_values(2)
+        names = members_sheet.col_values(12)
     team_num = int(team_num)
     if team_num not in range(1,9):
         response = "You need to specify the number of your team\n !bingo checkdone 1"
@@ -158,10 +156,10 @@ async def check_done(ctx, team_num):
 @bot1.command(name='checkleft', help='Checks tiles that have not been done by a team.')
 async def check_left(ctx, team_num):
     try:
-        names = start_sheet.col_values(2)
+        names = members_sheet.col_values(12)
     except gspread.exceptions.APIError as e:
         client.login()
-        names = start_sheet.col_values(2)
+        names = members_sheet.col_values(12)
     team_num = int(team_num)
     if team_num not in range(1,9):
         response = "You need to specify the number of your team\n !bingo checkleft 1"
@@ -196,10 +194,10 @@ async def change_rsn(ctx, member,*new_name):
     converter = MemberConverter()
     new_name = " ".join(new_name)
     try:
-        names = start_sheet.col_values(2)[1:]
+        names = members_sheet.col_values(12)[1:]
     except gspread.exceptions.APIError as e:
         client.login()
-        names = start_sheet.col_values(2)[1:]
+        names = members_sheet.col_values(12)[1:]
     try:
         member = await converter.convert(ctx,member)
         if member.nick:
@@ -207,7 +205,7 @@ async def change_rsn(ctx, member,*new_name):
         else:
             old_name = member.name
         ol_name = old_name.replace(" ", "_")
-        update_rsn(members_sheet,bosses_sheet,skills_sheet,start_sheet,names,ol_name,new_name)
+        update_rsn(members_sheet,names,ol_name,new_name)
         await member.edit(nick=new_name)
         response = f"{old_name} has been changed to {new_name}."
     except Exception as e:
@@ -227,10 +225,10 @@ async def change_rsn(ctx, member,*new_name):
 async def ranks(ctx, *rank):
     rank = " ".join(rank)
     try:
-        names = start_sheet.col_values(1)[1:]
+        names = members_sheet.col_values(12)[1:]
     except gspread.exceptions.APIError as e:
         client.login()
-        names = start_sheet.col_values(1)[1:]
+        names = members_sheet.col_values(12)[1:]
     if rank in RANKS.keys():
         members_has_rank = []
         rank1 = members_sheet.col_values(RANKS[rank])
@@ -245,10 +243,10 @@ async def ranks(ctx, *rank):
 @commands.has_permissions(kick_members=True)
 async def due(ctx,rank):
     try:
-        names = start_sheet.col_values(1)[1:]
+        names = members_sheet.col_values(12)[1:]
     except gspread.exceptions.APIError as e:
         client.login()
-        names = start_sheet.col_values(1)[1:]
+        names = members_sheet.col_values(12)[1:]
     members_due_rank = []
     if rank == "all":
         members_values = members_sheet.get_all_values()[1:]
@@ -271,10 +269,10 @@ async def due(ctx,rank):
 @bot1.command(name='compare', help='Compares two players in a specific stat.')
 async def compare(ctx, stat, player1, player2):
     try:
-        names = start_sheet.col_values(2)[1:]
+        names = members_sheet.col_values(12)[1:]
     except gspread.exceptions.APIError as e:
         client.login()
-        names = start_sheet.col_values(2)[1:]
+        names = members_sheet.col_values(12)[1:]
     p1,p2 = player1.lower(), player2.lower()
     stat = get_stat(stat)
     if not stat:
@@ -292,7 +290,7 @@ async def compare(ctx, stat, player1, player2):
         return
     comparison = compare_players(bosses_sheet, skills_sheet, names, p1, p2, stat)
     winner = comparison[0]
-    player1,player2 = get_pretty_names(start_sheet,[p1,p2])
+    player1,player2 = get_pretty_names(members_sheet,[p1,p2])
     response = f"{stat} \n"
     if len(comparison) == 5: #this is a skill
         if winner:
@@ -326,10 +324,10 @@ async def superadd(ctx, member,*args):
                 response = f"{rsn} not found in the highscores."
             else:
                 try:
-                    names = start_sheet.col_values(2)[1:]
+                    names = members_sheet.col_values(12)[1:]
                 except gspread.exceptions.APIError as e:
                     client.login()
-                    names = start_sheet.col_values(2)[1:]
+                    names = members_sheet.col_values(12)[1:]
                 col0 = members_sheet.col_values(1)
                 if rsn.replace(" ","_").lower() in names:
                     response = f"{rsn} is already in the memberlist (spreadsheet)."
@@ -380,25 +378,19 @@ async def myjoindate(ctx):
 @commands.has_permissions(kick_members=True)
 async def memberslit(ctx,*members):
     try:
-        names = start_sheet.col_values(2)[1:]
+        names = members_sheet.col_values(12)[1:]
     except gspread.exceptions.APIError as e:
         client.login()
-        names = start_sheet.col_values(2)[1:]
+        names = members_sheet.col_values(12)[1:]
     not_found = []
     await ctx.send("Deleting")
     for name in members:
         if name.lower() not in names:
             not_found.append(name)
         else:
-
             index = names.index(name.lower())+2
             names.remove(name.lower())
-            tracker_sheet.delete_row(index)
-            tracked_sheet.delete_row(index)
-            start_sheet.delete_row(index)
-            bosses_sheet.delete_row(index)
             members_sheet.delete_row(index)
-            skills_sheet.delete_row(index)
             print(f"{name} deleted")
     found = [x for x in members if x not in not_found]
     response = f'Deleted \n{found}\n \nNot Found \n {not_found}'

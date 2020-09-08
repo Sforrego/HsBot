@@ -99,6 +99,13 @@ def get_players_in_hs(cur):
     names = cur.fetchall()
     return [x[0] for x in names]
 
+def get_players_in_tracker(cur):
+    """ return a list of all the players in the stats table"""
+    query = "SELECT rsn FROM clan_tracker";
+    cur.execute(query)
+    names = cur.fetchall()
+    return [x[0] for x in names]
+
 def get_players_in_personal_tracker(cur):
     """ return a list of all the players in the personal_tracker table"""
     query = "SELECT rsn FROM personal_tracker";
@@ -133,7 +140,23 @@ def get_player_rank(cur,name,stat,skill):
 
 def add_personal_tracker(cur,name,stats):
     string_of_values = stats_to_string(stats)
-    cur.execute(f"""INSERT INTO personal_tracker VALUES ('{name}',{string_of_values},current_timestamp)""")
+    cur.execute(f"""INSERT INTO clan_tracker VALUES ('{name}',{string_of_values},current_timestamp)""")
+
+def add_clan_tracker(cur,name,stats):
+    string_of_values = stats_to_string(stats)
+    cur.execute(f"""INSERT INTO clan_tracker VALUES ('{name}',{string_of_values},current_timestamp)""")
+
+def xp_gained_clan(cur,name,stat,skill):
+    if skill:
+        query = f"""SELECT s.{stat}_xp-t.{stat}_xp FROM stats as s, clan_tracker as t WHERE s.rsn = '{name}' and t.rsn = '{name}'  """
+    else:
+        query = f""" SELECT s."{stat}"-t."{stat}" FROM stats as s, clan_tracker as t WHERE s.rsn = '{name}' and t.rsn = '{name}' """
+    cur.execute(query)
+    stat_delta = cur.fetchone()[0]
+    time_query = f"""SELECT s.updated_at-t.created_at FROM stats as s, clan_tracker as t WHERE s.rsn = '{name}' and t.rsn = '{name}'  """
+    cur.execute(time_query)
+    time_delta = cur.fetchone()[0]
+    return (int(stat_delta),time_delta)
 
 def xp_gained(cur,name,stat,skill):
     if skill:
@@ -151,17 +174,23 @@ def reset_personal_tracker(cur,name):
     query = f"""Delete from personal_tracker where rsn = '{name}'  """
     cur.execute(query)
 
-def personal_tracker_starting_stat(cur,name,stat,skill):
+def tracker_starting_stat(cur,name,stat,skill,table):
     if skill:
-        query = f"""SELECT "{stat}_xp" FROM stats WHERE rsn = '{name}'  """
+        query = f"""SELECT "{stat}_xp" FROM {table} WHERE rsn = '{name}'  """
     else:
-        query = f""" SELECT "{stat}" FROM stats WHERE rsn = '{name}' """
+        query = f""" SELECT "{stat}" FROM {table} WHERE rsn = '{name}' """
 
     cur.execute(query)
     starting_stat = cur.fetchone()[0]
     return starting_stat
 
-
+def top_tracked(cur,stat,skill,n):
+    if skill:
+        query = f"""SELECT s.rsn,s.{stat}_xp-t.{stat}_xp as xp_gained FROM stats as s, clan_tracker as t WHERE s.rsn = t.rsn  ORDER BY xp_gained DESC LIMIT {n}"""
+    else:
+        query = f""" SELECT s.rsn,s."{stat}"-t."{stat}" as kc_gained FROM stats as s, clan_tracker as t WHERE s.rsn = t.rsn ORDER BY xp_gained DESC LIMIT {n}"""
+    cur.execute(query)
+    return cur.fetchall()
 def get_ranks(cur,name,skill):
     ranks = []
     if skill:
@@ -183,12 +212,12 @@ if __name__ == '__main__':
     cur = conn.cursor()
 
     ##### TESTING FUNCTIONS
-    name = 'tawer'
+    name = 'shawrys'
     # stats = getStats(playerURL(name,'iron'))
 
-    stats = getStats(playerURL(name,'iron'))
+    # stats = getStats(playerURL(name,'iron'))
 
-    sql_update_player_hs(self.cur,name,stats,stats_col_names)
+    print(top_stat_to_string(top_tracked(cur,'runecraft',1,2)))
 
     # sql_update_player_hs(cur,name,stats_col_names,stats)
 
@@ -201,7 +230,5 @@ if __name__ == '__main__':
     # response =
     #
     #
-    players = get_players_in_personal_tracker(self.cur)    #
     #
-    print(players)
     conn.commit()
