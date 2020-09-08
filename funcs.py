@@ -27,8 +27,8 @@ def get_stats_shorts():
 
 def get_pretty_names(members_sheet,names):
     pretty_names_list = []
-    ugly_names = members_sheet.col_values(12)[1:]
-    pretty_names = members_sheet.col_values(11)[1:]
+    ugly_names = members_sheet.col_values(11)[1:]
+    pretty_names = members_sheet.col_values(10)[1:]
     for name in names:
         index = ugly_names.index(name)
         pretty_name = pretty_names[index]
