@@ -44,7 +44,7 @@ class Tracker(commands.Cog):
 
 
     @commands.command(name='checktracker', help="Checks a players progress according to the clan tracker. \n eg: !hs checktracker ironrok Mining")
-    async def check_clan_tracker(self,ctx,name,stat):
+    async def check_clan_tracker(self,ctx,name,*stat):
         try:
             name = name.lower()
             clan_tracker_names = get_players_in_tracker(self.cur)
