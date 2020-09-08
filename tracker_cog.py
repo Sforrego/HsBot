@@ -82,8 +82,9 @@ class Tracker(commands.Cog):
         top = top_stat_to_string(top_tracked(self.cur,stat,skill,5))
         response = f'```\n{top}```'
         await ctx.send(response)
+
     @commands.command(name='toptracker10', help="Checks the top 5 progress according to the clan tracker in a stat. \n eg: !hs toptracker mining")
-    async def toptracker(self,ctx,stat):
+    async def toptracker10(self,ctx,stat):
         top = top_stat_to_string(top_tracked(self.cur,stat,skill,10))
         response = f'```\n{top}```'
         await ctx.send(response)
