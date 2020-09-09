@@ -11,7 +11,7 @@ class Tracker(commands.Cog):
         self.conn = conn
         self.cur = conn.cursor()
 
-    @commands.command(name='addtotracker', help="Adds a players to clan tracker. \n eg: !hs addtotracker ironrok its_ruhspect")
+    @commands.command(name='addtotracker', help="Adds players to the clan tracker. \n eg: !hs addtotracker ironrok its_ruhspect")
     async def start_clan_tracker(self,ctx,*members):
         try:
             await ctx.send("Adding players to the tracker.")
@@ -121,7 +121,7 @@ class Tracker(commands.Cog):
                     if name not in players_in_hs(self.cur):
                         sql_add_player_hs(self.cur,name,stats)
                     else:
-                        sql_update_player_hs(self.cur,name,stats,stats_col_names)                        
+                        sql_update_player_hs(self.cur,name,stats,stats_col_names)
                     add_personal_tracker(self.cur,name,stats)
                     self.conn.commit()
                     response = f"You are now being tracked. use !hs update 'your_name' to update your stats and !hs mytracker 'skill' to check your progress."
