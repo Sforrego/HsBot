@@ -64,7 +64,8 @@ class Tracker(commands.Cog):
                 response += f'These names {not_found_osrs} are outdated.'
         except Exception as e:
             response = str(e)
-
+        finally:
+            await ctx.send(response)
     @commands.command(name='checktracker', help="Checks a players progress according to the clan tracker. \n eg: !hs checktracker ironrok Mining")
     async def check_clan_tracker(self,ctx,name,*stat):
         try:
