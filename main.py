@@ -342,9 +342,9 @@ async def superadd(ctx, member,*args):
                     index = len(col0)+1
                     #members_cell_list = members_sheet.range(f'A{index}:B{index}')
                     members_sheet.update_acell(f"A{index}",rsn)
-                    members_sheet.update_acell(f"K{index}",rsn)
+                    members_sheet.update_acell(f"J{index}",rsn)
                     members_sheet.update_acell(f"B{index}",member.joined_at.strftime("%d %b, %Y"))
-                    members_sheet.update_acell(f"M{index}",member.name)
+                    members_sheet.update_acell(f"L{index}",member.name)
                     response = f"{rsn} has been added to the memberlist, given nickname and role, and added in the clan's HS."
     except discord.ext.commands.errors.BadArgument:
         response = f"Member {member} not found."
