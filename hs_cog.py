@@ -199,7 +199,7 @@ class Hiscores(commands.Cog):
         finally:
             await ctx.send(response)
 
-    @commands.command(name='change2',help='Changes the name in the hiscores database.')
+    @commands.command(name='change2',help="Changes the name in the clan's hiscores.")
     async def change2(self,ctx,old_name,*new_name):
         try:
             players = get_players_in_personal_tracker(cur)
@@ -216,6 +216,22 @@ class Hiscores(commands.Cog):
         finally:
             await ctx.send(response)
 
+    @commands.command(name='rmoutdated',help="Removes outdated names from the clan's hiscores.")
+    async def rmoutdated(self,ctx):
+        try:
+            players_in_hs = get_players_in_hs(self.cur)
+            outdated = []
+            for name in players_in_hs:
+                stats = getStats(playerURL(name,'iron'))
+                if stats == 404:
+                    outdated.append(name)
+                    rm_from_hs(self.cur,name)
+            self.conn.commit()
+            response = f"Players outdated and removed: {outdated}"
+        except Exception as e:
+            response = str(e)
+        finally:
+            await ctx.send(response)
 
 def setup(bot):
     # user = os.getenv('user')

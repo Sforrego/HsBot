@@ -199,6 +199,12 @@ def get_ranks(cur,name,skill):
             ranks.append((skill,rank))
     print(ranks)
 
+
+def rm_from_hs(cur,name):
+    query = """delete from stats where rsn=name  """
+    cur.execute(query)
+
+
 if __name__ == '__main__':
     load_dotenv()
 

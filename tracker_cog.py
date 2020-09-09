@@ -16,6 +16,7 @@ class Tracker(commands.Cog):
         try:
             await ctx.send("Adding players to the tracker.")
             players = get_players_in_tracker(self.cur)
+            players_in_hs = get_players_in_hs(self.cur)
             already_being_tracked = []
             not_found_osrs = []
             for name in members:
@@ -27,8 +28,12 @@ class Tracker(commands.Cog):
                     if stats == 404:
                         not_found_osrs.append(name)
                     else:
-                        sql_update_player_hs(self.cur,name,stats,stats_col_names)
+                        if name not in players_in_hs:
+                            sql_add_player_hs(self.cur,name,stats)
+                        else:
+                            sql_update_player_hs(self.cur,name,stats,stats_col_names)
                         add_clan_tracker(self.cur,name,stats)
+
             self.conn.commit()
             response = ''
             if already_being_tracked:
@@ -43,8 +48,12 @@ class Tracker(commands.Cog):
             await ctx.send(response)
 
     @commands.command(name='updatetracker',help='Updates all players in the tracker.')
-    async def update_clan_tracker(self,ctx,*members):
-        pass
+    async def update_clan_tracker(self,ctx):
+        try:
+            await ctx.send("Updating players...")
+            players = get_players_in_tracker(self.cur)
+        except Exception as e:
+            response = str(e)
 
     @commands.command(name='checktracker', help="Checks a players progress according to the clan tracker. \n eg: !hs checktracker ironrok Mining")
     async def check_clan_tracker(self,ctx,name,*stat):
@@ -103,13 +112,17 @@ class Tracker(commands.Cog):
         try:
             name = coded_string(ctx.message.author.display_name)
             personal_tracker_names = get_players_in_personal_tracker(self.cur)
+            players_in_hs = get_players_in_hs(self.cur)
             if name not in personal_tracker_names:
                 stats = getStats(playerURL(name,'iron'))
                 if stats == 404:
                     response = f"{name} is not on the osrs hiscores."
                 else:
+                    if name not in players_in_hs(self.cur):
+                        sql_add_player_hs(self.cur,name,stats)
+                    else:
+                        sql_update_player_hs(self.cur,name,stats,stats_col_names)                        
                     add_personal_tracker(self.cur,name,stats)
-                    sql_update_player_hs(self.cur,name,stats,stats_col_names)
                     self.conn.commit()
                     response = f"You are now being tracked. use !hs update 'your_name' to update your stats and !hs mytracker 'skill' to check your progress."
             else:
