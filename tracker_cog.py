@@ -52,6 +52,16 @@ class Tracker(commands.Cog):
         try:
             await ctx.send("Updating players...")
             players = get_players_in_tracker(self.cur)
+            not_found_osrs = []
+            for name in players:
+                stats = getStats(playerURL(name,'iron'))
+                if stats == 404:
+                    not_found_osrs.append(name)
+                else:
+                    sql_update_player_hs(self.cur,name,stats,stats_col_names)
+            response = 'Tracker updated.\n'
+            if not_found_osrs:
+                response += f'These names {not_found_osrs} are outdated.'
         except Exception as e:
             response = str(e)
 
