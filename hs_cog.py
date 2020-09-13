@@ -202,7 +202,7 @@ class Hiscores(commands.Cog):
     @commands.command(name='change2',help="Changes the name in the clan's hiscores.")
     async def change2(self,ctx,old_name,*new_name):
         try:
-            players2 = get_players_in_hs(self.cur)
+            players = get_players_in_hs(self.cur)
             players2 = get_players_in_personal_tracker(self.cur)
             new_name = ("_").join(new_name).lower()
             old_name = old_name.lower()
