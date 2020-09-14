@@ -222,12 +222,11 @@ if __name__ == '__main__':
     cur = conn.cursor()
 
     ##### TESTING FUNCTIONS
-    name = 'shawrys'
+    name = 'ironrok'
+    stats = getStats(playerURL(name,'iron'))
     # stats = getStats(playerURL(name,'iron'))
-
-    # stats = getStats(playerURL(name,'iron'))
-
-    print(top_stat_to_string(top_tracked(cur,'skotizo',0,5)))
+    cur.execute("alter table stats rename column praye to prayer")
+    #print(top_stat_to_string(top_tracked(cur,'skotizo',0,5)))
 
     # sql_update_player_hs(cur,name,stats_col_names,stats)
 

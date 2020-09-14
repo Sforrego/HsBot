@@ -250,7 +250,8 @@ boss_shorts = {
 "atk":"Attack",
 "con":"Construction",
 "clues":"Clues total",
-"total":"Overall"
+"total":"Overall",
+"fm":"Firemaking"
 }
 
 # INDEX IN THE SPREADSHEET
