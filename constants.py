@@ -12,6 +12,7 @@ GAMEMODE_URL = {
   'ult': '_ultimate/',
 }
 
+#hello world
 
 BINGO_TILES=["4 GWD Uniques",
 "2 Wintertodt Uniques (No gloves/torch)",
