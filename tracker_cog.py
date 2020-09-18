@@ -98,6 +98,15 @@ class Tracker(commands.Cog):
             response = str(e)
         finally:
             await ctx.send(response)
+    @commands.command(name='playerstracked', help="Checks which players are being tracked by the clan tracker. \n eg: !hs playerstracked")
+    async def check_clan_tracker(self,ctx):
+        try:
+            players_tracked = get_players_in_tracker(self.cur)
+            response = f"Players being tracked: {players_tracked}."
+        except Exception as e:
+            response = str(e)
+        finally:
+            await ctx.send(response)
 
     @commands.command(name='toptracker', help="Checks the top 5 progress according to the clan tracker in a stat. \n eg: !hs toptracker mining")
     async def toptracker(self,ctx,stat):
