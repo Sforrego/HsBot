@@ -110,7 +110,16 @@ class Tracker(commands.Cog):
 
     @commands.command(name='toptracker', help="Checks the top 5 progress according to the clan tracker in a stat. \n eg: !hs toptracker mining")
     async def toptracker(self,ctx,stat):
+        if stat:
+            stat = ("_").join(stat).lower()
+            pretty_stat = get_stat(stat)
+            stat = coded_string(pretty_stat)
+        else:
+            stat = "overall"
+            pretty_stat = "Overall"
+
         skill = is_skill(stat)
+        
         top = top_stat_to_string(top_tracked(self.cur,stat,skill,5))
         response = f'```\n{top}```'
         await ctx.send(response)
