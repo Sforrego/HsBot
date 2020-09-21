@@ -66,6 +66,7 @@ class Tracker(commands.Cog):
             response = str(e)
         finally:
             await ctx.send(response)
+
     @commands.command(name='checktracker', help="Checks a players progress according to the clan tracker. \n eg: !hs checktracker ironrok Mining")
     async def check_clan_tracker(self,ctx,name,*stat):
         try:
@@ -98,6 +99,7 @@ class Tracker(commands.Cog):
             response = str(e)
         finally:
             await ctx.send(response)
+
     @commands.command(name='playerstracked', help="Checks which players are being tracked by the clan tracker. \n eg: !hs playerstracked")
     async def check_clan_tracker(self,ctx):
         try:
@@ -123,12 +125,23 @@ class Tracker(commands.Cog):
         top = top_stat_to_string(top_tracked(self.cur,stat,skill,5))
         response = f'```\n{top}```'
         await ctx.send(response)
-
     @commands.command(name='toptracker10', help="Checks the top 10 progress according to the clan tracker in a stat. \n eg: !hs toptracker mining")
-    async def toptracker10(self,ctx,stat):
+    async def toptracker10(self,ctx,*stat):
+        if stat:
+            stat = ("_").join(stat).lower()
+            pretty_stat = get_stat(stat)
+            stat = coded_string(pretty_stat)
+        else:
+            stat = "overall"
+            pretty_stat = "Overall"
+
+        skill = is_skill(stat)
+
         top = top_stat_to_string(top_tracked(self.cur,stat,skill,10))
         response = f'```\n{top}```'
         await ctx.send(response)
+
+
 
     @commands.command(name='resetclantracker',help='Removes everyone from the clantracker')
     async def resettracker(self,ctx):
