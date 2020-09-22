@@ -203,6 +203,8 @@ def update_rsn(members_sheet, names, old_name, new_name):
         index = names.index(old_name)+2
         members_sheet.update_acell(f"K{index}",new_name)
         names[index-2] = new_name.lower()
+    elif new_name in names:
+        raise Exception(f"{new_name} is already in the spreadsheet.")
     else:
         raise Exception(f"{old_name} is not in the spreadsheet.")
 def check(names,rsn):

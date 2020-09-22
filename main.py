@@ -58,6 +58,12 @@ members_sheet = client.open("Members Ranks").worksheet('Members')
 # bingo_sheet_skills = client.open("Bingo 07irons").worksheet('SkillsTracker')
 bingo_sheet_tiles = client.open("Bingo 07irons").worksheet('Tile Tracker')
 
+
+### connecting to database ###
+DATABASE_URL = os.environ['DATABASE_URL']
+conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+cur = conn.cursor()
+
 #BOT 1
 
 

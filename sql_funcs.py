@@ -132,6 +132,9 @@ def change_player_name(cur,old_name,new_name):
 def change_player_name_mytracker(cur,old_name,new_name):
     query = f"""UPDATE personal_tracker SET rsn =  '{new_name}' WHERE rsn='{old_name}'"""
     cur.execute(query)
+def change_player_name_clantracker(cur,old_name,new_name):
+    query = f"""UPDATE clan_tracker SET rsn =  '{new_name}' WHERE rsn='{old_name}'"""
+    cur.execute(query)
 
 def get_player_rank(cur,name,stat,skill):
     if skill:
