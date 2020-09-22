@@ -101,7 +101,7 @@ class Tracker(commands.Cog):
             await ctx.send(response)
 
     @commands.command(name='playerstracked', help="Checks which players are being tracked by the clan tracker. \n eg: !hs playerstracked")
-    async def check_clan_tracker(self,ctx):
+    async def playerstracked(self,ctx):
         try:
             players_tracked = get_players_in_tracker(self.cur)
             response = f"Players being tracked: {players_tracked}."

@@ -67,7 +67,7 @@ bingo_sheet_tiles = client.open("Bingo 07irons").worksheet('Tile Tracker')
 @bot1.event
 async def on_ready():
     print(f'{bot1.user} has connected to Discord!')
-    #task = loop.create_task(do_stuff_every_x_seconds(60*29, client.login))
+    task = loop.create_task(do_stuff_every_x_seconds(60*29, client.login))
     #task2 = loop.create_task(do_stuff_every_x_seconds(60*60*24, update_all,bosses_sheet,skills_sheet,start_sheet,client))
 
 #### BINGO ####
