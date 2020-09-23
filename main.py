@@ -62,6 +62,7 @@ bingo_sheet_tiles = client.open("Bingo 07irons").worksheet('Tile Tracker')
 ### connecting to database ###
 DATABASE_URL = os.environ['DATABASE_URL']
 conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+conn.autocommit=True
 cur = conn.cursor()
 
 #BOT 1

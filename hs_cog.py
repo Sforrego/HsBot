@@ -31,11 +31,11 @@ class Hiscores(commands.Cog):
                     try:
                         sql_update_player_hs(self.cur,name,stats,stats_col_names)
                         sql_add_player_hs_historic(self.cur,name,stats)
+                        #self.conn.commit()
                     except Exception as e:
                         print(e)
                 else:
                     not_in_cc.append(name)
-            self.conn.commit()
             found = [x for x in members if (x not in not_in_cc and x not in not_found_osrs)]
             response = f"{found} were updated!\n"
             if not_found_osrs:
@@ -72,7 +72,7 @@ class Hiscores(commands.Cog):
                         sql_add_player_hs_historic(self.cur,name,stats)
                     except Exception as e:
                         in_cc.append(name)
-            self.conn.commit()
+            #self.conn.commit()
             found = [x for x in members if (x not in in_cc and x not in not_found_osrs)]
             response = f"{found} were added!\n"
             if not_found_osrs:
@@ -170,7 +170,7 @@ class Hiscores(commands.Cog):
                     sql_add_player_hs_historic(self.cur,name,stats)
                 except Exception as e:
                     in_cc.append(name)
-        self.conn.commit()
+        #self.conn.commit()
 
         if not_found_osrs:
             response+= f"{not_found_osrs} were not found in the osrs' hiscores.\n"
@@ -209,7 +209,7 @@ class Hiscores(commands.Cog):
                 change_player_name(self.cur,old_name,new_name)
                 change_player_name_clantracker(self.cur,old_name,new_name)
                 change_player_name_mytracker(self.cur,old_name,new_name)
-                self.conn.commit()
+                #self.conn.commit()
                 response = f"{old_name} changed to {new_name} in the clan's hiscores."
             else:
                 response = f"{old_name} not found in the clan's hiscores."
@@ -229,7 +229,7 @@ class Hiscores(commands.Cog):
                 if stats == 404:
                     outdated.append(name)
                     rm_from_hs(self.cur,name)
-            self.conn.commit()
+            #self.conn.commit()
             response = f"Players outdated and removed: {outdated}"
         except Exception as e:
             response = str(e)
@@ -246,5 +246,5 @@ def setup(bot):
 
     DATABASE_URL = os.environ['DATABASE_URL']
     conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-
+    conn.autocommit=True
     bot.add_cog(Hiscores(bot,conn))

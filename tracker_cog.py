@@ -34,7 +34,7 @@ class Tracker(commands.Cog):
                             sql_update_player_hs(self.cur,name,stats,stats_col_names)
                         add_clan_tracker(self.cur,name,stats)
 
-            self.conn.commit()
+            #self.conn.commit()
             response = ''
             if already_being_tracked:
                 response += f'{already_being_tracked} are already being tracked.\n'
@@ -59,6 +59,7 @@ class Tracker(commands.Cog):
                     not_found_osrs.append(name)
                 else:
                     sql_update_player_hs(self.cur,name,stats,stats_col_names)
+            #self.conn.commit()
             response = 'Tracker updated.\n'
             if not_found_osrs:
                 response += f'These names {not_found_osrs} are outdated.'
@@ -92,7 +93,7 @@ class Tracker(commands.Cog):
                         stat_delta,time_delta = xp_gained_clan(self.cur,name,stat,skill)
                         hours,mins = seconds_to_hours_mins(time_delta.seconds)
                         response = f"{name} has done {str(stat_delta)} {pretty_stat} kills in the last {time_delta.days}d {hours}h {mins}m."
-
+                #self.conn.commit()
             else:
                 response = f"{name} is not in the clan tracker."
         except Exception as e:
@@ -104,6 +105,7 @@ class Tracker(commands.Cog):
     async def playerstracked(self,ctx):
         try:
             players_tracked = get_players_in_tracker(self.cur)
+            #self.conn.commit()
             response = f"Players being tracked: {players_tracked}."
         except Exception as e:
             response = str(e)
@@ -146,7 +148,7 @@ class Tracker(commands.Cog):
     @commands.command(name='resetclantracker',help='Removes everyone from the clantracker')
     async def resettracker(self,ctx):
         self.cur.execute("delete from clan_tracker")
-        self.conn.commit()
+        #self.conn.commit()
         await ctx.send('Clan tracker reset.')
 
     @commands.command(name='startmytracker', help="Starts a player's personal tracker. \n eg: !hs startmytracker")
@@ -165,7 +167,7 @@ class Tracker(commands.Cog):
                     else:
                         sql_update_player_hs(self.cur,name,stats,stats_col_names)
                     add_personal_tracker(self.cur,name,stats)
-                    self.conn.commit()
+                    #self.conn.commit()
                     response = f"You are now being tracked. use !hs update 'your_name' to update your stats and !hs mytracker 'skill' to check your progress."
             else:
                 response = "You are already being tracked. do: !hs resetmytracker, to restart your tracker. "
@@ -223,7 +225,7 @@ class Tracker(commands.Cog):
                     reset_personal_tracker(self.cur,name)
                     add_personal_tracker(self.cur,name,stats)
                     sql_update_player_hs(self.cur,name,stats,stats_col_names)
-                    self.conn.commit()
+                    #self.conn.commit()
                     response = f"Your tracker has been reset!"
             else:
                 response = "You are not being tracked, to start your tracker do !hs startmytracker"
@@ -247,5 +249,5 @@ def setup(bot):
 
     DATABASE_URL = os.environ['DATABASE_URL']
     conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-
+    conn.autocommit=True
     bot.add_cog(Tracker(bot,conn))
