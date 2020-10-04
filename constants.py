@@ -14,6 +14,39 @@ GAMEMODE_URL = {
 
 #hello world
 
+
+TILES_TO_NUM={"hidden 1":1,
+"ba":2,
+"cw":3,
+"pc":4,
+"golden tench":5,
+"gauntlet":6,
+"raids":7,
+"hunter":8,
+"gwd":9,
+"barrows":10,
+"agility":11,
+"hidden 2":12,
+"larran":13,
+"corp nmare":14,
+"mole":15,
+"hidden 3":16,
+"fishing":17,
+"wildy demi":18,
+"mining":19,
+"wildy bosses":20,
+"vorkath zulrah":21,
+"crystal grail":22,
+"hidden 4":23,
+"kq":24,
+"thieving":25
+}
+BINGO_LIST=["Gnomes scarves for everyone!",
+"Tears of Guthix!",
+"Upset the balance!",
+"Spectator Sport!",
+"]
+
 BINGO_TILES=["4 GWD Uniques",
 "2 Wintertodt Uniques (No gloves/torch)",
 "2 Cox or Tob purples",
@@ -37,45 +70,6 @@ BINGO_TILES=["4 GWD Uniques",
 "2 Fishing Trawler PIeces",
 "Black mask or Jaw of basilisks"
 ]
-TILES_TO_NUM={"gwd":1,
-"wt":2,
-"raids":3,
-"random 1":4,
-"champion scroll":5,
-"random 2":6,
-"pp":7,
-"wildy boss":8,
-"dks":9,
-"medium":10,
-"zenytes":11,
-"master":12,
-"blood shard":13,
-"easy":14,
-"slayer boss":15,
-"barrows":16,
-"random 3":17,
-"wildy demi":18,
-"hespori":19,
-"blessed hide":20,
-"vorkath":21,
-"beginner":22,
-"zulrah":23,
-"ft":24,
-"mask jaw":25,
-
-}
-BINGO_LIST=["Instantly finish a random tile",
-"Re do a random finished tile",
-"2x Item drop rate for a DICED tile (need to do 2x LESS)",
-"0.5x Item drop rate for a DICED tile (need to do 2x MORE)",
-"Nothing happens!",
-"Double 1 tile and remove another by choice",
-"Nothing happens!",
-"Add 1 needed item to a random (DICED) tile of a CHOSEN team.",
-"Remove 1 needed item from a random (DICED) tile of a CHOSEN team.",
-"Nothing happens!"]
-
-
 
 RANKS = {
     'smiley':4,

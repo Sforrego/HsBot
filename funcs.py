@@ -474,11 +474,28 @@ def get_tiles_done(bingo_sheet, team_num):
     tiles_done = [tiles[i] for i in range(len(team_tiles)) if team_tiles[i] != ""]
     tiles_num = [i for i in range(len(team_tiles)) if team_tiles[i] != ""]
     return tiles_done,tiles_num
+
 def get_tiles_left(bingo_sheet, team_num):
     tiles = bingo_sheet.col_values(1)[1:26]
     team_tiles = bingo_sheet.col_values(team_num+1)[1:26]
     tiles_left = [tiles[i] for i in range(len(team_tiles)) if team_tiles[i] == ""]
+
     return tiles_left
+
+def get_number_tiles_left(bingo_sheet, team_num):
+    tiles = bingo_sheet.col_values(1)[1:26]
+    team_tiles = bingo_sheet.col_values(team_num+1)[1:26]
+    tiles_left = [tiles[i] for i in range(len(team_tiles)) if team_tiles[i] == ""]
+    hidden_left = 0
+    hidden_tiles_left = []
+    for tile in tiles_left:
+        if "hidden" in tile.lower():
+            hidden_left += 1
+            hiddentile,num = tile.lower().split("hidden tile ")
+            hidden_tiles_left.append(int(num))
+    return (len(tiles_left),hidden_left,hidden_tiles_left)
+
+
 
 def complete_tile(bingo_sheet, team_num, tile_num):
     bingo_sheet.update_cell(tile_num+1,team_num+1, "DONE")

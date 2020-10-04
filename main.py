@@ -10,7 +10,7 @@ import time
 import httplib2
 from discord.ext.commands import MemberConverter
 ## make one function that creates an object after calling rs.hs make the other funcs receive that.
-from random import randint
+from random import randint,random
 from image_editing import *
 from sql_funcs import *
 
@@ -110,8 +110,16 @@ async def complete(ctx, team_num, *tile_name):
     else:
         tile_num = TILES_TO_NUM[tile_name]
         complete_tile(bingo_sheet_tiles, team_num, tile_num)
-        response = f"{tile_name} completed by team {team_num}."
+        response = f"{tile_name} completed by team {team_num}.\n"
+
+        tiles_left,hidden_left,hidden_tiles_left = get_number_tiles_left(bingo_sheet_tiles, team_num)
+
+        if random() < hidden_left/tiles_left:
+            new_bingo_list = [BINGO_LIST[i-1] for i in hidden_tiles_left]
+            hidden_tile = new_bingo_list[randint(0,len(new_bingo_list)-1)]
+            response += f"You rolled for the hidden tile {hidden_tile}!"
     await ctx.send(response)
+
 @bot1.command(name='undo', help='Undo a Tile.')
 @commands.has_permissions(kick_members=True)
 async def undo(ctx, team_num, *tile_name):
