@@ -44,8 +44,7 @@ TILES_TO_NUM={"hidden 1":1,
 BINGO_LIST=["Gnomes scarves for everyone!",
 "Tears of Guthix!",
 "Upset the balance!",
-"Spectator Sport!",
-"]
+"Spectator Sport!"]
 
 BINGO_TILES=["4 GWD Uniques",
 "2 Wintertodt Uniques (No gloves/torch)",
