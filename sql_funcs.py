@@ -217,7 +217,8 @@ def add_team(cur,team_num,players):
         if i == len(players)-1:
             query += f""",'{player}')"""
         else:
-            query += f""",'{player}'"""
+            query += f""" ,'{player}' """
+    print(query)
     cur.execute(query)
 
 def update_team(cur,team_num,player_num,player):
@@ -234,8 +235,11 @@ def get_team_nums(cur):
     query = f"""SELECT team_number from teams"""
     cur.execute(query)
     team_nums = cur.fetchall()
-    return team_nums[0]
+    team_nums = [x[0] for x in team_nums]
+    return team_nums
 
+def reset_teams(cur):
+    query = """DELETE FROM teams """
 
 if __name__ == '__main__':
     load_dotenv()
@@ -253,4 +257,4 @@ if __name__ == '__main__':
     name = 'ironrok'
     # stats = getStats(playerURL(name,'iron'))
 
-    print(get_team(cur,1))
+    print(get_team_nums(cur))

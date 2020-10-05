@@ -233,6 +233,13 @@ async def updateteam(ctx, team_num, player_num, player):
         response = f"{player} is now player {player_num} of team {team_num}."
     await ctx.send(response)
 
+@bot1.command(name='resetteams', help='Removes all teams.')
+@commands.has_permissions(kick_members=True)
+async def resetteans(ctx):
+    reset_teams(cur)
+    response = "Teams have been reset."
+    await ctx.send(response)
+
 #### END BINGO ####
 
 
