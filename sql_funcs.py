@@ -191,6 +191,22 @@ def tracker_starting_stat(cur,name,stat,skill,table):
     starting_stat = cur.fetchone()[0]
     return starting_stat
 
+def tracker_starting_stat_multiple(cur,names,stat,skill,table):
+    inside = "("
+    for i,name in enumerate(names):
+        if i == len(names)-1:
+            inside += f"'{name}')"
+        else:
+            inside += f"'{name}',"
+    if skill:
+        query = f"""SELECT rsn,"{stat}_xp" FROM {table} WHERE rsn in {inside}  """
+    else:
+        query = f""" SELECT rsn,"{stat}" FROM {table} WHERE rsn in {inside} """
+
+    cur.execute(query)
+    starting_stat = cur.fetchall()
+    return starting_stat
+
 def top_tracked(cur,stat,skill,n):
     if skill:
         query = f"""SELECT s.rsn,s.{stat}_xp-t.{stat}_xp as xp_gained FROM stats as s, clan_tracker as t WHERE s.rsn = t.rsn  ORDER BY xp_gained DESC LIMIT {n}"""
@@ -214,6 +230,7 @@ def rm_from_hs(cur,name):
 def add_team(cur,team_num,players):
     query = f"""INSERT INTO teams VALUES ({team_num}"""
     for i,player in enumerate(players):
+        player = player.lower()
         if i == len(players)-1:
             query += f""",'{player}')"""
         else:
@@ -240,6 +257,27 @@ def get_team_nums(cur):
 
 def reset_teams(cur):
     query = """DELETE FROM teams """
+    cur.execute(query)
+
+def xp_gained_team(cur,team_num,stat,skill):
+    players = get_team(cur,team_num)
+    inside = "("
+    for i,player in enumerate(players):
+        if i == len(players)-1:
+            inside += f"'{player}')"
+        else:
+            inside += f"'{player}',"
+    if skill:
+        query = f"""SELECT sum(stats.{stat}_xp-clan_tracker.{stat}_xp) from stats inner join clan_tracker on (stats.rsn=clan_tracker.rsn) where stats.rsn IN {inside}"""
+    else:
+        query = f"""SELECT sum(stats.{stat}-clan_tracker.{stat}) from stats inner join clan_tracker on (stats.rsn=clan_tracker.rsn) where stats.rsn IN {inside}"""
+    cur.execute(query)
+    stat_delta = cur.fetchone()[0]
+    time_query = f"""SELECT s.updated_at-t.created_at FROM stats as s, clan_tracker as t WHERE s.rsn = '{name}' and t.rsn = '{name}'  """
+    cur.execute(time_query)
+    time_delta = cur.fetchone()[0]
+    return (int(stat_delta),time_delta)
+
 
 if __name__ == '__main__':
     load_dotenv()
@@ -256,5 +294,4 @@ if __name__ == '__main__':
     ##### TESTING FUNCTIONS
     name = 'ironrok'
     # stats = getStats(playerURL(name,'iron'))
-
-    print(get_team_nums(cur))
+    print(tracker_starting_stat_multiple(cur,["ironrok","spniz_uim"],"zalcano",0,"clan_tracker"))

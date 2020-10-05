@@ -191,54 +191,106 @@ async def check_left(ctx, team_num):
 @bot1.command(name='addteam', help='Add a team of players.')
 @commands.has_permissions(kick_members=True)
 async def addteam(ctx, team_num, *players):
-    if int(team_num) not in range(1,9):
-        response = "You need to specify the number of your team\n !hs addteam 1 ironrok toad_event spniz_uim thebranflake"
-    else:
-        team_nums = get_team_nums(cur)
-        if team_num in team_nums:
-            response = f"Team {team_num} already exists! To check the team use !hs checkteam {team_num}"
+    try:
+        if int(team_num) not in range(1,9):
+            response = "You need to specify the number of your team\n !hs addteam 1 ironrok toad_event spniz_uim thebranflake"
         else:
-            add_team(cur,team_num, list(players))
-            response = f"Team {team_num} has been created. To check the team use !hs checkteam {team_num}"
-    await ctx.send(response)
+            team_nums = get_team_nums(cur)
+            if team_num in team_nums:
+                response = f"Team {team_num} already exists! To check the team use !hs checkteam {team_num}"
+            else:
+                add_team(cur,team_num, list(players))
+                response = f"Team {team_num} has been created. To check the team use !hs checkteam {team_num}"
+    except Exception as e:
+        response = str(e)
+    finally:
+        await ctx.send(response)
 
-@bot1.command(name='checkteam', help='Returns the players of a specific team. !hs checkteam 1 -> returns the players of team 1')
-async def checkteam(ctx, team_num):
-    team_num = int(team_num)
-    if team_num not in range(1,9):
-        response = "You need to specify the number of your team\n !hs addteam 1 ironrok toad_event spniz_uim thebranflake"
-    else:
-        team_nums = get_team_nums(cur)
-        if team_num in team_nums:
-            team = get_team(cur,team_num)
-            response = f"Team {team_num} has the following players:\n"
-            for i,player in enumerate(team):
-                if player:
-                    response += f"{i+1}. {player}\n"
+@bot1.command(name='getteam', help='Returns the players of a specific team. !hs checkteam 1 -> returns the players of team 1')
+async def getteam(ctx, team_num):
+    try:
+        team_num = int(team_num)
+        if team_num not in range(1,9):
+            response = "You need to specify the number of your team\n !hs addteam 1 ironrok toad_event spniz_uim thebranflake"
         else:
-            response = f"Team {team_num} does not exist, to create it use !hs addteam {team_num} player1 player2 ... player8"
-    await ctx.send(response)
+            team_nums = get_team_nums(cur)
+            if team_num in team_nums:
+                team = get_team(cur,team_num)
+                response = f"Team {team_num} has the following players:\n"
+                for i,player in enumerate(team):
+                    if player:
+                        response += f"{i+1}. {player}\n"
+            else:
+                response = f"Team {team_num} does not exist, to create it use !hs addteam {team_num} player1 player2 ... player8"
+    except Exception as e:
+        response = str(e)
+    finally:
+        await ctx.send(response)
 
 @bot1.command(name='updateteam', help='Updates a specific player of a team. !hs updateteam 1 5 ironrok -> updates the team 1 player 5 to ironrok.')
 @commands.has_permissions(kick_members=True)
 async def updateteam(ctx, team_num, player_num, player):
-    team_num = int(team_num)
-    player_num = int(player_num)
-    if int(team_num) not in range(1,9):
-        response = "You need to specify the number of your team\n For example team 1, player 2, name ironrok: !hs updateteam 1 2 ironrok"
-    elif int(player_num) not in range(1,9):
-        response = "You need to specify the number of the player you are updating\n For example team 1, player 2, name ironrok: !hs updateteam 1 2 ironrok"
-    else:
-        update_team(cur,team_num,player_num,player)
-        response = f"{player} is now player {player_num} of team {team_num}."
-    await ctx.send(response)
+    try:
+        team_num = int(team_num)
+        player_num = int(player_num)
+        if int(team_num) not in range(1,9):
+            response = "You need to specify the number of your team\n For example team 1, player 2, name ironrok: !hs updateteam 1 2 ironrok"
+        elif int(player_num) not in range(1,9):
+            response = "You need to specify the number of the player you are updating\n For example team 1, player 2, name ironrok: !hs updateteam 1 2 ironrok"
+        else:
+            update_team(cur,team_num,player_num,player)
+            response = f"{player} is now player {player_num} of team {team_num}."
+    except Exception as e:
+        response = str(e)
+    finally:
+        await ctx.send(response)
 
 @bot1.command(name='resetteams', help='Removes all teams.')
 @commands.has_permissions(kick_members=True)
 async def resetteans(ctx):
-    reset_teams(cur)
-    response = "Teams have been reset."
-    await ctx.send(response)
+    try:
+        reset_teams(cur)
+        response = "Teams have been reset."
+    except Exception as e:
+        response = str(e)
+    finally:
+        await ctx.send(response)
+
+@bot1.command(name='checkteam', help='Checks xp/kc gained by a team in a skill/boss (players with starting kc not on the highscores wont be tracked)')
+@commands.has_permissions(kick_members=True)
+async def checkteam(ctx, team_num,*stat):
+    try:
+        if team_num not in range(1,9):
+            response = "Team number must be between 1 and 8 included."
+        else:
+            if stat:
+                stat = ("_").join(stat).lower()
+                pretty_stat = get_stat(stat)
+                stat = coded_string(pretty_stat)
+            else:
+                stat = "overall"
+                pretty_stat = "Overall"
+            skill = is_skill(stat)
+            if skill:
+                team_members = get_team(cur,team_num)
+                stat_delta,time_delta = xp_gained_team(cur,team_num,stat,skill,team_members)
+                hours,mins = seconds_to_hours_mins(time_delta.seconds)
+                response = f"Team {team_num} has gained {str(stat_delta)} {pretty_stat} xp in the last {time_delta.days}d {hours}h {mins}m."
+            else:
+                team_members = get_team(cur,team_num)
+                starting_kc = tracker_starting_stat_multiple(cur,team_members,stat,skill,'clan_tracker')
+                valid_team_members = [x[0] for x in starting_kc if int(x[1]) != -1]
+
+                stat_delta,time_delta = xp_gained_team(cur,team_num,stat,skill,team_members)
+                hours,mins = seconds_to_hours_mins(time_delta.seconds)
+                response = f"Team {team_num} has done {str(stat_delta)} {pretty_stat} kills in the last {time_delta.days}d {hours}h {mins}m."
+
+    except Exception as e:
+        response = str(e)
+    finally:
+        await ctx.send(response)
+
+
 
 #### END BINGO ####
 
