@@ -231,12 +231,12 @@ def get_team(cur,team_num):
     return team[1:]
 
 def get_team_nums(cur):
-    query = f"""SELECT team_num from teams"""
+    query = f"""SELECT team_number from teams"""
     cur.execute(query)
     team_nums = cur.fetchall()
     return team_nums
 
-    
+
 if __name__ == '__main__':
     load_dotenv()
 
