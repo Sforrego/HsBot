@@ -228,7 +228,7 @@ def get_team(cur,team_num):
     query = f"""select * from teams where team_number = {team_num} """
     cur.execute(query)
     team = cur.fetchall()
-    return team[1:]
+    return team[0][1:]
 
 def get_team_nums(cur):
     query = f"""SELECT team_number from teams"""
@@ -251,18 +251,6 @@ if __name__ == '__main__':
 
     ##### TESTING FUNCTIONS
     name = 'ironrok'
-    stats = getStats(playerURL(name,'iron'))
     # stats = getStats(playerURL(name,'iron'))
-    #print(top_stat_to_string(top_tracked(cur,'skotizo',0,5)))
+
     print(get_team(cur,1))
-    # sql_update_player_hs(cur,name,stats_col_names,stats)
-
-    # xp,time_delta = xp_gained(cur,name,"wintertodt",0)
-
-    # response = is_skill("Chambers of xeric")
-    # response = top_stat_to_string(sql_top_stat(cur,"farming",5,1,stats_col_names))
-    # response = get_player_stat(cur,"ironrok","slayer",1,stats_col_names)
-    # response =
-    #
-    #
-    #
