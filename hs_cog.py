@@ -11,7 +11,6 @@ class Hiscores(commands.Cog):
         self.conn = conn
         self.cur = conn.cursor()
 
-
     @commands.command(name='update', help="Updates a players stats in the clan's hiscores. \n eg: !hs update ironrok r_a_df_o_r_d (updates both players you can do as many as you want)")
     async def update_hs(self,ctx, *members):
         try:
@@ -84,7 +83,6 @@ class Hiscores(commands.Cog):
         finally:
             await ctx.send(response)
 
-
     @commands.command(name='top', help="Shows the top 5 players and their kc/lvl+xp for a specific stat.")
     async def top_hs(self,ctx, *stat):
 
@@ -124,7 +122,6 @@ class Hiscores(commands.Cog):
         finally:
             await ctx.send(response)
 
-
     @commands.command(name='check', help="Checks if a player is in the clan's hs.")
     async def check_hs(self,ctx, name):
         name = name.lower()
@@ -156,6 +153,7 @@ class Hiscores(commands.Cog):
             await ctx.send(response)
 
     @commands.command(name='fullupdate', help="Updates every player in the clan's hiscores.")
+    @commands.has_permissions(kick_members=True)
     async def fullupdate(ctx):
         await ctx.send("Updating all players...")
         members = get_players_in_hs(self.cur)
@@ -177,7 +175,6 @@ class Hiscores(commands.Cog):
             await ctx.send(response)
 
         await ctx.send("Finished updating.")
-
 
     @commands.command(name='rank', help='Shows the rank within the clan of a member in a specific stat. (!hs rank zulrah spniz_uim)')
     async def ranks(self,ctx,stat,name):

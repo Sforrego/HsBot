@@ -143,8 +143,6 @@ class Tracker(commands.Cog):
         response = f'```\n{top}```'
         await ctx.send(response)
 
-
-
     @commands.command(name='resetclantracker',help='Removes everyone from the clantracker')
     async def resettracker(self,ctx):
         self.cur.execute("delete from clan_tracker")
@@ -234,6 +232,27 @@ class Tracker(commands.Cog):
         finally:
             await ctx.send(response)
 
+    @bot1.command(name='trackercommands', help='Shows all the tracker related commands')
+    async def bingocommands(ctx):
+        try:
+            response = """
+CLAN:
+!hs addtotracker ironrok spniz_uim ... -> adds all players separated by a space to the tracker.
+!hs updatetracker -> updates all players being tracked.
+!hs checktracker ironrok cox -> shows the xp/kc gained by a the player ironrok in cox (everybody).
+!hs playerstracked -> shows all the players in the tracker.
+!hs toptracker mining -> shows the top 5 gains in mining.
+!hs toptracker10 zulrah -> shows the top 10 gains in zulrah.
+!hs resetclantracker -> removes all players from the tracker.
+PERSONAL:
+!hs startmytracker -> uses your discord nickname to add you to the tracker.
+!hs mytracker runecraft -> shows your gains in runecraft.
+!hs resetmtracker -> resets your tracker with your latest xp.
+"""
+        except Exception as e:
+            response = str(e)
+        finally:
+            await ctx.send(response)
 
 
 
