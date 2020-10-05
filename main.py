@@ -227,9 +227,9 @@ async def getteam(ctx, team_num):
     finally:
         await ctx.send(response)
 
-@bot1.command(name='updateteam', help='Updates a specific player of a team. !hs updateteam 1 5 ironrok -> updates the team 1 player 5 to ironrok.')
+@bot1.command(name='modifyteam', help='Updates a specific player of a team. !hs updateteam 1 5 ironrok -> updates the team 1 player 5 to ironrok.')
 @commands.has_permissions(kick_members=True)
-async def updateteam(ctx, team_num, player_num, player):
+async def modifyteam(ctx, team_num, player_num, player):
     try:
         team_num = int(team_num)
         player_num = int(player_num)
@@ -290,6 +290,24 @@ async def checkteam(ctx, team_num,*stat):
     finally:
         await ctx.send(response)
 
+@bot1.command(name='bingocommands', help='Shows all the bingo related commands')
+async def bingocommands(ctx):
+    try:
+        response = """
+        !hs complete 1 raids -> completes team 1 raids tile in the sheets.
+        !hs undo 1 raids -> undos team 1 raids tile in the sheets.
+        !hs checkdone 1 -> shows the tiles complete by team 1.
+        !hs checkleft -> shows the tiles left of team 1.
+        !hs addteam 2 ironrok spniz_uim -> creates team number 2 and adds players ironrok and spniz_uim to it.
+        !hs getteam 2 -> shows the members of team 2
+        !hs modifyteam 2 1 cluelessprod -> cluelessprod is now player 1 of team 2.
+        !hs resetteams -> removes all teams.
+        !hs checkteam 1 mining -> shows xp gained by team 1 in mining.
+        """
+    except Exception as e:
+        response = str(e)
+    finally:
+        await ctx.send(response)
 
 
 #### END BINGO ####

@@ -259,8 +259,7 @@ def reset_teams(cur):
     query = """DELETE FROM teams """
     cur.execute(query)
 
-def xp_gained_team(cur,team_num,stat,skill):
-    players = get_team(cur,team_num)
+def xp_gained_team(cur,team_num,stat,skill, players):
     inside = "("
     for i,player in enumerate(players):
         if i == len(players)-1:
