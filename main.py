@@ -188,7 +188,47 @@ async def check_left(ctx, team_num):
                 response += f"{tile}\n"
     await ctx.send(response)
 
+@bot1.command(name='addteam', help='Add a team of players.')
+@commands.has_permissions(kick_members=True)
+async def addteam(ctx, team_num, *players):
+    if team_num not in range(1,9):
+        response = "You need to specify the number of your team\n !hs addteam 1 ironrok toad_event spniz_uim thebranflake"
+    else:
+        team_nums = get_team_nums(cur)
+        if team_num in team_nums:
+            response = f"Team {team_num} already exists! To check the team use !hs checkteam {team_num}"
+        else:
+            add_team(team_num, list(players))
+            response = f"Team {team_num} has been created. To check the team use !hs checkteam {team_num}"
+    await ctx.send(response)
 
+@bot1.command(name='checkteam', help='Returns the players of a specific team. !hs checkteam 1 -> returns the players of team 1')
+async def checkteam(ctx, team_num):
+    if team_num not in range(1,9):
+        response = "You need to specify the number of your team\n !hs addteam 1 ironrok toad_event spniz_uim thebranflake"
+    else:
+        team_nums = get_team_nums(cur)
+        if team_num in team_nums:
+            team = get_team(cur,team_num)
+            response = f"Team {team_num} has the following players:\n"
+            for i,player in enumerate(team):
+                if player:
+                    response += f"{i+1}. {player}\n"
+        else:
+            response = f"Team {team_num} does not exist, to create it use !hs addteam {team_num} player1 player2 ... player8"
+    await ctx.send(response)
+
+@bot1.command(name='updateteam', help='Updates a specific player of a team. !hs updateteam 1 5 ironrok -> updates the team 1 player 5 to ironrok.')
+@commands.has_permissions(kick_members=True)
+async def updateteam(ctx, team_num, player_num, player):
+    if team_num not in range(1,9):
+        response = "You need to specify the number of your team\n For example team 1, player 2, name ironrok: !hs updateteam 1 2 ironrok"
+    elif player_num not in range(1,9):
+        response = "You need to specify the number of the player you are updating\n For example team 1, player 2, name ironrok: !hs updateteam 1 2 ironrok"
+    else:
+        update_team(cur,team_num,player_num,player)
+        response = f"{player} is now player {player_num} of team {team_num}."
+    await ctx.send(response)
 
 #### END BINGO ####
 

@@ -211,7 +211,32 @@ def rm_from_hs(cur,name):
     query = """delete from stats where rsn=name  """
     cur.execute(query)
 
+def add_team(cur,team_num,players):
+    query = f"""INSERT INTO teams VALUES ({team_num}"""
+    for i,player in enumerate(players):
+        if i == len(players)-1:
+            query += f""",'{player}')"""
+        else:
+            query += f""",'{player}'"""
+    cur.execute(query)
 
+def update_team(cur,team_num,player_num,player):
+    query = f"""UPDATE teams SET player{player_num} = '{player}' where team_number={team_num}"""
+    cur.execute(query)
+
+def get_team(cur,team_num):
+    query = f"""select * from teams where team_number = {team_num} """
+    cur.execute(query)
+    team = cur.fetchall()
+    return team[1:]
+
+def get_team_nums(cur):
+    query = f"""SELECT team_num from teams"""
+    cur.execute(query)
+    team_nums = cur.fetchall()
+    return team_nums
+
+    
 if __name__ == '__main__':
     load_dotenv()
 
@@ -228,11 +253,9 @@ if __name__ == '__main__':
     name = 'ironrok'
     stats = getStats(playerURL(name,'iron'))
     # stats = getStats(playerURL(name,'iron'))
-    cur.execute("alter table stats rename column praye to prayer")
     #print(top_stat_to_string(top_tracked(cur,'skotizo',0,5)))
-
+    print(get_team(cur,1))
     # sql_update_player_hs(cur,name,stats_col_names,stats)
-
 
     # xp,time_delta = xp_gained(cur,name,"wintertodt",0)
 
@@ -243,4 +266,3 @@ if __name__ == '__main__':
     #
     #
     #
-    conn.commit()
