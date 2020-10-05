@@ -204,7 +204,8 @@ async def addteam(ctx, team_num, *players):
 
 @bot1.command(name='checkteam', help='Returns the players of a specific team. !hs checkteam 1 -> returns the players of team 1')
 async def checkteam(ctx, team_num):
-    if int(team_num) not in range(1,9):
+    team_num = int(team_num)
+    if team_num not in range(1,9):
         response = "You need to specify the number of your team\n !hs addteam 1 ironrok toad_event spniz_uim thebranflake"
     else:
         team_nums = get_team_nums(cur)
@@ -221,6 +222,8 @@ async def checkteam(ctx, team_num):
 @bot1.command(name='updateteam', help='Updates a specific player of a team. !hs updateteam 1 5 ironrok -> updates the team 1 player 5 to ironrok.')
 @commands.has_permissions(kick_members=True)
 async def updateteam(ctx, team_num, player_num, player):
+    team_num = int(team_num)
+    player_num = int(player_num)
     if int(team_num) not in range(1,9):
         response = "You need to specify the number of your team\n For example team 1, player 2, name ironrok: !hs updateteam 1 2 ironrok"
     elif int(player_num) not in range(1,9):
