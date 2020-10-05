@@ -234,7 +234,7 @@ def get_team_nums(cur):
     query = f"""SELECT team_number from teams"""
     cur.execute(query)
     team_nums = cur.fetchall()
-    return team_nums
+    return team_nums[0]
 
 
 if __name__ == '__main__':
