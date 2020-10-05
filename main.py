@@ -198,7 +198,7 @@ async def addteam(ctx, team_num, *players):
         if team_num in team_nums:
             response = f"Team {team_num} already exists! To check the team use !hs checkteam {team_num}"
         else:
-            add_team(team_num, list(players))
+            add_team(cur,team_num, list(players))
             response = f"Team {team_num} has been created. To check the team use !hs checkteam {team_num}"
     await ctx.send(response)
 
