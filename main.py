@@ -294,15 +294,15 @@ async def checkteam(ctx, team_num,*stat):
 async def bingocommands(ctx):
     try:
         response = """
-        !hs complete 1 raids -> completes team 1 raids tile in the sheets.
-        !hs undo 1 raids -> undos team 1 raids tile in the sheets.
-        !hs checkdone 1 -> shows the tiles complete by team 1.
-        !hs checkleft -> shows the tiles left of team 1.
-        !hs addteam 2 ironrok spniz_uim -> creates team number 2 and adds players ironrok and spniz_uim to it.
-        !hs getteam 2 -> shows the members of team 2
-        !hs modifyteam 2 1 cluelessprod -> cluelessprod is now player 1 of team 2.
-        !hs resetteams -> removes all teams.
-        !hs checkteam 1 mining -> shows xp gained by team 1 in mining.
+!hs complete 1 raids -> completes team 1 raids tile in the sheets.
+!hs undo 1 raids -> undos team 1 raids tile in the sheets.
+!hs checkdone 1 -> shows the tiles complete by team 1 (everybody).
+!hs checkleft -> shows the tiles left of team 1 (everybody).
+!hs addteam 2 ironrok spniz_uim -> creates team number 2 and adds players ironrok and spniz_uim to it.
+!hs getteam 2 -> shows the members of team 2 (everybody).
+!hs modifyteam 2 1 cluelessprod -> cluelessprod is now player 1 of team 2.
+!hs resetteams -> removes all teams.
+!hs checkteam 1 mining -> shows xp gained by team 1 in mining (everybody).
         """
     except Exception as e:
         response = str(e)
