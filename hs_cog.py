@@ -219,6 +219,7 @@ class Hiscores(commands.Cog):
     @commands.command(name='rmoutdated',help="Removes outdated names from the clan's hiscores.")
     async def rmoutdated(self,ctx):
         try:
+            await ctx.send("Checking for outdated names in the hs.")
             players_in_hs = get_players_in_hs(self.cur)
             outdated = []
             for name in players_in_hs:
