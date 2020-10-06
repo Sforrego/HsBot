@@ -224,7 +224,7 @@ def get_ranks(cur,name,skill):
 
 
 def rm_from_hs(cur,name):
-    query = f"""delete from stats where rsn={name}  """
+    query = f"""delete from stats where rsn='{name}'  """
     cur.execute(query)
 
 def add_team(cur,team_num,players):
@@ -293,4 +293,6 @@ if __name__ == '__main__':
     ##### TESTING FUNCTIONS
     name = 'ironrok'
     # stats = getStats(playerURL(name,'iron'))
-    print(tracker_starting_stat_multiple(cur,["ironrok","spniz_uim"],"zalcano",0,"clan_tracker"))
+    query = """delete from stats where rsn = 'yaspy' """
+    cur.execute(query)
+    conn.commit()
