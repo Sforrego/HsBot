@@ -232,7 +232,7 @@ class Tracker(commands.Cog):
         finally:
             await ctx.send(response)
 
-    @bot1.command(name='trackercommands', help='Shows all the tracker related commands')
+    @commands.command(name='trackercommands', help='Shows all the tracker related commands')
     async def bingocommands(ctx):
         try:
             response = """
