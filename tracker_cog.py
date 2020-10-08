@@ -233,7 +233,7 @@ class Tracker(commands.Cog):
             await ctx.send(response)
 
     @commands.command(name='trackercommands', help='Shows all the tracker related commands')
-    async def trackercommands(ctx):
+    async def trackercommands(self,ctx):
         try:
             response = """
 CLAN:
