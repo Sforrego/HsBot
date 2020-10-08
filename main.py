@@ -192,6 +192,7 @@ async def check_left(ctx, team_num):
 @commands.has_permissions(kick_members=True)
 async def addteam(ctx, team_num, *players):
     try:
+        team_num = int(team_num)
         if int(team_num) not in range(1,9):
             response = "You need to specify the number of your team\n !hs addteam 1 ironrok toad_event spniz_uim thebranflake"
         else:
@@ -259,6 +260,7 @@ async def resetteans(ctx):
 @bot1.command(name='checkteam', help='Checks xp/kc gained by a team in a skill/boss (players with starting kc not on the highscores wont be tracked)')
 @commands.has_permissions(kick_members=True)
 async def checkteam(ctx, team_num,*stat):
+    team_num = int(team_num)
     try:
         if team_num not in range(1,9):
             response = "Team number must be between 1 and 8 included."
