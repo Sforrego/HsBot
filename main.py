@@ -303,6 +303,7 @@ async def bingocommands(ctx):
 !hs modifyteam 2 1 cluelessprod -> cluelessprod is now player 1 of team 2.
 !hs resetteams -> removes all teams.
 !hs checkteam 1 mining -> shows xp gained by team 1 in mining (everybody).
+!hs updateteam 1 -> updates all players in team 1.
         """
     except Exception as e:
         response = str(e)
@@ -325,15 +326,10 @@ async def updateteam(ctx,team_num):
             stats = getStats(playerURL(name,'iron'))
             if stats == 404:
                 not_found_osrs.append(name)
-            elif name in players:
-                try:
-                    sql_update_player_hs(cur,name,stats,stats_col_names)
+            else:
+                sql_update_player_hs(cur,name,stats,stats_col_names)
                     # sql_add_player_hs_historic(self.cur,name,stats)
                     #self.conn.commit()
-                except Exception as e:
-                    print(e)
-            else:
-                not_in_cc.append(name)
         found = [x for x in members if (x not in not_in_cc and x not in not_found_osrs)]
         response = f"{found} were updated!\n"
         if not_found_osrs:
