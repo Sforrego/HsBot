@@ -275,17 +275,15 @@ async def checkteam(ctx, team_num,*stat):
             skill = is_skill(stat)
             if skill:
                 team_members = get_team(cur,team_num)
-                stat_delta,time_delta = xp_gained_team(cur,team_num,stat,skill,team_members)
-                hours,mins = seconds_to_hours_mins(time_delta.seconds)
-                response = f"Team {team_num} has gained {str(stat_delta)} {pretty_stat} xp in the last {time_delta.days}d {hours}h {mins}m."
+                stat_delta = xp_gained_team(cur,team_num,stat,skill,team_members)
+                response = f"Team {team_num} has gained {str(stat_delta)} {pretty_stat} xp."
             else:
                 team_members = get_team(cur,team_num)
                 starting_kc = tracker_starting_stat_multiple(cur,team_members,stat,skill,'clan_tracker')
                 valid_team_members = [x[0] for x in starting_kc if int(x[1]) != -1]
 
-                stat_delta,time_delta = xp_gained_team(cur,team_num,stat,skill,team_members)
-                hours,mins = seconds_to_hours_mins(time_delta.seconds)
-                response = f"Team {team_num} has done {str(stat_delta)} {pretty_stat} kills in the last {time_delta.days}d {hours}h {mins}m."
+                stat_delta= xp_gained_team(cur,team_num,stat,skill,team_members)
+                response = f"Team {team_num} has done {str(stat_delta)} {pretty_stat} kills."
 
     except Exception as e:
         response = str(e)
