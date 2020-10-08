@@ -309,6 +309,41 @@ async def bingocommands(ctx):
     finally:
         await ctx.send(response)
 
+@bot1.command(name='updateteam',help='updates a bingo team on the hiscores. !hs updateteam 1')
+async def updateteam(ctx,team_num):
+    try:
+        team_num = int(team_num)
+        members = get_team(cur,team_num)
+        first_msg = 'Updating '
+        for member in members:
+            first_msg += f'{member} '
+        await ctx.send(first_msg)
+        not_found_osrs = []
+        not_in_cc = []
+        for name in members:
+            name = name.lower()
+            stats = getStats(playerURL(name,'iron'))
+            if stats == 404:
+                not_found_osrs.append(name)
+            elif name in players:
+                try:
+                    sql_update_player_hs(cur,name,stats,stats_col_names)
+                    # sql_add_player_hs_historic(self.cur,name,stats)
+                    #self.conn.commit()
+                except Exception as e:
+                    print(e)
+            else:
+                not_in_cc.append(name)
+        found = [x for x in members if (x not in not_in_cc and x not in not_found_osrs)]
+        response = f"{found} were updated!\n"
+        if not_found_osrs:
+            response+= f"{not_found_osrs} were not found in the osrs' ironman hiscores.\n"
+        if not_in_cc:
+            response+= f"{not_in_cc} were not found on the clan's hiscores.\n"
+    except Exception as e:
+        response = str(e)
+    finally:
+        await ctx.send(response)
 
 #### END BINGO ####
 
