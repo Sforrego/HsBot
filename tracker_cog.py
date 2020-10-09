@@ -160,7 +160,7 @@ class Tracker(commands.Cog):
                 if stats == 404:
                     response = f"{name} is not on the osrs hiscores."
                 else:
-                    if name not in players_in_hs(self.cur):
+                    if name not in players_in_hs:
                         sql_add_player_hs(self.cur,name,stats)
                     else:
                         sql_update_player_hs(self.cur,name,stats,stats_col_names)
