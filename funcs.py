@@ -478,7 +478,7 @@ def get_tiles_done(bingo_sheet, team_num):
 def get_tiles_left(bingo_sheet, team_num):
     tiles = bingo_sheet.col_values(1)[1:26]
     team_tiles = bingo_sheet.col_values(team_num+1)[1:26]
-    tiles_left = [tiles[i] for i in range(len(team_tiles)) if team_tiles[i] == ""]
+    tiles_left = [tiles[i] for i in range(len(team_tiles)) if team_tiles[i] != "DONE"]
 
     return tiles_left
 
