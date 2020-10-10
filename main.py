@@ -261,7 +261,6 @@ async def resetteans(ctx):
         await ctx.send(response)
 
 @bot1.command(name='checkteam', help='Checks xp/kc gained by a team in a skill/boss (players with starting kc not on the highscores wont be tracked)')
-@commands.has_permissions(kick_members=True)
 async def checkteam(ctx, team_num,*stat):
     team_num = int(team_num)
     try:
