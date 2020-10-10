@@ -471,8 +471,8 @@ def new_remove(members, start_sheet,bosses_sheet,skills_sheet,members_sheet):
 def get_tiles_done(bingo_sheet, team_num):
     tiles = bingo_sheet.col_values(1)[1:26]
     team_tiles = bingo_sheet.col_values(team_num+1)[1:26]
-    tiles_done = [tiles[i] for i in range(len(team_tiles)) if team_tiles[i] != ""]
-    tiles_num = [i for i in range(len(team_tiles)) if team_tiles[i] != ""]
+    tiles_done = [tiles[i] for i in range(len(team_tiles)) if team_tiles[i] == "DONE"]
+    tiles_num = [i for i in range(len(team_tiles)) if team_tiles[i] == "DONE"]
     return tiles_done,tiles_num
 
 def get_tiles_left(bingo_sheet, team_num):
@@ -491,14 +491,18 @@ def get_number_tiles_left(bingo_sheet, team_num):
     for tile in tiles_left:
         if "hidden" in tile.lower():
             hidden_left += 1
-            hiddentile,num = tile.lower().split("hidden tile ")
-            hidden_tiles_left.append(int(num))
+            hiddentile,numeral = tile.lower().split("hidden tile ")
+            hidden_tiles_left.append(int(numeral))
+
     return (len(tiles_left),hidden_left,hidden_tiles_left)
 
 
 
 def complete_tile(bingo_sheet, team_num, tile_num):
     bingo_sheet.update_cell(tile_num+1,team_num+1, "DONE")
+
+def reveal_tile(bingo_sheet, team_num, tile_num):
+    bingo_sheet.update_cell(tile_num+1,team_num+1, "REVEALED")
 
 def undo_tile(bingo_sheet, team_num, tile_num):
     bingo_sheet.update_cell(tile_num+1,team_num+1, "")

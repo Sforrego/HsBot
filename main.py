@@ -84,7 +84,7 @@ async def roll(ctx, type):
     if type == "board":
         response = BINGO_TILES[randint(0,len(BINGO_TILES)-1)]
     elif type == "list":
-        response = BINGO_LIST[randint(0,len(BINGO_LIST)-1)]
+        response = BINGO_HIDDEN[randint(0,len(BINGO_HIDDEN)-1)]
     else:
         response = "You can either do !hs roll board or !hs roll list."
     await ctx.send(response)
@@ -113,11 +113,14 @@ async def complete(ctx, team_num, *tile_name):
         response = f"{tile_name} completed by team {team_num}.\n"
 
         tiles_left,hidden_left,hidden_tiles_left = get_number_tiles_left(bingo_sheet_tiles, team_num)
-
+        # listoftiles, number, number, list of tiles
         if random() < hidden_left/tiles_left:
-            new_bingo_list = [BINGO_LIST[i-1] for i in hidden_tiles_left]
-            hidden_tile = new_bingo_list[randint(0,len(new_bingo_list)-1)]
+            new_bingo_list = [BINGO_HIDDEN[i-1] for i in hidden_tiles_left]
+            hidden_index = randint(0,len(new_bingo_list)-1)
+            hidden_tile = new_bingo_list[hidden_index]
             response += f"You rolled for the hidden tile {hidden_tile}!"
+            tile_num2 = TILES_TO_NUM[" ".join(["hidden",hidden_index+1])]
+            reveal_tile(bingo_sheet_tiles, team_num,tile_num2)
     await ctx.send(response)
 
 @bot1.command(name='undo', help='Undo a Tile.')

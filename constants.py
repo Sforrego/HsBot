@@ -41,7 +41,7 @@ TILES_TO_NUM={"hidden 1":1,
 "kq":24,
 "thieving":25
 }
-BINGO_LIST=["Gnome Scarves for everyone! (6 out of 8 members must get a gnome scarf)",
+BINGO_HIDDEN=["Gnome Scarves for everyone! (6 out of 8 members must get a gnome scarf)",
 "Tears of Guthix! ( A random member of your team is rolled, they must gain 100k xp in their lowest skill. REMEMBER to post picture of your xp before and after the grind with the cc name at bingo-proof-team!)",
 "Upset the Balance! (A random member of your team is rolled, they must gain 500k xp in their highest [non 99] skill.  REMEMBER to post picture of your xp before and after the grind with the cc name at bingo-proof-team!)",
 "Spectator Sport! (Upon revealing this tile choose two other teams which must engage in a best of 3 runelink battle for a bonus challenge point)"]
