@@ -269,7 +269,7 @@ def xp_gained_team(cur,team_num,stat,skill, players):
     if skill:
         query = f"""SELECT sum(stats.{stat}_xp-clan_tracker.{stat}_xp) from stats inner join clan_tracker on (stats.rsn=clan_tracker.rsn) where stats.rsn IN {inside}"""
     else:
-        query = f"""SELECT sum(stats.{stat}-clan_tracker.{stat}) from stats inner join clan_tracker on (stats.rsn=clan_tracker.rsn) where stats.rsn IN {inside}"""
+        query = f"""SELECT sum(stats."{stat}"-clan_tracker."{stat}") from stats inner join clan_tracker on (stats.rsn=clan_tracker.rsn) where stats.rsn IN {inside}"""
     cur.execute(query)
     stat_delta = cur.fetchone()[0]
     return int(stat_delta)
