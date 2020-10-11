@@ -119,7 +119,7 @@ async def complete(ctx, team_num, *tile_name):
             hidden_index = randint(0,len(new_bingo_list)-1)
             hidden_tile = new_bingo_list[hidden_index]
             response += f"You rolled for the hidden tile {hidden_tile}!"
-            tile_num2 = TILES_TO_NUM[" ".join(["hidden",hidden_index+1])]
+            tile_num2 = TILES_TO_NUM[" ".join(["hidden",str(hidden_index+1)])]
             reveal_tile(bingo_sheet_tiles, team_num,tile_num2)
     await ctx.send(response)
 

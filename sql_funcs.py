@@ -290,5 +290,8 @@ if __name__ == '__main__':
     ##### TESTING FUNCTIONS
     name = 'ironrok'
     # stats = getStats(playerURL(name,'iron'))
-    cur.execute("""select rsn from personal_tracker""")
+    #
+    cur.execute(""" update clan_tracker set kalphite_queen = 109 where rsn = 'iron_jobione' """)
+    conn.commit()
+    cur.execute(""" select rsn,kalphite_queen from clan_tracker where rsn = 'iron_jobione' """)
     print(cur.fetchall())
