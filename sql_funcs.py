@@ -147,7 +147,7 @@ def get_player_rank(cur,name,stat,skill):
 
 def add_personal_tracker(cur,name,stats):
     string_of_values = stats_to_string(stats)
-    cur.execute(f"""INSERT INTO clan_tracker VALUES ('{name}',{string_of_values},current_timestamp)""")
+    cur.execute(f"""INSERT INTO personal_tracker VALUES ('{name}',{string_of_values},current_timestamp)""")
 
 def add_clan_tracker(cur,name,stats):
     string_of_values = stats_to_string(stats)
@@ -290,6 +290,5 @@ if __name__ == '__main__':
     ##### TESTING FUNCTIONS
     name = 'ironrok'
     # stats = getStats(playerURL(name,'iron'))
-    query = """delete from stats where rsn = 'yaspy' """
-    cur.execute(query)
-    conn.commit()
+    cur.execute("""select rsn from personal_tracker""")
+    print(cur.fetchall())
