@@ -283,9 +283,10 @@ async def checkteam(ctx, team_num,*stat):
                 team_members = get_team(cur,team_num)
                 starting_kc = tracker_starting_stat_multiple(cur,team_members,stat,skill,'clan_tracker')
                 valid_team_members = [x[0] for x in starting_kc if int(x[1]) != -1]
-
-                stat_delta= xp_gained_team(cur,team_num,stat,skill,team_members)
+                invalid_members = [x for x in team_members if x not in valid_team_members]
+                stat_delta= xp_gained_team(cur,team_num,stat,skill,valid_team_members)
                 response = f"Team {team_num} has done {str(stat_delta)} {pretty_stat} kills."
+                response += f"\nKc gained by {invalid_members} is not being counted because their starting kc was not in the hs."
 
     except Exception as e:
         response = str(e)
