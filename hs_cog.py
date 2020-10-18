@@ -51,7 +51,7 @@ class Hiscores(commands.Cog):
     async def ranks_hs(self,ctx, skill, *name):
         try:
             name = ("_").join(name).lower()
-            all_stats = get_all_from_hs(cur)
+            all_stats = get_all_from_hs(self.cur)
             if skill == "skills":
                 ranks = {}
                 for i,skill in enumerate(SKILLS):
