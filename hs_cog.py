@@ -50,7 +50,7 @@ class Hiscores(commands.Cog):
     @commands.command(name='ranks', help="Updates a players stats in the clan's hiscores. \n eg: !hs update ironrok r_a_df_o_r_d (updates both players you can do as many as you want)")
     async def ranks_hs(self,ctx, skill, *name):
         try:
-            name = name.lower()
+            name = ("_").join(name).lower()
             all_stats = get_all_from_hs(cur)
             if skill == "skills":
                 ranks = {}
