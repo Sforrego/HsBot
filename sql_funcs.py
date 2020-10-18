@@ -274,6 +274,31 @@ def xp_gained_team(cur,team_num,stat,skill, players):
     stat_delta = cur.fetchone()[0]
     return int(stat_delta)
 
+def bingo_gained(cur,stat,skill):
+    players = []
+    for i in range(1,7):
+        players += get_team(cur,i)
+
+    if not skill:
+        starting_kc = tracker_starting_stat_multiple(cur,players,stat,skill,'clan_tracker')
+        players = [x[0] for x in starting_kc if int(x[1]) != -1]
+
+
+    inside = "("
+    for i,player in enumerate(players):
+        if i == len(players)-1:
+            inside += f"'{player}')"
+        else:
+            inside += f"'{player}',"
+    query = f"""SELECT sum(stats."{stat}"-clan_tracker."{stat}") from stats inner join clan_tracker on (stats.rsn=clan_tracker.rsn) where stats.rsn IN {inside}"""
+    cur.execute(query)
+    stat_delta = cur.fetchone()[0]
+    return int(stat_delta)
+
+def get_all_from_hs(cur):
+    query = """SELECT * from stats"""
+    cur.execute(query)
+    return cur.fetchall()
 
 if __name__ == '__main__':
     load_dotenv()
@@ -290,8 +315,3 @@ if __name__ == '__main__':
     ##### TESTING FUNCTIONS
     name = 'ironrok'
     # stats = getStats(playerURL(name,'iron'))
-    #
-    cur.execute(""" update clan_tracker set kalphite_queen = 109 where rsn = 'iron_jobione' """)
-    conn.commit()
-    cur.execute(""" select rsn,kalphite_queen from clan_tracker where rsn = 'iron_jobione' """)
-    print(cur.fetchall())

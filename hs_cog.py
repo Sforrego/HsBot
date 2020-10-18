@@ -47,6 +47,25 @@ class Hiscores(commands.Cog):
         #     await ctx.send(response)
         await ctx.send('Unavailable while we do some data things.')
 
+    @commands.command(name='ranks', help="Updates a players stats in the clan's hiscores. \n eg: !hs update ironrok r_a_df_o_r_d (updates both players you can do as many as you want)")
+    async def ranks_hs(self,ctx, skill, *name):
+        try:
+            name = name.lower()
+            all_stats = get_all_from_hs(cur)
+            if skill == "skills":
+                ranks = {}
+                for i,skill in enumerate(SKILLS):
+                    all_stats = sorted(all_stats,key=lambda tup: tup[i*2+2])
+                    index = [x for x, y in enumerate(all_stats) if y[0] == name][0]
+                    ranks[skill] = index
+
+            response = f"{name}\n"
+            for skill in ranks:
+                response += f"{skill}: {ranks[skill]}\n"
+        except Exception as e:
+            response = str(e)
+        finally:
+            await ctx.send(response)
     @commands.command(name='add', help="Adds players to the clan's hiscores. \n eg: !hs addhs ironrok r_a_df_o_r_d (updates both players you can do as many as you want)")
     @commands.has_permissions(kick_members=True)
     async def add_hs(self,ctx, *members):
