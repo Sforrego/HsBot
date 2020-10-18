@@ -49,24 +49,25 @@ class Tracker(commands.Cog):
 
     @commands.command(name='updatetracker',help='Updates all players in the tracker.')
     async def update_clan_tracker(self,ctx):
-        try:
-            await ctx.send("Updating players...")
-            players = get_players_in_tracker(self.cur)
-            not_found_osrs = []
-            for name in players:
-                stats = getStats(playerURL(name,'iron'))
-                if stats == 404:
-                    not_found_osrs.append(name)
-                else:
-                    sql_update_player_hs(self.cur,name,stats,stats_col_names)
-            #self.conn.commit()
-            response = 'Tracker updated.\n'
-            if not_found_osrs:
-                response += f'These names {not_found_osrs} are outdated.'
-        except Exception as e:
-            response = str(e)
-        finally:
-            await ctx.send(response)
+        # try:
+        #     await ctx.send("Updating players...")
+        #     players = get_players_in_tracker(self.cur)
+        #     not_found_osrs = []
+        #     for name in players:
+        #         stats = getStats(playerURL(name,'iron'))
+        #         if stats == 404:
+        #             not_found_osrs.append(name)
+        #         else:
+        #             sql_update_player_hs(self.cur,name,stats,stats_col_names)
+        #     #self.conn.commit()
+        #     response = 'Tracker updated.\n'
+        #     if not_found_osrs:
+        #         response += f'These names {not_found_osrs} are outdated.'
+        # except Exception as e:
+        #     response = str(e)
+        # finally:
+        #     await ctx.send(response)
+        await ctx.send('Unavailable while we do some data things.')
 
     @commands.command(name='checktracker', help="Checks a players progress according to the clan tracker. \n eg: !hs checktracker ironrok Mining")
     async def check_clan_tracker(self,ctx,name,*stat):
@@ -145,9 +146,9 @@ class Tracker(commands.Cog):
 
     @commands.command(name='resetclantracker',help='Removes everyone from the clantracker')
     async def resettracker(self,ctx):
-        self.cur.execute("delete from clan_tracker")
-        #self.conn.commit()
-        await ctx.send('Clan tracker reset.')
+        # self.cur.execute("delete from clan_tracker")
+        # await ctx.send('Clan tracker reset.')
+        await ctx.send('Unavailable while we do some data things.')
 
     @commands.command(name='startmytracker', help="Starts a player's personal tracker. \n eg: !hs startmytracker")
     async def start_my_tracker(self,ctx):

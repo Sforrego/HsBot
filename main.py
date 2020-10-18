@@ -252,13 +252,14 @@ async def modifyteam(ctx, team_num, player_num, player):
 @bot1.command(name='resetteams', help='Removes all teams.')
 @commands.has_permissions(kick_members=True)
 async def resetteans(ctx):
-    try:
-        reset_teams(cur)
-        response = "Teams have been reset."
-    except Exception as e:
-        response = str(e)
-    finally:
-        await ctx.send(response)
+    # try:
+    #     reset_teams(cur)
+    #     response = "Teams have been reset."
+    # except Exception as e:
+    #     response = str(e)
+    # finally:
+    #     await ctx.send(response)
+    await ctx.send('Unavailable while we do some data things.')
 
 @bot1.command(name='checkteam', help='Checks xp/kc gained by a team in a skill/boss (players with starting kc not on the highscores wont be tracked)')
 async def checkteam(ctx, team_num,*stat):
@@ -317,34 +318,35 @@ async def bingocommands(ctx):
 
 @bot1.command(name='updateteam',help='updates a bingo team on the hiscores. !hs updateteam 1')
 async def updateteam(ctx,team_num):
-    try:
-        team_num = int(team_num)
-        members = get_team(cur,team_num)
-        first_msg = 'Updating '
-        for member in members:
-            first_msg += f'{member} '
-        await ctx.send(first_msg)
-        not_found_osrs = []
-        not_in_cc = []
-        for name in members:
-            name = name.lower()
-            stats = getStats(playerURL(name,'iron'))
-            if stats == 404:
-                not_found_osrs.append(name)
-            else:
-                sql_update_player_hs(cur,name,stats,stats_col_names)
-                    # sql_add_player_hs_historic(self.cur,name,stats)
-                    #self.conn.commit()
-        found = [x for x in members if (x not in not_in_cc and x not in not_found_osrs)]
-        response = f"{found} were updated!\n"
-        if not_found_osrs:
-            response+= f"{not_found_osrs} were not found in the osrs' ironman hiscores.\n"
-        if not_in_cc:
-            response+= f"{not_in_cc} were not found on the clan's hiscores.\n"
-    except Exception as e:
-        response = str(e)
-    finally:
-        await ctx.send(response)
+    # try:
+    #     team_num = int(team_num)
+    #     members = get_team(cur,team_num)
+    #     first_msg = 'Updating '
+    #     for member in members:
+    #         first_msg += f'{member} '
+    #     await ctx.send(first_msg)
+    #     not_found_osrs = []
+    #     not_in_cc = []
+    #     for name in members:
+    #         name = name.lower()
+    #         stats = getStats(playerURL(name,'iron'))
+    #         if stats == 404:
+    #             not_found_osrs.append(name)
+    #         else:
+    #             sql_update_player_hs(cur,name,stats,stats_col_names)
+    #                 # sql_add_player_hs_historic(self.cur,name,stats)
+    #                 #self.conn.commit()
+    #     found = [x for x in members if (x not in not_in_cc and x not in not_found_osrs)]
+    #     response = f"{found} were updated!\n"
+    #     if not_found_osrs:
+    #         response+= f"{not_found_osrs} were not found in the osrs' ironman hiscores.\n"
+    #     if not_in_cc:
+    #         response+= f"{not_in_cc} were not found on the clan's hiscores.\n"
+    # except Exception as e:
+    #     response = str(e)
+    # finally:
+    #     await ctx.send(response)
+    await ctx.send('Unavailable while we do some data things.')
 
 #### END BINGO ####
 
