@@ -316,5 +316,6 @@ if __name__ == '__main__':
     name = 'ironrok'
     all_stats = get_all_from_hs(cur)
     all_stats = sorted(all_stats,key=lambda tup:(tup[1], tup[2]),reverse=True)
-    print(all_stats[0])
+    index = [x for x, y in enumerate(all_stats) if y[0] == name][0] + 1
+    print(index)
     # stats = getStats(playerURL(name,'iron'))

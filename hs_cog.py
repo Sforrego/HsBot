@@ -56,7 +56,7 @@ class Hiscores(commands.Cog):
                 ranks = {}
                 for i,skill in enumerate(SKILLS):
                     all_stats = sorted(all_stats,key=lambda tup: (tup[i*2+1],tup[i*2+2]),reverse=True)
-                    index = [x for x, y in enumerate(all_stats) if y[0] == name][0]
+                    index = [x for x, y in enumerate(all_stats) if y[0] == name][0] + 1
                     ranks[skill] = index
 
             response = f"{name}\n"
