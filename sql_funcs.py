@@ -315,7 +315,13 @@ if __name__ == '__main__':
     ##### TESTING FUNCTIONS
     name = 'ironrok'
     all_stats = get_all_from_hs(cur)
-    all_stats = sorted(all_stats,key=lambda tup:(tup[1], tup[2]),reverse=True)
-    index = [x for x, y in enumerate(all_stats) if y[0] == name][0] + 1
-    print(index)
+    ranks = {}
+    for i,stat in enumerate(CLUES+BOSSES,start=49):
+        all_stats = sorted(all_stats,key=lambda tup: tup[i],reverse=True)
+        index = [(x,y[i]) for x, y in enumerate(all_stats) if y[0] == name][0]
+        ranks[stat] = index[0]+1,index[1]
+    response = f"{name}\n"
+    for skill in ranks:
+        response += f"{skill}: {ranks[skill]}\n"
+    print(response)
     # stats = getStats(playerURL(name,'iron'))

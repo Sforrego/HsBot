@@ -51,17 +51,26 @@ class Hiscores(commands.Cog):
     async def ranks_hs(self,ctx, skill, *name):
         try:
             name = ("_").join(name).lower()
-            all_stats = get_all_from_hs(self.cur)
-            if skill == "skills":
-                ranks = {}
-                for i,skill in enumerate(SKILLS):
-                    all_stats = sorted(all_stats,key=lambda tup: (tup[i*2+1],tup[i*2+2]),reverse=True)
-                    index = [x for x, y in enumerate(all_stats) if y[0] == name][0] + 1
-                    ranks[skill] = index
-
-            response = f"{name}\n"
-            for skill in ranks:
-                response += f"{skill}: {ranks[skill]}\n"
+            players = get_players_in_hs(self.cur)
+            if name in players:
+                all_stats = get_all_from_hs(self.cur)
+                if skill == "skills":
+                    ranks = {}
+                    for i,skill in enumerate(SKILLS):
+                        all_stats = sorted(all_stats,key=lambda tup: (tup[i*2+1],tup[i*2+2]),reverse=True)
+                        index = [x for x, y in enumerate(all_stats) if y[0] == name][0] + 1
+                        ranks[skill] = index
+                else:
+                    ranks = {}
+                    for i,stat in enumerate(CLUES+BOSSES,start=49):
+                        all_stats = sorted(all_stats,key=lambda tup: tup[i],reverse=True)
+                        index = [x for x, y in enumerate(all_stats) if y[0] == name][0] + 1
+                        ranks[stat] = index
+                response = f"{name}\n"
+                for skill in ranks:
+                    response += f"{skill}: {ranks[skill]}\n"
+            else:
+                response = f"{name} is not on the clan hs."
         except Exception as e:
             response = str(e)
         finally:
