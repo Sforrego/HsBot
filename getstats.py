@@ -1,6 +1,6 @@
 import requests
 import urllib.parse
-from constants import *
+from constants import CLUES,SKILLS,BOSSES,BASE_URL,GAMEMODE_URL,STATS_URL
 
 
 def playerURL(rsn,gamemode):

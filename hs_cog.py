@@ -1,8 +1,10 @@
 from discord.ext import commands
-from getstats import *
-from funcs import *
-from sql_funcs import *
+from funcs import get_stat
+from constants import SKILLS,CLUES,BOSSES,stats_col_names
+from getstats import getStats,playerURL
+from sql_funcs import get_all_from_hs,get_players_in_hs,sql_add_player_hs,sql_top_stat,top_stat_to_string,coded_string,is_skill,get_player_stat,get_player_rank,change_player_name,change_player_name_clantracker,change_player_name_mytracker,rm_from_hs
 import os
+import psycopg2 
 
 class Hiscores(commands.Cog):
 
@@ -99,7 +101,6 @@ class Hiscores(commands.Cog):
                 else:
                     try:
                         sql_add_player_hs(self.cur,name,stats)
-                        sql_add_player_hs_historic(self.cur,name,stats)
                     except Exception as e:
                         in_cc.append(name)
             #self.conn.commit()
@@ -185,7 +186,7 @@ class Hiscores(commands.Cog):
 
     @commands.command(name='fullupdate', help="Updates every player in the clan's hiscores.")
     @commands.has_permissions(kick_members=True)
-    async def fullupdate(ctx):
+    async def fullupdate(self,ctx):
         # await ctx.send("Updating all players...")
         # members = get_players_in_hs(self.cur)
         # not_found_osrs = []

@@ -2,7 +2,8 @@ import os
 import psycopg2
 from dotenv import load_dotenv
 from time import time
-from funcs import *
+from funcs import createDicts,parseStats,get_stat
+from constants import SKILLS,BOSSES,CLUES
 
 def seconds_to_hours_mins(int):
     hours = int//3600
@@ -43,10 +44,8 @@ def sql_update_player_hs(cur,name,stats,col_names):
     player_skills, player_clues , player_bosses = createDicts(parseStats(stats))
     list_of_values = list(player_skills.values())+list(player_clues.values())+list(player_bosses.values())
 
-    string_of_values = ",".join(list_of_values)
     query = "UPDATE stats SET "
     for i,value in enumerate(list_of_values,start=1):
-        stat_name = col_names[i] if "'" not in col_names[i] else col_names[i].replace("'", "''")
         query += f""" "{col_names[i]}" = {value},"""
 
     query += f""" updated_at = current_timestamp """
@@ -94,21 +93,21 @@ def is_skill(stat):
 
 def get_players_in_hs(cur):
     """ return a list of all the players in the stats table"""
-    query = "SELECT rsn FROM stats";
+    query = "SELECT rsn FROM stats"
     cur.execute(query)
     names = cur.fetchall()
     return [x[0] for x in names]
 
 def get_players_in_tracker(cur):
     """ return a list of all the players in the stats table"""
-    query = "SELECT rsn FROM clan_tracker";
+    query = "SELECT rsn FROM clan_tracker"
     cur.execute(query)
     names = cur.fetchall()
     return [x[0] for x in names]
 
 def get_players_in_personal_tracker(cur):
     """ return a list of all the players in the personal_tracker table"""
-    query = "SELECT rsn FROM personal_tracker";
+    query = "SELECT rsn FROM personal_tracker"
     cur.execute(query)
     names = cur.fetchall()
     return [x[0] for x in names]
@@ -314,14 +313,7 @@ if __name__ == '__main__':
 
     ##### TESTING FUNCTIONS
     name = 'ironrok'
-    all_stats = get_all_from_hs(cur)
-    ranks = {}
-    for i,stat in enumerate(CLUES+BOSSES,start=49):
-        all_stats = sorted(all_stats,key=lambda tup: tup[i],reverse=True)
-        index = [(x,y[i]) for x, y in enumerate(all_stats) if y[0] == name][0]
-        ranks[stat] = index[0]+1,index[1]
-    response = f"{name}\n"
-    for skill in ranks:
-        response += f"{skill}: {ranks[skill]}\n"
-    print(response)
+    query = """ select rsn from stats """
+    cur.execute(query)
+    print(cur.fetchall())
     # stats = getStats(playerURL(name,'iron'))

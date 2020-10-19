@@ -1,7 +1,7 @@
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
-from getstats import *
-from constants import *
+from getstats import createDicts,parseStats,getStats,playerURL
+from constants import NAMES_LOWER,boss_shorts,CLUES,BOSSES,SKILLS,STATSINDEX
 import time
 import asyncio
 from datetime import datetime
@@ -128,7 +128,6 @@ def update_player(bosses_sheet, skills_sheet, start_sheet, names, name, stats, a
 
             if tracker_sheet:
                 print("There is tracker sheet!")
-                date_cell_list2 = tracker_sheet.range(f'AX{index}:AX{index}')
                 tracker_cell_list = tracker_sheet.range(f'B{index}:AW{index}')
 
 
@@ -215,11 +214,10 @@ def check(names,rsn):
 def update_all(bosses_sheet, skills_sheet, start_sheet, client, starting_cell=2, tracker_sheet=None):
     try:
         names = start_sheet.col_values(2)[1:]
-    except gspread.exceptions.APIError as e:
+    except gspread.exceptions.APIError:
         client.login()
         names = start_sheet.col_values(2)[1:]
     bosses_values = bosses_sheet.get_all_values()[1:]
-    skills_values = skills_sheet.get_all_values()[1:]
     start_values = start_sheet.get_all_values()[1:]
     bosses_list = []
     skills_list = []
@@ -324,7 +322,7 @@ def update_all(bosses_sheet, skills_sheet, start_sheet, client, starting_cell=2,
 
     try:
         names = start_sheet.col_values(2)[1:]
-    except gspread.exceptions.APIError as e:
+    except gspread.exceptions.APIError:
         client.login()
         names = start_sheet.col_values(2)[1:]
     bosses_sheet.update_cells(bosses_cell_list)
@@ -339,7 +337,7 @@ def update_all(bosses_sheet, skills_sheet, start_sheet, client, starting_cell=2,
 def tracker(tracker_sheet, start_sheet, client, start=0,starting_cell=2):
     try:
         names = start_sheet.col_values(2)[1:]
-    except gspread.exceptions.APIError as e:
+    except gspread.exceptions.APIError:
         client.login()
         names = start_sheet.col_values(2)[1:]
     tracker_values = tracker_sheet.get_all_values()[1:]
@@ -356,7 +354,7 @@ def tracker(tracker_sheet, start_sheet, client, start=0,starting_cell=2):
     for index,name in enumerate(names[starting_cell-2:], start=starting_cell):
         stats = getStats(playerURL(name,'iron'))
         if stats != 404:
-            player_skills, player_clues , player_bosses = createDicts(parseStats(stats))
+            player_skills, _ , _ = createDicts(parseStats(stats))
             # start_list.append((player_skills["Overall"],player_skills["Overall"],player_skills["Overall_Xp"],player_skills["Overall_Xp"]))
             player_skills = [value for key,value in player_skills.items() if "Xp" in key]
 
@@ -391,7 +389,7 @@ def tracker(tracker_sheet, start_sheet, client, start=0,starting_cell=2):
 
     try:
         names = start_sheet.col_values(2)[1:]
-    except gspread.exceptions.APIError as e:
+    except gspread.exceptions.APIError:
         client.login()
         names = start_sheet.col_values(2)[1:]
     tracker_sheet.update_cells(tracker_cell_list)
@@ -491,7 +489,7 @@ def get_number_tiles_left(bingo_sheet, team_num):
     for tile in tiles_left:
         if "hidden" in tile.lower():
             hidden_left += 1
-            hiddentile,numeral = tile.lower().split("hidden tile ")
+            _,numeral = tile.lower().split("hidden tile ")
             hidden_tiles_left.append(int(numeral))
 
     return (len(tiles_left),hidden_left,hidden_tiles_left)

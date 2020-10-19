@@ -243,7 +243,6 @@ boss_shorts = {
 "def":"Defence",
 "atk":"Attack",
 "con":"Construction",
-"clues":"Clues total",
 "total":"Overall",
 "fm":"Firemaking"
 }
