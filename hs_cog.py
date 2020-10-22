@@ -15,39 +15,38 @@ class Hiscores(commands.Cog):
 
     @commands.command(name='update', help="Updates a players stats in the clan's hiscores. \n eg: !hs update ironrok r_a_df_o_r_d (updates both players you can do as many as you want)")
     async def update_hs(self,ctx, *members):
-        # try:
-        #     players = get_players_in_hs(self.cur)
-        #     first_msg = 'Updating '
-        #     for member in members:
-        #         first_msg += f'{member} '
-        #     await ctx.send(first_msg)
-        #     not_found_osrs = []
-        #     not_in_cc = []
-        #     for name in members:
-        #         name = name.lower()
-        #         stats = getStats(playerURL(name,'iron'))
-        #         if stats == 404:
-        #             not_found_osrs.append(name)
-        #         elif name in players:
-        #             try:
-        #                 sql_update_player_hs(self.cur,name,stats,stats_col_names)
-        #                 # sql_add_player_hs_historic(self.cur,name,stats)
-        #                 #self.conn.commit()
-        #             except Exception as e:
-        #                 print(e)
-        #         else:
-        #             not_in_cc.append(name)
-        #     found = [x for x in members if (x not in not_in_cc and x not in not_found_osrs)]
-        #     response = f"{found} were updated!\n"
-        #     if not_found_osrs:
-        #         response+= f"{not_found_osrs} were not found in the osrs' ironman hiscores.\n"
-        #     if not_in_cc:
-        #         response+= f"{not_in_cc} were not found on the clan's hiscores.\n"
-        # except Exception as e:
-        #     response = str(e)
-        # finally:
-        #     await ctx.send(response)
-        await ctx.send('Unavailable while we do some data things.')
+        try:
+            players = get_players_in_hs(self.cur)
+            first_msg = 'Updating '
+            for member in members:
+                first_msg += f'{member} '
+            await ctx.send(first_msg)
+            not_found_osrs = []
+            not_in_cc = []
+            for name in members:
+                name = name.lower()
+                stats = getStats(playerURL(name,'iron'))
+                if stats == 404:
+                    not_found_osrs.append(name)
+                elif name in players:
+                    try:
+                        sql_update_player_hs(self.cur,name,stats,stats_col_names)
+                        # sql_add_player_hs_historic(self.cur,name,stats)
+                        #self.conn.commit()
+                    except Exception as e:
+                        print(e)
+                else:
+                    not_in_cc.append(name)
+            found = [x for x in members if (x not in not_in_cc and x not in not_found_osrs)]
+            response = f"{found} were updated!\n"
+            if not_found_osrs:
+                response+= f"{not_found_osrs} were not found in the osrs' ironman hiscores.\n"
+            if not_in_cc:
+                response+= f"{not_in_cc} were not found on the clan's hiscores.\n"
+        except Exception as e:
+            response = str(e)
+        finally:
+            await ctx.send(response)
 
     @commands.command(name='ranks', help="Updates a players stats in the clan's hiscores. \n eg: !hs update ironrok r_a_df_o_r_d (updates both players you can do as many as you want)")
     async def ranks_hs(self,ctx, skill, *name):
@@ -187,26 +186,25 @@ class Hiscores(commands.Cog):
     @commands.command(name='fullupdate', help="Updates every player in the clan's hiscores.")
     @commands.has_permissions(kick_members=True)
     async def fullupdate(self,ctx):
-        # await ctx.send("Updating all players...")
-        # members = get_players_in_hs(self.cur)
-        # not_found_osrs = []
-        # for name in members:
-        #     stats = getStats(playerURL(name,'iron'))
-        #     if stats == 404:
-        #         not_found_osrs.append(name)
-        #     else:
-        #         try:
-        #             sql_update_player_hs(self.cur,name,stats_col_names,stats)
-        #             sql_add_player_hs_historic(self.cur,name,stats)
-        #         except Exception as e:
-        #             in_cc.append(name)
-        #
-        # if not_found_osrs:
-        #     response+= f"{not_found_osrs} were not found in the osrs' hiscores.\n"
-        #     await ctx.send(response)
-        #
-        # await ctx.send("Finished updating.")
-        await ctx.send('Unavailable while we do some data things.')
+        await ctx.send("Updating all players...")
+        members = get_players_in_hs(self.cur)
+        not_found_osrs = []
+        for name in members:
+            stats = getStats(playerURL(name,'iron'))
+            if stats == 404:
+                not_found_osrs.append(name)
+            else:
+                try:
+                    sql_update_player_hs(self.cur,name,stats_col_names,stats)
+                    sql_add_player_hs_historic(self.cur,name,stats)
+                except Exception as e:
+                    in_cc.append(name)
+        
+        if not_found_osrs:
+            response+= f"{not_found_osrs} were not found in the osrs' hiscores.\n"
+            await ctx.send(response)
+        
+        await ctx.send("Finished updating.")
 
     @commands.command(name='rank', help='Shows the rank within the clan of a member in a specific stat. (!hs rank zulrah spniz_uim)')
     async def ranks(self,ctx,stat,name):
