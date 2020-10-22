@@ -2,7 +2,7 @@ from discord.ext import commands
 from funcs import get_stat
 from constants import SKILLS,CLUES,BOSSES,stats_col_names
 from getstats import getStats,playerURL
-from sql_funcs import get_all_from_hs,get_players_in_hs,sql_add_player_hs,sql_top_stat,top_stat_to_string,coded_string,is_skill,get_player_stat,get_player_rank,change_player_name,change_player_name_clantracker,change_player_name_mytracker,rm_from_hs
+from sql_funcs import sql_update_player_hs , get_all_from_hs,get_players_in_hs,sql_add_player_hs,sql_top_stat,top_stat_to_string,coded_string,is_skill,get_player_stat,get_player_rank,change_player_name,change_player_name_clantracker,change_player_name_mytracker,rm_from_hs
 import os
 import psycopg2 
 
@@ -196,15 +196,14 @@ class Hiscores(commands.Cog):
             else:
                 try:
                     sql_update_player_hs(self.cur,name,stats_col_names,stats)
-                    sql_add_player_hs_historic(self.cur,name,stats)
                 except Exception as e:
-                    in_cc.append(name)
-        
+                    print(str(e))
+        response = "Finished updating."
         if not_found_osrs:
             response+= f"{not_found_osrs} were not found in the osrs' hiscores.\n"
             await ctx.send(response)
         
-        await ctx.send("Finished updating.")
+        await ctx.send(response)
 
     @commands.command(name='rank', help='Shows the rank within the clan of a member in a specific stat. (!hs rank zulrah spniz_uim)')
     async def ranks(self,ctx,stat,name):

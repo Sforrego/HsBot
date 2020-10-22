@@ -1,8 +1,10 @@
-from discord.ext import commands
-from getstats import *
-from funcs import *
-from sql_funcs import *
 import os
+import psycopg2
+from discord.ext import commands
+from getstats import getStats, playerURL
+from funcs import get_stat
+from sql_funcs import get_players_in_tracker,get_players_in_hs, sql_add_player_hs, sql_update_player_hs, add_clan_tracker, get_players_in_tracker, coded_string, is_skill, xp_gained_clan, seconds_to_hours_mins,tracker_starting_stat, top_stat_to_string, top_tracked, get_players_in_personal_tracker, add_personal_tracker, xp_gained, reset_personal_tracker
+from constants import stats_col_names
 
 class Tracker(commands.Cog):
 
