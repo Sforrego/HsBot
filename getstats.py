@@ -39,11 +39,15 @@ def createDicts(statsList):
     clues[f"{clue}"] = statsList[index][1]
 
 
-  for index,boss in enumerate(BOSSES,start=index+2):
+  for index,boss in enumerate(BOSSES,start=index+3):
     # bosses[f"{boss}_Rank"] = statsList[index][0]
     bosses[f"{boss}"] = statsList[index][1]
   return (skills,clues,bosses)
 
 if __name__ == '__main__':
   rsn = "ironrok"
-  print(playerURL(rsn,'iron'))
+  url=playerURL(rsn,'iron')
+  stats = getStats(url)
+  pstats = parseStats(stats)
+  dict = createDicts(pstats)
+  print(dict)
