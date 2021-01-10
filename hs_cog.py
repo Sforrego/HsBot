@@ -263,6 +263,24 @@ class Hiscores(commands.Cog):
         finally:
             await ctx.send(response)
 
+    @commands.command(name='rm',help="Removes names from the clan's hiscores.")
+    @commands.has_permissions(kick_members=True)
+    async def rm(self,ctx, *members):
+        try:
+            await ctx.send("Removing players from the hs.")
+            players_in_hs = get_players_in_hs(self.cur)
+            removed = []
+            for name in members:
+                name = name.lower()
+                if name in players_in_hs:
+                    rm_from_hs(self.cur,name)
+                    removed.append(name)
+            response = f"Players removed: {removed}"
+        except Exception as e:
+            response = str(e)
+        finally:
+            await ctx.send(response)
+
 def setup(bot):
     # user = os.getenv('user')
     # password = os.getenv('password')
