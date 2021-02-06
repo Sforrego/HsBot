@@ -146,10 +146,10 @@ class Tracker(commands.Cog):
         await ctx.send(response)
 
     @commands.command(name='resetclantracker',help='Removes everyone from the clantracker')
+    @commands.has_permissions(kick_members=True)
     async def resettracker(self,ctx):
-        # self.cur.execute("delete from clan_tracker")
-        # await ctx.send('Clan tracker reset.')
-        await ctx.send('Unavailable while we do some data things.')
+        self.cur.execute("delete from clan_tracker")
+        await ctx.send('Clan tracker reset.')
 
     @commands.command(name='startmytracker', help="Starts a player's personal tracker. \n eg: !hs startmytracker")
     async def start_my_tracker(self,ctx):
