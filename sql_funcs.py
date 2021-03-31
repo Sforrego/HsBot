@@ -3,8 +3,8 @@ import psycopg2
 from dotenv import load_dotenv
 from time import time
 from funcs import createDicts,parseStats,get_stat
-from constants import SKILLS,BOSSES,CLUES
-
+from constants import SKILLS,BOSSES,CLUES,stats_col_names
+from getstats import getStats, playerURL
 def seconds_to_hours_mins(int):
     hours = int//3600
     mins = (int%3600)//60
@@ -26,14 +26,8 @@ def sql_add_player_hs(cur,name,stats):
 
      """
     string_of_values = stats_to_string(stats)
-    cur.execute(f"""INSERT INTO stats VALUES ('{name}',{string_of_values},current_timestamp,current_timestamp)""")
+    cur.execute(f"""INSERT INTO stats VALUES ('{name}",{string_of_values},current_timestamp,current_timestamp)""")
 
-def sql_add_player_hs_historic(cur,name,stats):
-    """
-    Inserts a new row to the historic_stats table.
-     """
-    string_of_values = stats_to_string(stats)
-    cur.execute(f"""INSERT INTO historic_stats VALUES ('{name}',{string_of_values},current_timestamp)""")
 
 def sql_update_player_hs(cur,name,stats,col_names):
     """
@@ -146,11 +140,11 @@ def get_player_rank(cur,name,stat,skill):
 
 def add_personal_tracker(cur,name,stats):
     string_of_values = stats_to_string(stats)
-    cur.execute(f"""INSERT INTO personal_tracker VALUES ('{name}',{string_of_values},current_timestamp)""")
+    cur.execute(f"""INSERT INTO personal_tracker VALUES ('{name}",{string_of_values},current_timestamp)""")
 
 def add_clan_tracker(cur,name,stats):
     string_of_values = stats_to_string(stats)
-    cur.execute(f"""INSERT INTO clan_tracker VALUES ('{name}',{string_of_values},current_timestamp)""")
+    cur.execute(f"""INSERT INTO clan_tracker VALUES ('{name}",{string_of_values},current_timestamp)""")
 
 def xp_gained_clan(cur,name,stat,skill):
     if skill:
@@ -288,7 +282,7 @@ def bingo_gained(cur,stat,skill):
         if i == len(players)-1:
             inside += f"'{player}')"
         else:
-            inside += f"'{player}',"
+            inside += f"'{player}'',"
     query = f"""SELECT sum(stats."{stat}"-clan_tracker."{stat}") from stats inner join clan_tracker on (stats.rsn=clan_tracker.rsn) where stats.rsn IN {inside}"""
     cur.execute(query)
     stat_delta = cur.fetchone()[0]
@@ -299,6 +293,15 @@ def get_all_from_hs(cur):
     cur.execute(query)
     return cur.fetchall()
 
+#def add_new_boss_hs(cur):
+    # in the create table function add the new boss at the desired location.
+    # then change stats col names in constants and bosses to match the new boss.
+    # "alter table stats rename to oldstats"
+    # """create table stats ("rsn", "overall", "overall_xp", "attack", "attack_xp", "defence", "defence_xp", "strength", "strength_xp", "hitpoints", "hitpoints_xp", "ranged", "ranged_xp", "prayer", "prayer_xp", "magic", "magic_xp", "cooking", "cooking_xp", "woodcutting", "woodcutting_xp", "fletching", "fletching_xp", "fishing", "fishing_xp", "firemaking", "firemaking_xp", "crafting", "crafting_xp", "smithing", "smithing_xp", "mining", "mining_xp", "herblore", "herblore_xp", "agility", "agility_xp", "thieving", "thieving_xp", "slayer", "slayer_xp", "farming", "farming_xp", "runecraft", "runecraft_xp", "hunter", "hunter_xp", "construction", "construction_xp", "clues_total", "beginner", "easy", "medium", "hard", "elite", "master", "abyssal_sire", "alchemical_hydra", "barrows_chests", "bryophyta", "callisto", "cerberus", "chambers_of_xeric", "chambers_of_xeric:_challenge_mode", "chaos_elemental", "chaos_fanatic", "commander_zilyana", "corporeal_beast", "crazy_archaeologist", "dagannoth_prime", "dagannoth_rex", "dagannoth_supreme", "deranged_archaeologist", "general_graardor", "giant_mole", "grotesque_guardians", "hespori", "kalphite_queen", "king_black_dragon", "kraken", "kree'arra", "k'ril_tsutsaroth", "mimic", "nightmare", "obor", "sarachnis", "scorpia", "skotizo", "tempoross", "the_gauntlet", "the_corrupted_gauntlet", "theatre_of_blood", "thermonuclear_smoke_devil", "tzkal-zuk", "tztok-jad", "venenatis", "vet'ion", "vorkath", "wintertodt", "zalcano", "zulrah", "created_at", "updated_at")"""
+    # """insert into stats ("rsn", "overall", "overall_xp", "attack", "attack_xp", "defence", "defence_xp", "strength", "strength_xp", "hitpoints", "hitpoints_xp", "ranged", "ranged_xp", "prayer", "prayer_xp", "magic", "magic_xp", "cooking", "cooking_xp", "woodcutting", "woodcutting_xp", "fletching", "fletching_xp", "fishing", "fishing_xp", "firemaking", "firemaking_xp", "crafting", "crafting_xp", "smithing", "smithing_xp", "mining", "mining_xp", "herblore", "herblore_xp", "agility", "agility_xp", "thieving", "thieving_xp", "slayer", "slayer_xp", "farming", "farming_xp", "runecraft", "runecraft_xp", "hunter", "hunter_xp", "construction", "construction_xp", "clues_total", "beginner", "easy", "medium", "hard", "elite", "master", "abyssal_sire", "alchemical_hydra", "barrows_chests", "bryophyta", "callisto", "cerberus", "chambers_of_xeric", "chambers_of_xeric:_challenge_mode", "chaos_elemental", "chaos_fanatic", "commander_zilyana", "corporeal_beast", "crazy_archaeologist", "dagannoth_prime", "dagannoth_rex", "dagannoth_supreme", "deranged_archaeologist", "general_graardor", "giant_mole", "grotesque_guardians", "hespori", "kalphite_queen", "king_black_dragon", "kraken", "kree'arra", "k'ril_tsutsaroth", "mimic", "nightmare", "obor", "sarachnis", "scorpia", "skotizo", "the_gauntlet", "the_corrupted_gauntlet", "theatre_of_blood", "thermonuclear_smoke_devil", "tzkal-zuk", "tztok-jad", "venenatis", "vet'ion", "vorkath", "wintertodt", "zalcano", "zulrah", "created_at", "updated_at") 
+    # select 
+    #"rsn", "overall", "overall_xp", "attack", "attack_xp", "defence", "defence_xp", "strength", "strength_xp", "hitpoints", "hitpoints_xp", "ranged", "ranged_xp", "prayer", "prayer_xp", "magic", "magic_xp", "cooking", "cooking_xp", "woodcutting", "woodcutting_xp", "fletching", "fletching_xp", "fishing", "fishing_xp", "firemaking", "firemaking_xp", "crafting", "crafting_xp", "smithing", "smithing_xp", "mining", "mining_xp", "herblore", "herblore_xp", "agility", "agility_xp", "thieving", "thieving_xp", "slayer", "slayer_xp", "farming", "farming_xp", "runecraft", "runecraft_xp", "hunter", "hunter_xp", "construction", "construction_xp", "clues_total", "beginner", "easy", "medium", "hard", "elite", "master", "abyssal_sire", "alchemical_hydra", "barrows_chests", "bryophyta", "callisto", "cerberus", "chambers_of_xeric", "chambers_of_xeric:_challenge_mode", "chaos_elemental", "chaos_fanatic", "commander_zilyana", "corporeal_beast", "crazy_archaeologist", "dagannoth_prime", "dagannoth_rex", "dagannoth_supreme", "deranged_archaeologist", "general_graardor", "giant_mole", "grotesque_guardians", "hespori", "kalphite_queen", "king_black_dragon", "kraken", "kree'arra", "k'ril_tsutsaroth", "mimic", "nightmare", "obor", "sarachnis", "scorpia", "skotizo", "the_gauntlet", "the_corrupted_gauntlet", "theatre_of_blood", "thermonuclear_smoke_devil", "tzkal-zuk", "tztok-jad", "venenatis", "vet'ion", "vorkath", "wintertodt", "zalcano", "zulrah", "created_at", "updated_at" from oldstats"""
+    
 if __name__ == '__main__':
     load_dotenv()
 
@@ -310,10 +313,14 @@ if __name__ == '__main__':
 
     conn = psycopg2.connect(user=user,password=password,host=host,port=port,database=database)
     cur = conn.cursor()
-
+    # rm_from_hs(cur,'tig bittty')
     ##### TESTING FUNCTIONS
     name = 'ironrok'
-    query = """ select rsn from stats """
-    cur.execute(query)
-    print(cur.fetchall())
+    stats = getStats(playerURL(name,'iron'))
+    sql_update_player_hs(cur,name,stats,stats_col_names)
+
+
+    # response = cur.fetchall()
+    # print(response)
     # stats = getStats(playerURL(name,'iron'))
+    # ;

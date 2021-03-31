@@ -1,0 +1,8 @@
+Change EVERYTHINg, not really, but a reestructure of the bot so it works for every community, and it only uses databases and tracks usrs
+
+ADD the following columns
+og_rsn og_clan current_clan is_valid
+
+Modify rsn to current_rsn
+
+Remove all google spreedheet connections (move them to another bot)

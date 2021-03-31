@@ -31,8 +31,7 @@ class Hiscores(commands.Cog):
                 elif name in players:
                     try:
                         sql_update_player_hs(self.cur,name,stats,stats_col_names)
-                        # sql_add_player_hs_historic(self.cur,name,stats)
-                        #self.conn.commit()
+
                     except Exception as e:
                         print(e)
                 else:

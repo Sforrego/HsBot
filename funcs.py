@@ -1,7 +1,7 @@
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from getstats import createDicts,parseStats,getStats,playerURL
-from constants import NAMES_LOWER,boss_shorts,CLUES,BOSSES,SKILLS,STATSINDEX
+from constants import NAMES_LOWER,boss_shorts,CLUES,BOSSES,SKILLS
 import time
 import asyncio
 from datetime import datetime
