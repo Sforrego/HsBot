@@ -3,7 +3,7 @@ import gspread
 import os 
 import psycopg2
 from discord.ext import commands
-from constants import TILES_TO_NUM, BINGO_HIDDEN, stats_col_names
+from constants import TILES_TO_NUM, stats_col_names #, BINGO_HIDDEN
 from funcs import complete_tile,get_number_tiles_left, get_tiles_done,reveal_tile,undo_tile,get_tiles_left
 from sql_funcs import get_team_nums, add_team, get_team, update_team,xp_gained_team,tracker_starting_stat_multiple,is_skill,coded_string,get_stat,reset_teams,sql_update_player_hs
 from random import random,randint

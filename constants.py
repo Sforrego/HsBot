@@ -46,29 +46,6 @@ TILES_TO_NUM={"raids":1,
 # "Upset the Balance! (A random member of your team is rolled, they must gain 500k xp in their highest [non 99] skill.  REMEMBER to post picture of your xp before and after the grind with the cc name at bingo-proof-team!)",
 # "Spectator Sport! (Upon revealing this tile choose two other teams which must engage in a best of 3 runelink battle for a bonus challenge point)"]
 
-BINGO_TILES=["4 GWD Uniques",
-"2 Wintertodt Uniques (No gloves/torch)",
-"2 Cox or Tob purples",
-"1 Champion Scroll",
-"1 Pyramid Plunder Sceptre",
-"Wildy Boss Ring or Dpick",
-"4 DK rings",
-"Medium Clue Boots",
-"2 Zenytes",
-"1 Master Unique",
-"Blood Shard",
-"10 Easy uniques",
-"2 Slayer Boss uniques",
-"16 Barrows Uniques",
-"3 Wildy Demi Boss Shards",
-"Hespori Bucket",
-"1 Blessed D'hide piece from Hard Clues",
-"Vorkath Head/Unique (NO guaranteed head)",
-"Beginner Clue Slippers/Parrot",
-"4 Zulrah Uniques",
-"2 Fishing Trawler PIeces",
-"Black mask or Jaw of basilisks"
-]
 
 # ADMIN
 
