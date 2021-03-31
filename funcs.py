@@ -467,25 +467,26 @@ def new_remove(members, start_sheet,bosses_sheet,skills_sheet,members_sheet):
     return found
 
 def get_tiles_done(bingo_sheet, team_num):
-    tiles = bingo_sheet.col_values(1)[1:26]
-    team_tiles = bingo_sheet.col_values(team_num+1)[1:26]
+    tiles = bingo_sheet.col_values(1)[1:17]
+    team_tiles = bingo_sheet.col_values(team_num+1)[1:17]
     tiles_done = [tiles[i] for i in range(len(team_tiles)) if team_tiles[i] == "DONE"]
     tiles_num = [i for i in range(len(team_tiles)) if team_tiles[i] == "DONE"]
     return tiles_done,tiles_num
 
 def get_tiles_left(bingo_sheet, team_num):
-    tiles = bingo_sheet.col_values(1)[1:26]
-    team_tiles = bingo_sheet.col_values(team_num+1)[1:26]
+    tiles = bingo_sheet.col_values(1)[1:17]
+    team_tiles = bingo_sheet.col_values(team_num+1)[1:17]
     tiles_left = [tiles[i] for i in range(len(team_tiles)) if team_tiles[i] != "DONE"]
-
     return tiles_left
 
 def get_number_tiles_left(bingo_sheet, team_num):
-    tiles = bingo_sheet.col_values(1)[1:26]
-    team_tiles = bingo_sheet.col_values(team_num+1)[1:26]
+    tiles = bingo_sheet.col_values(1)[1:17]
+    team_tiles = bingo_sheet.col_values(team_num+1)[1:17]
     tiles_left = [tiles[i] for i in range(len(team_tiles)) if team_tiles[i] == ""]
     hidden_left = 0
     hidden_tiles_left = []
+    print(tiles)
+    print(team_tiles)
     for tile in tiles_left:
         if "hidden" in tile.lower():
             hidden_left += 1
@@ -509,41 +510,7 @@ if __name__ == "__main__":
         'https://www.googleapis.com/auth/drive']
     creds = ServiceAccountCredentials.from_json_keyfile_name('client_secret.json', scope)
     client = gspread.authorize(creds)
-    bosses_sheet = client.open("Members Ranks").worksheet('Bosses')
-    skills_sheet = client.open("Members Ranks").worksheet('Skills')
-    start_sheet = client.open("Members Ranks").worksheet('Start')
-    members_sheet = client.open("Members Ranks").worksheet('Members')
-    tracker_sheet = client.open("Members Ranks").worksheet('WeeklyTracker')
-    tracked_sheet = client.open("Members Ranks").worksheet('TrackedXp')
-    names = start_sheet.col_values(2)[1:]
+    bingo_sheet = client.open("Bingo 07irons").worksheet('Tile Tracker')
 
-    # bingo_sheet = client.open("Bingo 07irons").worksheet('Tile Tracker')
-    # print(get_tiles_left(bingo_sheet, 2))
-    # undo_tile(bingo_sheet, 1, 1)
-    #bingo_sheet_bosses = client.open("Lockdown Bingo").worksheet('BossTracker')
-    #bingo_sheet_skills = client.open("Lockdown Bingo").worksheet('SkillsTracker')
-    #player_top_stats(bosses_sheet, skills_sheet, start_sheet, names, "IronRok", 1)
-    #bingo_update(bingo_sheet_bosses,bingo_sheet_skills,skills=1)
-    #bingo_update(bingo_sheet_bosses,bingo_sheet_skills,skills="both",init=1)
-    #bingo_check(bingo_sheet_bosses,bingo_sheet_skills,5)
-    #EXAMPLES
-    stats = getStats(playerURL('ironrok','iron'))
-    # update_player(bosses_sheet,skills_sheet,start_sheet,names,"eehaap",stats,1)
-    #tracker(tracker_sheet,start_sheet,client,start=1,starting_cell=400)
-    #print(get_tracked_top(tracked_sheet,start_sheet,names,"overall",10))
-    # print(tracked_player(tracked_sheet,names,"agility","ironrok"))
-    #get_coded_name(start_sheet)
-    # print(new_remove(["Idiotium","Iron_Man_MkV","asdqwe","ironn_69","siphiwe_moyo","iron_lyfeee","weeeeeeeee"],start_sheet,bosses_sheet,skills_sheet,members_sheet))
-    #update_all(bosses_sheet,skills_sheet,start_sheet,client,tracker_sheet=tracker_sheet,starting_cell=390)
-    update_player(bosses_sheet,skills_sheet,start_sheet,names,"ironrok",stats,tracker_sheet=tracker_sheet)
-    #update_player(bosses_sheet,skills_sheet,start_sheet,names,"bonerrific",1)
-    #print(top_stat(bosses_sheet,skills_sheet,names,"tob",10))
-    #print(get_pretty_name(start_sheet,"no_ge_canvey"))
-    #print(compare_players(bosses_sheet, skills_sheet, names, "IronRok", "no ge canvey", "Attack"))
-
-    #print(skills_sheet.col_values(1))
-    # pretty = get_pretty_names2(start_sheet)
-    # start_cell_list = start_sheet.range(f'B{2}:B{358}')
-    # for index,cell in enumerate(start_cell_list):
-    #     cell.value = pretty[index]
-    # start_sheet.update_cells(start_cell_list)
+    print(get_tiles_done(bingo_sheet, 2))
+   
