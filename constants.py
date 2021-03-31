@@ -18,6 +18,8 @@ GAMEMODE_URL = {
 ## TILES MATCHING BINGO SHEETS
 
 TILES_TO_NUM={"raids":1,
+"cox":1,
+"dk":2,
 "dks":2,
 "wildy":3,
 "demonic":4,

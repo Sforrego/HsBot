@@ -512,5 +512,5 @@ if __name__ == "__main__":
     client = gspread.authorize(creds)
     bingo_sheet = client.open("Bingo 07irons").worksheet('Tile Tracker')
 
-    print(get_tiles_done(bingo_sheet, 2))
+    print(get_tiles_done(bingo_sheet, 1))
    

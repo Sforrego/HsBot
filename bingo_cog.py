@@ -87,9 +87,9 @@ class Bingo(commands.Cog):
             response = "You need to specify the number of your team\n !bingo checkdone 1"
             await ctx.send(response)
         else:
-            _,tiles_done = get_tiles_done(self.bingo_sheet_tiles, team_num)
-            if len(tiles_done)==25:
-                response = f"Team {team_num} has complete the bingo, such monsters."
+            tiles_done,_ = get_tiles_done(self.bingo_sheet_tiles, team_num)
+            if len(tiles_done)==16:
+                response = f"Team {team_num} has completed the bingo, nerds."
                 await ctx.send(response)
             else:
                 response = f"Team {team_num} has finished the following tiles:\n"
@@ -99,7 +99,7 @@ class Bingo(commands.Cog):
                 # temp_img.save(f"team{team_num}.png")
                 # await ctx.send(file=discord.File(f"team{team_num}.png"))
                 await ctx.send(response)
-                
+
     @commands.command(name='checkleft', help='Checks tiles that have not been done by a team.')
     async def check_left(self,ctx, team_num):
         try:
