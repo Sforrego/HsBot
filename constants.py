@@ -12,39 +12,39 @@ GAMEMODE_URL = {
   'ult': '_ultimate/',
 }
 
-#hello world
 
+# BINGO
 
-TILES_TO_NUM={"hidden 1":1,
-"ba":2,
-"cw":3,
-"pc":4,
-"golden tench":5,
-"gauntlet":6,
-"raids":7,
-"hunter":8,
-"gwd":9,
-"barrows":10,
-"agility":11,
-"hidden 2":12,
-"larran":13,
-"corp nmare":14,
-"mole":15,
-"hidden 3":16,
-"fishing":17,
-"wildy demi":18,
-"mining":19,
-"wildy bosses":20,
-"vorkath zulrah":21,
-"crystal grail":22,
-"hidden 4":23,
-"kq":24,
-"thieving":25
+## TILES MATCHING BINGO SHEETS
+
+TILES_TO_NUM={"raids":1,
+"dks":2,
+"wildy":3,
+"demonic":4,
+"nightmare":5,
+"corp":5,
+"mole":6,
+"gwd":7,
+"barrows":8,
+"slayer":9,
+"priff":10,
+"wt":11,
+"tempoross":11,
+"zulrah":12,
+"rc":13,
+"agility":14,
+"sceptre":15,
+"pp":15,
+"wc":16,
+"mining":16,
+"hunter":16,
+
 }
-BINGO_HIDDEN=["Gnome Scarves for everyone! (6 out of 8 members must get a gnome scarf)",
-"Tears of Guthix! ( A random member of your team is rolled, they must gain 100k xp in their lowest skill. REMEMBER to post picture of your xp before and after the grind with the cc name at bingo-proof-team!)",
-"Upset the Balance! (A random member of your team is rolled, they must gain 500k xp in their highest [non 99] skill.  REMEMBER to post picture of your xp before and after the grind with the cc name at bingo-proof-team!)",
-"Spectator Sport! (Upon revealing this tile choose two other teams which must engage in a best of 3 runelink battle for a bonus challenge point)"]
+
+# BINGO_HIDDEN=["Gnome Scarves for everyone! (6 out of 8 members must get a gnome scarf)",
+# "Tears of Guthix! ( A random member of your team is rolled, they must gain 100k xp in their lowest skill. REMEMBER to post picture of your xp before and after the grind with the cc name at bingo-proof-team!)",
+# "Upset the Balance! (A random member of your team is rolled, they must gain 500k xp in their highest [non 99] skill.  REMEMBER to post picture of your xp before and after the grind with the cc name at bingo-proof-team!)",
+# "Spectator Sport! (Upon revealing this tile choose two other teams which must engage in a best of 3 runelink battle for a bonus challenge point)"]
 
 BINGO_TILES=["4 GWD Uniques",
 "2 Wintertodt Uniques (No gloves/torch)",
@@ -69,6 +69,8 @@ BINGO_TILES=["4 GWD Uniques",
 "2 Fishing Trawler PIeces",
 "Black mask or Jaw of basilisks"
 ]
+
+# ADMIN
 
 RANKS = {
     'smiley':4,
@@ -100,6 +102,8 @@ RANKS2 = {
     10:"General"
 
 }
+
+# HISCORES
 
 SKILLS = [
   'Overall',

@@ -41,15 +41,16 @@ class Bingo(commands.Cog):
             complete_tile(self.bingo_sheet_tiles, team_num, tile_num)
             response = f"{tile_name} completed by team {team_num}.\n"
 
-            tiles_left,hidden_left,hidden_tiles_left = get_number_tiles_left(self.bingo_sheet_tiles, team_num)
-            # listoftiles, number, number, list of tiles
-            if random() < hidden_left/tiles_left:
-                new_bingo_list = [BINGO_HIDDEN[i-1] for i in hidden_tiles_left]
-                hidden_index = randint(0,len(new_bingo_list)-1)
-                hidden_tile = new_bingo_list[hidden_index]
-                response += f"You rolled for the hidden tile {hidden_tile}!"
-                tile_num2 = TILES_TO_NUM[" ".join(["hidden",str(hidden_index+1)])]
-                reveal_tile(self.bingo_sheet_tiles, team_num,tile_num2)
+            ## HIDDEN TILES BINGO
+            # tiles_left,hidden_left,hidden_tiles_left = get_number_tiles_left(self.bingo_sheet_tiles, team_num)
+            # # listoftiles, number, number, list of tiles
+            # if random() < hidden_left/tiles_left:
+            #     new_bingo_list = [BINGO_HIDDEN[i-1] for i in hidden_tiles_left]
+            #     hidden_index = randint(0,len(new_bingo_list)-1)
+            #     hidden_tile = new_bingo_list[hidden_index]
+            #     response += f"You rolled for the hidden tile {hidden_tile}!"
+            #     tile_num2 = TILES_TO_NUM[" ".join(["hidden",str(hidden_index+1)])]
+            #     reveal_tile(self.bingo_sheet_tiles, team_num,tile_num2)
         await ctx.send(response)
 
     @commands.command(name='undo', help='Undo a Tile.')
@@ -163,9 +164,9 @@ class Bingo(commands.Cog):
         try:
             team_num = int(team_num)
             player_num = int(player_num)
-            if int(team_num) not in range(1,9):
+            if team_num not in range(1,9):
                 response = "You need to specify the number of your team\n For example team 1, player 2, name ironrok: !hs updateteam 1 2 ironrok"
-            elif int(player_num) not in range(1,9):
+            elif player_num not in range(1,9):
                 response = "You need to specify the number of the player you are updating\n For example team 1, player 2, name ironrok: !hs updateteam 1 2 ironrok"
             else:
                 update_team(self.cur,team_num,player_num,player)
