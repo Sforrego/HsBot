@@ -225,7 +225,7 @@ class Bingo(commands.Cog):
             await ctx.send(response)
 
     @commands.command(name='checkallteams', help='Checks xp/kc gained by all teams in a skill/boss (players with starting kc not on the highscores wont be tracked)')
-    async def checkteam(self,ctx,*stat):
+    async def checkallteams(self,ctx, *stat):
         team_nums = get_team_nums(self.cur)
         try:
             response = ""
@@ -251,7 +251,7 @@ class Bingo(commands.Cog):
                     if valid_team_members:
                         stat_delta= xp_gained_team(self.cur,team_num,stat,skill,valid_team_members)
                         response += f"Team {team_num} has done {str(stat_delta)} {pretty_stat} kills."
-                        response += f"\nKc gained by {invalid_members} is not being counted because their starting kc was not in the hs."
+                        response += f"\nKc gained by {invalid_members} is not being counted because their starting kc was not in the hs.\n"
                     else:
                         response += f"Team {team_num} doesn't have any team member being tracked in {pretty_stat} because their starting kc was not in the hs.\n"
         except Exception as e:
