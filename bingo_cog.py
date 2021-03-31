@@ -210,6 +210,7 @@ class Bingo(commands.Cog):
                 else:
                     team_members = get_team(self.cur,team_num)
                     starting_kc = tracker_starting_stat_multiple(self.cur,team_members,stat,skill,'clan_tracker')
+                    
                     valid_team_members = [x[0] for x in starting_kc if int(x[1]) != -1]
                     invalid_members = [x for x in team_members if x not in valid_team_members]
                     if valid_team_members:
