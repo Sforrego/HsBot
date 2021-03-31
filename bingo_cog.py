@@ -273,8 +273,14 @@ class Bingo(commands.Cog):
 
 
 def setup(bot):
+    scope = ['https://spreadsheets.google.com/feeds',
+    'https://www.googleapis.com/auth/drive']
+    creds = ServiceAccountCredentials.from_json_keyfile_name('client_secret.json', scope)
+    client = gspread.authorize(creds)
+    bingo_sheet_tiles = client.open("Bingo 07irons").worksheet('Tile Tracker')
 
     DATABASE_URL = os.environ['DATABASE_URL']
     conn = psycopg2.connect(DATABASE_URL, sslmode='require')
     conn.autocommit=True
-    bot.add_cog(Bingo(bot,conn))
+    bot.add_cog(Bingo(bot,conn,client,bingo_sheet_tiles))
+    
