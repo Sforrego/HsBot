@@ -5,4 +5,8 @@ og_rsn og_clan current_clan is_valid
 
 Modify rsn to current_rsn
 
-Remove all google spreedheet connections (move them to another bot)
+Remove all google spreedsheet connections (move them to another bot)
+
+ADD a tracking system for when a function is used
+
+Check if bot can use different threads

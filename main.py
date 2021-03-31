@@ -41,6 +41,7 @@ bot1 = commands.Bot(command_prefix=['!hs '])
 
 bot1.load_extension('hs_cog')
 bot1.load_extension('tracker_cog')
+bot1.load_extension('bingo_cog')
 
 
 
