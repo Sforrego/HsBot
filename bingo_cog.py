@@ -224,6 +224,41 @@ class Bingo(commands.Cog):
         finally:
             await ctx.send(response)
 
+    @commands.command(name='checkallteams', help='Checks xp/kc gained by all teams in a skill/boss (players with starting kc not on the highscores wont be tracked)')
+    async def checkteam(self,ctx,*stat):
+        team_nums = get_team_nums(self.cur)
+        try:
+            response = ""
+            for team_num in team_nums:
+                if stat:
+                    stat = ("_").join(stat).lower()
+                    pretty_stat = get_stat(stat)
+                    stat = coded_string(pretty_stat)
+                else:
+                    stat = "overall"
+                    pretty_stat = "Overall"
+                skill = is_skill(stat)
+                if skill:
+                    team_members = get_team(self.cur,team_num)
+                    stat_delta = xp_gained_team(self.cur,team_num,stat,skill,team_members)
+                    response = f"Team {team_num} has gained {str(stat_delta)} {pretty_stat} xp."
+                else:
+                    team_members = get_team(self.cur,team_num)
+                    starting_kc = tracker_starting_stat_multiple(self.cur,team_members,stat,skill,'clan_tracker')
+
+                    valid_team_members = [x[0] for x in starting_kc if int(x[1]) != -1]
+                    invalid_members = [x for x in team_members if x not in valid_team_members]
+                    if valid_team_members:
+                        stat_delta= xp_gained_team(self.cur,team_num,stat,skill,valid_team_members)
+                        response += f"Team {team_num} has done {str(stat_delta)} {pretty_stat} kills."
+                        response += f"\nKc gained by {invalid_members} is not being counted because their starting kc was not in the hs."
+                    else:
+                        response += f"Team {team_num} doesn't have any team member being tracked in {pretty_stat} because their starting kc was not in the hs.\n"
+        except Exception as e:
+            response = str(e)
+        finally:
+            await ctx.send(response)
+
     @commands.command(name='bingocommands', help='Shows all the bingo related commands')
     async def bingocommands(self,ctx):
         try:
