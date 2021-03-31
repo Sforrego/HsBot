@@ -229,15 +229,15 @@ class Bingo(commands.Cog):
         team_nums = get_team_nums(self.cur)
         try:
             response = ""
+            if stat:
+                stat = ("_").join(stat).lower()
+                pretty_stat = get_stat(stat)
+                stat = coded_string(pretty_stat)
+            else:
+                stat = "overall"
+                pretty_stat = "Overall"
+            skill = is_skill(stat)
             for team_num in team_nums:
-                if stat:
-                    stat = ("_").join(stat).lower()
-                    pretty_stat = get_stat(stat)
-                    stat = coded_string(pretty_stat)
-                else:
-                    stat = "overall"
-                    pretty_stat = "Overall"
-                skill = is_skill(stat)
                 if skill:
                     team_members = get_team(self.cur,team_num)
                     stat_delta = xp_gained_team(self.cur,team_num,stat,skill,team_members)

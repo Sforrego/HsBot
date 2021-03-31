@@ -328,8 +328,7 @@ if __name__ == '__main__':
     # rm_from_hs(cur,'tig bittty')
     ##### TESTING FUNCTIONS
     name = 'ironrok'
-    stats = getStats(playerURL(name,'iron'))
-    add_clan_tracker(cur,name,stats)   
+    print(is_skill("overall"))
 
     # response = cur.fetchall()
     # print(response)
