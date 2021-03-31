@@ -241,7 +241,7 @@ class Bingo(commands.Cog):
                 if skill:
                     team_members = get_team(self.cur,team_num)
                     stat_delta = xp_gained_team(self.cur,team_num,stat,skill,team_members)
-                    response = f"Team {team_num} has gained {str(stat_delta)} {pretty_stat} xp."
+                    response += f"Team {team_num} has gained {str(stat_delta)} {pretty_stat} xp.\n"
                 else:
                     team_members = get_team(self.cur,team_num)
                     starting_kc = tracker_starting_stat_multiple(self.cur,team_members,stat,skill,'clan_tracker')
@@ -250,8 +250,8 @@ class Bingo(commands.Cog):
                     invalid_members = [x for x in team_members if x not in valid_team_members]
                     if valid_team_members:
                         stat_delta= xp_gained_team(self.cur,team_num,stat,skill,valid_team_members)
-                        response += f"Team {team_num} has done {str(stat_delta)} {pretty_stat} kills."
-                        response += f"\nKc gained by {invalid_members} is not being counted because their starting kc was not in the hs.\n"
+                        response += f"Team {team_num} has done {str(stat_delta)} {pretty_stat} kills.\n"
+                        response += f"Kc gained by {invalid_members} is not being counted because their starting kc was not in the hs.\n"
                     else:
                         response += f"Team {team_num} doesn't have any team member being tracked in {pretty_stat} because their starting kc was not in the hs.\n"
         except Exception as e:
