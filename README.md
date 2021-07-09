@@ -3,23 +3,16 @@ This is a tracker bot for Oldschool Runescape, it connects Discord with SQL data
 It is no longer working since our friends at https://wiseoldman.net have done an excellent job in achieving the same goal as this bot, and any further work done here could be done helping them. The other reason is that everytime Jagex, the company running Oldschool Runescape, updates the game with a new boss or skill, all the stats move (because their API is pretty bad) and the bot stops being accurate, this implies continous updates to keep the bot working properly are needed.
 
 ### Commands
-
+<pre>
 Replace spaces with _ in names.
 
 Hiscores:
-
   add              Adds players to the clan's hiscores. !hs add <player1> <player2>
-  
   change2          Changes the name in the clan's hiscores. !hs change2 <old_name> <new_name>
-  
   check            Checks if a player is in the clan's hs. !hs check <name>
-  
   fullupdate       Updates every player in the clan's hiscores. !hs fullupdate
-  
   my               Gets the person using the command lvl/kc in a stat. !hs my <stat>
-  
   rank             Shows the rank within the clan of a member in a specific stat. !hs rank <stat> <name>
-  
   ranks            Shows the ranks within the clan of all the stats related to skills or bosses of a player. !hs ranks <"skills/bosses"> <name>
   rm               Removes names from the clan's hiscores. !hs rm <player1> <player2>
   rmoutdated       Removes outdated names from the clan's hiscores. !hs rmoutdated
@@ -64,3 +57,4 @@ Management
   remove           Removes players from the cc (sheets) (Admin) (Replace spac...
   shorts           Gets all the short ways of calling each stat (Case insensi...
   superadd         Changes a players discord nick, gives him role, and adds h...
+</pre>
