@@ -7,12 +7,19 @@ It is no longer working since our friends at https://wiseoldman.net have done an
 Replace spaces with _ in names.
 
 Hiscores:
+
   add              Adds players to the clan's hiscores. !hs add <player1> <player2>
+  
   change2          Changes the name in the clan's hiscores. !hs change2 <old_name> <new_name>
+  
   check            Checks if a player is in the clan's hs. !hs check <name>
+  
   fullupdate       Updates every player in the clan's hiscores. !hs fullupdate
+  
   my               Gets the person using the command lvl/kc in a stat. !hs my <stat>
+  
   rank             Shows the rank within the clan of a member in a specific stat. !hs rank <stat> <name>
+  
   ranks            Shows the ranks within the clan of all the stats related to skills or bosses of a player. !hs ranks <"skills/bosses"> <name>
   rm               Removes names from the clan's hiscores. !hs rm <player1> <player2>
   rmoutdated       Removes outdated names from the clan's hiscores. !hs rmoutdated
