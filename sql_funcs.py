@@ -253,7 +253,7 @@ def reset_teams(cur):
     query = """DELETE FROM teams """
     cur.execute(query)
 
-def xp_gained_team(cur,team_num,stat,skill, players):
+def xp_gained_team(cur,stat,skill, players):
     inside = "("
     for i,player in enumerate(players):
         if i == len(players)-1:
@@ -264,6 +264,7 @@ def xp_gained_team(cur,team_num,stat,skill, players):
         query = f"""SELECT sum(stats.{stat}_xp-clan_tracker.{stat}_xp) from stats inner join clan_tracker on (stats.rsn=clan_tracker.rsn) where stats.rsn IN {inside}"""
     else:
         query = f"""SELECT sum(stats."{stat}"-clan_tracker."{stat}") from stats inner join clan_tracker on (stats.rsn=clan_tracker.rsn) where stats.rsn IN {inside}"""
+    print(query)
     cur.execute(query)
     stat_delta = cur.fetchone()[0]
     return int(stat_delta)
@@ -330,33 +331,3 @@ if __name__ == '__main__':
 
     ##### TESTING FUNCTIONS
     name = 'ironrok'
-    stat = ["mining"]
-    team_nums = get_team_nums(cur)
-    response = ""
-    if stat:
-        stat = ("_").join(stat).lower()
-        pretty_stat = get_stat(stat)
-        stat = coded_string(pretty_stat)
-    else:
-        stat = "overall"
-        pretty_stat = "Overall"
-    skill = is_skill(stat)
-    for team_num in team_nums:
-        if skill:
-            team_members = get_team(cur,team_num)
-            stat_delta = xp_gained_team(cur,team_num,stat,skill,team_members)
-            response += f"Team {team_num} has gained {str(stat_delta)} {pretty_stat} xp."
-        else:
-            team_members = get_team(cur,team_num)
-            starting_kc = tracker_starting_stat_multiple(cur,team_members,stat,skill,'clan_tracker')
-
-            valid_team_members = [x[0] for x in starting_kc if int(x[1]) != -1]
-            invalid_members = [x for x in team_members if x not in valid_team_members]
-            if valid_team_members:
-                stat_delta= xp_gained_team(cur,team_num,stat,skill,valid_team_members)
-                response += f"Team {team_num} has done {str(stat_delta)} {pretty_stat} kills."
-                response += f"\nKc gained by {invalid_members} is not being counted because their starting kc was not in the hs.\n"
-            else:
-                response += f"Team {team_num} doesn't have any team member being tracked in {pretty_stat} because their starting kc was not in the hs.\n"
-    
-    print(response)

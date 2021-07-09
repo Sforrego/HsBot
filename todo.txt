@@ -1,12 +1,3 @@
-Change EVERYTHINg, not really, but a reestructure of the bot so it works for every community, and it only uses databases and tracks usrs
-
-ADD the following columns
-og_rsn og_clan current_clan is_valid
-
-Modify rsn to current_rsn
-
-Remove all google spreedsheet connections (move them to another bot)
-
-ADD a tracking system for when a function is used
-
-Check if bot can use different threads
+Reestructure of the bot so it works for every community.
+Remove all google spreedsheet connections (move them to another bot).
+Check if bot can use different threads.
